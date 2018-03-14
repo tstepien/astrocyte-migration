@@ -12,10 +12,17 @@ gamma1 = 0;%0;
 gamma2 = 0;%0.5;
 
 %%% growth factor parameters
-D1 = 0;%1;
-D2 = 0;%1;
-eta1 = 0;%0.1;
-eta2 = 0;%0.1;
+lambda = 1.6; %%% tortuosity of medium
+phi = 0.2; %%% porosity/volume fraction in extracellular space (%)
+Dwater_PDGFA = 1.2*10^(-6); %%% diffusion of PDGFA in water at 37C (cm^2/s)
+Dwater_LIF = 1.38*10^(-6); %%% diffusion of LIF in water at 37C (cm^2/s)
+eta_PDGFA = 0;
+eta_LIF = 0;
+
+D1 = Dwater_PDGFA / lambda^2; %%% effective diffusivity of PDGFA
+D2 = Dwater_LIF / lambda^2; %%% effective diffusivity of LIF
+eta1 = eta_PDGFA / phi; %%% production/release rate of PDGFA
+eta2 = eta_LIF / phi; %%% production/release rate of LIF
 
 %%% tension parameters
 rbar = 7.75*10^(-3);
