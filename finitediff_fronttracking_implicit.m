@@ -1,21 +1,26 @@
 clear variables global;
 clc;
 
+%%% time unit: hr
+%%% space unit: mm
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% parameters %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% astrocyte parameters
 kappa = 1;
 mu = 0.01;
-alpha1 = 0.001/2;%0.028;
-alpha2 = 0.001/2;%0.010;
-beta = 0.0005/2;%0.0525;
+alpha1 = 0.028; %%% (/hr)
+alpha2 = 0.010; %%% (/hr)
+beta = 0.0525; %%% (/hr)
 gamma1 = 0;%0;
 gamma2 = 0;%0.5;
 
 %%% growth factor parameters
-lambda = 1.6; %%% tortuosity of medium
+lambda = 1.6; %%% tortuosity of medium (unitless)
 phi = 0.2; %%% porosity/volume fraction in extracellular space (%)
-Dwater_PDGFA = 1.2*10^(-6); %%% diffusion of PDGFA in water at 37C (cm^2/s)
-Dwater_LIF = 1.38*10^(-6); %%% diffusion of LIF in water at 37C (cm^2/s)
+Dwater_PDGFA = 1.2*10^(-6) *(60*60*10^2); %%% diffusion of PDGFA in water at 37C (cm^2/s)
+                                     %%% but then converted to (mm^2/hr)
+Dwater_LIF = 1.38*10^(-6) *(60*60*10^2); %%% diffusion of LIF in water at 37C (cm^2/s)
+                                    %%% but then converted to (mm^2/hr)
 eta_PDGFA = 0;
 eta_LIF = 0;
 
@@ -24,13 +29,17 @@ D2 = Dwater_LIF / lambda^2; %%% effective diffusivity of LIF
 eta1 = eta_PDGFA / phi; %%% production/release rate of PDGFA
 eta2 = eta_LIF / phi; %%% production/release rate of LIF
 
+p1max = 1;
+beta = 0.45;
+epsilon = 0.45;
+
 %%% tension parameters
-rbar = 7.75*10^(-3);
-rproc = 15.5*10^(-3);
-cmin = 1/(pi*rproc^2);
+rbar = 7.75*10^(-3); %%% reference radius (mm)
+rproc = 15.5*10^(-3); %%% reference radius with processes included (mm)
+cmin = 1/(pi*rproc^2); %%% reference cell density that includes processes (cells/mm^2)
 
 %%% moving boundary condition parameters
-Te = 0.0035; % tension on boundary
+Te = 0.0035; %%% tension on boundary
 ce = densityatbdy(Te,kappa,cmin,rbar); % c1+c2 on boundary
 
 Tprimeatce = Tderivative(ce,kappa,cmin,rbar); % T'(ce)
@@ -42,8 +51,8 @@ n = 10;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% mesh %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 dr = 0.001;
 
-rmax = 5;
-tmax = 80;
+rmax = 5; %%% max radius (mm) (estimate rat retinal radius = 4.1 mm)
+tmax = (1/24)*24; %%% max time (hr) (7 days = 168 hr)
 
 r = 0:dr:rmax;
 R = length(r);
@@ -90,8 +99,9 @@ c1_old = c1_init;
 c2_old = c2_init;
 
 %%% growth factors
-p1_old = 100*ones(1,R);%smooth(100*( heaviside(1-r)+(exp(-r+1)).*heaviside(r-1) ))';
-p2_old = 100*ones(1,R);%smooth(100*heaviside(1-r))';
+p1_old = p1max * (1 - beta*exp(-r.^2/epsilon));%100*ones(1,R);
+p1_old(1) = 0;
+p2_old = 10*ones(1,R);%smooth(100*heaviside(1-r))';
 
 %%%%%%%%%%%%%%%%%%%%%%% initialize final variables %%%%%%%%%%%%%%%%%%%%%%%%
 mvgbdy = s;
