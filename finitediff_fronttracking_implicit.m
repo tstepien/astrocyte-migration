@@ -30,8 +30,8 @@ eta1 = eta_PDGFA / phi; %%% production/release rate of PDGFA
 eta2 = eta_LIF / phi; %%% production/release rate of LIF
 
 p1max = 1;
-beta = 0.45;
-epsilon = 0.45;
+p1beta = 0.45;
+p1epsilon = 0.45;
 
 %%% tension parameters
 rbar = 7.75*10^(-3); %%% reference radius (mm)
@@ -99,7 +99,7 @@ c1_old = c1_init;
 c2_old = c2_init;
 
 %%% growth factors
-p1_old = p1max * (1 - beta*exp(-r.^2/epsilon));%100*ones(1,R);
+p1_old = p1max * (1 - p1beta*exp(-r.^2/p1epsilon));%100*ones(1,R);
 p1_old(1) = 0;
 p2_old = 10*ones(1,R);%smooth(100*heaviside(1-r))';
 
