@@ -35,12 +35,13 @@ M0 = M0 * (60/100*0.1^3); % cm^3 O2/hr
 
 %%% partial pressure of O2
 ind = thickness <= sqrt(2*P0*Dalpha/M0);
-PO2 = P0*(1 - sqrt(M0/(2*P0*Dalpha)) * thickness).^2 .*ind;
+PO2 = ( P0 - M0/(2*Dalpha)*thickness.^2 ) .*ind;
 
     plot(thickness,PO2)
     xlabel('retinal thickness (mm)')
     ylabel('partial pressure O_2 (mmHg)')
 
+    figure
     plot(tday,PO2)
     xlabel('time since E15 (days)')
     ylabel('partial pressure O_2 (mmHg)')
