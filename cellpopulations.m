@@ -1,15 +1,13 @@
-function [c1_new,c2_new] = cellpops_implicit_splitbc(j,c1_old,...
-    c2_old,p1,p2,...
-    dt,r,kappa,mu,alpha1,alpha2,beta,gamma1,gamma2,cmin,rbar,ce)
-% [c1_new,c2_new] = cellpops_implicit(j,c1_old,c2_old,p1,p2,...
+function [c1_new,c2_new] = cellpopulations(j,c1_old,c2_old,PO2,dt,r,Pm,...
+    kappa,mu,alpha1,alpha2,beta,gamma1,gamma2,cmin,rbar,ce)
+% [c1_new,c2_new] = cellpopulations(j,c1_old,c2_old,p1,p2,...
 %     dt,r,kappa,mu,alpha1,alpha2,beta,gamma1,gamma2,cmin,rbar,ce)
 %
 % inputs:
 %   j      = node that moving boundary is located at
 %   c1_old = APC cell concentration at previous time
 %   c2_old = IPA cell concentration at previous time
-%   p1     = PDGFA growth factor concentration at previous time
-%   p2     = LIF growth factor concentration at previous time
+%   PO2    = partial pressure of oxygen at next time
 %   dt     = time step size
 %   r      = spatial mesh
 %   {others} = parameters
@@ -17,8 +15,9 @@ function [c1_new,c2_new] = cellpops_implicit_splitbc(j,c1_old,...
 % outputs:
 %   c1_new   = APC cell concentration at next time
 %   c2_new   = IPA cell concentration at next time
-
-%%%%%%%%%%%%%%%% adding v_e as unknown
+%
+%
+% %%%%%%%%%%%%%%% adding v_e as unknown ------------------------
 
 %%% spatial mesh
 R = length(r);
@@ -41,9 +40,9 @@ Psi2(j) = interp1(rhalf(1:j-1),Psi2(1:j-1),rhalf(j),'pchip','extrap');
 %%% cells at time step j are at mesh points 1:j
 %%% cells at time step j+1 are at mesh points 1:j+1
 
-Tprimeatce = Tderivative(ce,kappa,cmin,rbar); % T'(ce)
+% Tprimeatce = Tderivative(ce,kappa,cmin,rbar); % T'(ce)
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% c1 - APC %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 theta1_1 = dt./(mu*r(2:j)*dr^2) .* Psi1(2:j);
 theta1_2 = dt./(mu*r(2:j)*dr^2) .* ( Psi1(2:j) + Psi1(1:j-1) );
@@ -66,7 +65,7 @@ lowerdiag12 = [theta1_3, 0];
 block12 = diag(maindiag12) + diag(upperdiag12,1) + diag(lowerdiag12,-1);
 block12 = [block12 , [zeros(j,1) ; theta1_5] ];
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% c2 - IPA %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 theta2_1 = dt./(mu*r(2:j)*dr^2) .* Psi2(2:j);
 theta2_2 = dt./(mu*r(2:j)*dr^2) .* ( Psi2(2:j) + Psi2(1:j-1) );
@@ -91,13 +90,14 @@ block22 = diag(maindiag22) + diag(upperdiag22,1) + diag(lowerdiag22,-1);
 block22 = [block22 ; [zeros(1,j) , 1] ];
 block22 = [block22 , [zeros(j,1) ; theta2_5 ; 0] ];
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%% right hand side %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-g1 = [cellgrowth_c1(c1_old(1:j),p1(1:j),p2(1:j),alpha1,beta,gamma1) , ...
-    cellgrowth_c1(c1_old(j),p1(j),p2(j),alpha1,beta,gamma1)];
 
-g2 = [cellgrowth_c2(c1_old(1:j),c2_old(1:j),p1(1:j),p2(1:j),alpha2,beta,gamma2) , ...
-    cellgrowth_c2(c1_old(j),c2_old(j),p1(j),p2(j),alpha2,beta,gamma2)];
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%% right hand side %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%% and construct matrix %%%%%%%%%%%%%%%%%%%%%%%%%%%
+g1 = [cellgrowth_c1(c1_old(1:j),PO2,Pm,alpha1,beta,gamma1) , ...
+    cellgrowth_c1(c1_old(j),PO2,Pm,alpha1,beta,gamma1)];
+
+g2 = [cellgrowth_c2(c1_old(1:j),c2_old(1:j),PO2,Pm,alpha2,beta,gamma2) , ...
+    cellgrowth_c2(c1_old(j),c2_old(j),PO2,Pm,alpha2,beta,gamma2)];
     
 bvector = [c1_old(1:j)' ; c1_old(j) ; ...
     c2_old(1:j)' ; c2_old(j) ; ce] ...
@@ -106,6 +106,7 @@ bvector = [c1_old(1:j)' ; c1_old(j) ; ...
 thetamatrix = [block11 , block12 ; ...
     block21 , block22];
     
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% solve system %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 c_new = ( thetamatrix \ bvector )';
     
 c1_new = [c_new(1:j+1) , zeros(1,R-(j+1))];

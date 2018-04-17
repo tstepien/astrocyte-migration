@@ -1,11 +1,12 @@
-function PO2 = oxygen(t)
-% PO2 = oxygen(t)
+function [PO2,thickness] = oxygen(t)
+% [PO2,thickness] = oxygen(t)
 %
 % inputs:
 %   t = time (hr)
 %
 % outputs:
-%   PO2 = partial pressure of oxygen (O2)
+%   PO2       = partial pressure of oxygen (O2)
+%   thickness = total retinal thickness (mm)
 
 %%% convert time from hours to days
 tday = t/24;
@@ -37,11 +38,11 @@ M0 = M0 * (60/100*0.1^3); % cm^3 O2/hr
 ind = thickness <= sqrt(2*P0*Dalpha/M0);
 PO2 = ( P0 - M0/(2*Dalpha)*thickness.^2 ) .*ind;
 
-    plot(thickness,PO2)
-    xlabel('retinal thickness (mm)')
-    ylabel('partial pressure O_2 (mmHg)')
-
-    figure
-    plot(tday,PO2)
-    xlabel('time since E15 (days)')
-    ylabel('partial pressure O_2 (mmHg)')
+%     plot(thickness,PO2)
+%     xlabel('retinal thickness (mm)')
+%     ylabel('partial pressure O_2 (mmHg)')
+% 
+%     figure
+%     plot(tday,PO2)
+%     xlabel('time since E15 (days)')
+%     ylabel('partial pressure O_2 (mmHg)')
