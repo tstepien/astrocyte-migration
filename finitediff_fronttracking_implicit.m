@@ -6,7 +6,7 @@ clc;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% parameters %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% oxygen parameters
-Pm = 1; % (mmHg)
+Pm = 100; % (mmHg)
 
 %%% astrocyte parameters
 kappa = 1;
@@ -29,10 +29,10 @@ ce = densityatbdy(Te,kappa,cmin,rbar); % c1+c2 on boundary
 Tprimeatce = Tderivative(ce,kappa,cmin,rbar); % T'(ce)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% mesh %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-dr = 0.001;
+dr = 0.1;
 
 rmax = 5; %%% max radius (mm) (estimate rat retinal radius = 4.1 mm)
-tmax = 5*24; %%% max time (hr) (7 days = 168 hr)
+tmax = 20*24; %%% max time (hr) (7 days = 168 hr)
 
 r = 0:dr:rmax;
 R = length(r);
@@ -196,6 +196,7 @@ hold off
 xlabel('radius r (mm)')
 ylabel('c1 (APCs)')
 set(gca,'XLim',[0,mvgbdy(end)+5*dr])
+ylims_c1 = get(gca,'YLim');
 
 subaxis(3,2,2,'MarginLeft',0.05,'MarginRight',0.01)
 hold on
@@ -205,20 +206,33 @@ end
 hold off
 xlabel('radius r (mm)')
 ylabel('c2 (IPAs)')
+set(gca,'XLim',[0,mvgbdy(end)+5*dr],'YLim',ylims_c1)
+
+subaxis(3,2,3,'MarginLeft',0.05,'MarginRight',0.01)
+hold on
+for i=1:T
+    plot(rplot(i,:),c1plot(i,:))
+end
+for i=1:T
+    plot(rplot(i,:),c2plot(i,:),'--')
+end
+hold off
+xlabel('radius r (mm)')
+ylabel('Solid: c1 (APCs), Dashed: c2 (IPAs)')
 set(gca,'XLim',[0,mvgbdy(end)+5*dr])
 
-subaxis(3,2,3,'MarginTop',0.03,'MarginBottom',0.05)
-plot(t,mvgbdy)
+subaxis(3,2,4,'MarginTop',0.03,'MarginBottom',0.05)
+plot(t,mvgbdy,'-o')
 xlabel('t (hr)')
 ylabel('moving boundary s(t) (mm)')
 
 subaxis(3,2,5,'MarginTop',0.03,'MarginBottom',0.05)
-plot(t,thickness)
+plot(t,thickness,'-o')
 xlabel('t (hr)')
 ylabel('total retinal thickness (mm)')
 
 subaxis(3,2,6)
-plot(thickness,PO2)
+plot(thickness,PO2,'-o')
 xlabel('total retinal thickness (mm)')
 ylabel('PO2 (mmHg)')
 
