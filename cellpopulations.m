@@ -61,9 +61,9 @@ upperdiag11 = [theta1_4 , ...
     theta1_1];
 maindiag11 = [1 - dt*g11 - theta1_4 , ...
     1 - dt*g11 - theta1_2 , ...
-    1];
-lowerdiag11 = [theta1_3 , ...
-    -dt*g11];
+    1-dt*g11];
+lowerdiag11 = [theta1_3 , ...%     -dt*g11];
+    0];
 
 block11 = diag(maindiag11) + diag(upperdiag11,1) + diag(lowerdiag11,-1);
 
@@ -72,7 +72,7 @@ maindiag12 = [-theta1_4 , -theta1_2 , 0];
 lowerdiag12 = [theta1_3, 0];
 
 block12 = diag(maindiag12) + diag(upperdiag12,1) + diag(lowerdiag12,-1);
-block12 = [block12 , [zeros(j,1) ; theta1_5] ];
+block12 = [block12 , [zeros(j,1) ; theta1_5] ]; % add on right-most column
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% c2 - IPA %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -99,9 +99,9 @@ upperdiag22 = [theta2_4 , ...
     theta2_1];
 maindiag22 = [1 - dt*g22 - theta2_4 , ...
     1 - dt*g22 - theta2_2 , ...
-    1];
-lowerdiag22 = [theta2_3 , ...
-    -dt*g22];
+    1-dt*g22];
+lowerdiag22 = [theta2_3 , ...%     -dt*g22];
+    0];
 
 block22 = diag(maindiag22) + diag(upperdiag22,1) + diag(lowerdiag22,-1);
 block22 = [block22 ; [zeros(1,j) , 1] ]; % add on bottom row
@@ -131,6 +131,10 @@ c2_new = [c_new(j+2:end-1) , zeros(1,R-(j+1))];
 
 c_newT = c_new(1:end-1)';
 
+
+if j>11+10
+    keyboard
+end
 
 % if j==11+5 && c1_new(1)<1000
 %     keyboard

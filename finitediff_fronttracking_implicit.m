@@ -1,5 +1,6 @@
 clear variables global;
 clc;
+close all;
 
 %%% time unit: hr
 %%% space unit: mm
@@ -10,7 +11,7 @@ Pm = 100; % (mmHg)
 
 %%% astrocyte parameters
 kappa = 1;
-mu = 0.01;
+mu = 0.05;
 alpha1 = 0.028; %%% (/hr)
 alpha2 = 0.010; %%% (/hr)
 beta = 0.0525; %%% (/hr)
@@ -29,10 +30,10 @@ ce = densityatbdy(Te,kappa,cmin,rbar); % c1+c2 on boundary
 Tprimeatce = Tderivative(ce,kappa,cmin,rbar); % T'(ce)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% mesh %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-dr = 0.1;
+dr = 0.01;
 
 rmax = 5; %%% max radius (mm) (estimate rat retinal radius = 4.1 mm)
-tmax = 20*24; %%% max time (hr) (7 days = 168 hr)
+tmax = 1*24; %%% max time (hr) (7 days = 168 hr)
 
 r = 0:dr:rmax;
 R = length(r);
@@ -42,7 +43,7 @@ tol = 10^(-6); % tolerance for predictor-corrector scheme
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%% initial conditions %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% moving boundary location
-s = 10*dr;
+s = 1;%10*dr;
 
 if abs(s/dr - round(s/dr))>2*eps
     error('error specifying s(0): moving boundary must be located on grid node');
@@ -123,6 +124,8 @@ while tcurr < tmax && j<R-1
                 + (1-bb)*( 3*k_old(j) - 4*k_old(j-1) + k_old(j-2) ) );
         end
         
+        [3*k_old(j) - 4*k_old(j-1) + k_old(j-2) , 3*k_hat(j+1) - 4*k_hat(j) + k_hat(j-1)]
+        
 %         [dt_p, dt_c]
 %         keyboard
         
@@ -175,6 +178,15 @@ else
 %     ind = 1:10;
 end
 
+%%% color order
+co = [0    0.4470    0.7410
+    0.8500    0.3250    0.0980
+    0.9290    0.6940    0.1250
+    0.4940    0.1840    0.5560
+    0.4660    0.6740    0.1880
+    0.3010    0.7450    0.9330
+    0.6350    0.0780    0.1840];
+
 %%% make moving boundary sharp
 c1plot = zeros(T,R+1);
 c2plot = zeros(T,R+1);
@@ -211,10 +223,10 @@ set(gca,'XLim',[0,mvgbdy(end)+5*dr],'YLim',ylims_c1)
 subaxis(3,2,3,'MarginLeft',0.05,'MarginRight',0.01)
 hold on
 for i=1:T
-    plot(rplot(i,:),c1plot(i,:))
+    plot(rplot(i,:),c1plot(i,:))%,'Color',co(i,:))
 end
 for i=1:T
-    plot(rplot(i,:),c2plot(i,:),'--')
+    plot(rplot(i,:),c2plot(i,:))%,'--','Color',co(i,:))
 end
 hold off
 xlabel('radius r (mm)')
