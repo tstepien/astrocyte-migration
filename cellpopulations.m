@@ -19,6 +19,8 @@ function [c1_new,c2_new] = cellpopulations(j,c1_old,c2_old,PO2,dt,r,Pm,...
 %
 % %%%%%%%%%%%%%%% adding v_e as unknown ------------------------
 
+global whatstep;
+
 %%% spatial mesh
 R = length(r);
 dr = r(2)-r(1);
@@ -45,8 +47,12 @@ Psi2(j) = interp1(rhalf(1:j-1),Psi2(1:j-1),rhalf(j),'pchip','extrap');
 %%% get growth term stuff
 g11 = alpha1 * PO2/(Pm+PO2) - beta * Pm/(Pm+PO2) - gamma1; %mult by c1
 g22 = alpha2 * PO2/(Pm+PO2) - gamma2; %mult by c2
-g12 = beta * Pm/(Pm+PO2); %mult by c1
+g21 = beta * Pm/(Pm+PO2); %mult by c1
 
+
+% if strcmp(whatstep,'corrector')==1
+%     [PO2,g11,g21,g22]
+% end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% c1 - APC %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 theta1_1 = dt./(mu*r(2:j)*dr^2) .* Psi1(2:j);
@@ -61,15 +67,19 @@ upperdiag11 = [theta1_4 , ...
     theta1_1];
 maindiag11 = [1 - dt*g11 - theta1_4 , ...
     1 - dt*g11 - theta1_2 , ...
-    1-dt*g11];
+    1 - dt*g11];
 lowerdiag11 = [theta1_3 , ...%     -dt*g11];
     0];
 
 block11 = diag(maindiag11) + diag(upperdiag11,1) + diag(lowerdiag11,-1);
 
-upperdiag12 = [theta1_4 , theta1_1];
-maindiag12 = [-theta1_4 , -theta1_2 , 0];
-lowerdiag12 = [theta1_3, 0];
+upperdiag12 = [theta1_4 , ...
+    theta1_1];
+maindiag12 = [-theta1_4 , ...
+    -theta1_2 , ...
+    0];
+lowerdiag12 = [theta1_3, ...
+    0];
 
 block12 = diag(maindiag12) + diag(upperdiag12,1) + diag(lowerdiag12,-1);
 block12 = [block12 , [zeros(j,1) ; theta1_5] ]; % add on right-most column
@@ -83,12 +93,12 @@ theta2_3 = dt./(mu*r(2:j)*dr^2) .* Psi2(1:j-1);
 theta2_4 = 2*dt/(mu*dr^2) * c2half(1)*Tp(1);
 
 theta2_5 = dt * c2_old(j);
-    
+
 upperdiag21 = [theta2_4 , ...
     theta2_1];
-maindiag21 = [-dt*g12 - theta2_4 , ...
-    -dt*g12 - theta2_2 , ...
-    0];
+maindiag21 = [-dt*g21 - theta2_4 , ...
+    -dt*g21 - theta2_2 , ...
+    -dt*g21];
 lowerdiag21 = [theta2_3 , ...
     0];
 
@@ -99,7 +109,7 @@ upperdiag22 = [theta2_4 , ...
     theta2_1];
 maindiag22 = [1 - dt*g22 - theta2_4 , ...
     1 - dt*g22 - theta2_2 , ...
-    1-dt*g22];
+    1 - dt*g22];
 lowerdiag22 = [theta2_3 , ...%     -dt*g22];
     0];
 
@@ -132,9 +142,11 @@ c2_new = [c_new(j+2:end-1) , zeros(1,R-(j+1))];
 c_newT = c_new(1:end-1)';
 
 
-if j>11+10
-    keyboard
-end
+% if strcmp(whatstep,'predictor')==1
+%     1
+% elseif strcmp(whatstep,'corrector')==1
+%     keyboard
+% end
 
 % if j==11+5 && c1_new(1)<1000
 %     keyboard
