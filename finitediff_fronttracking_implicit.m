@@ -1,6 +1,6 @@
 clear variables global;
 clc;
-close all;
+% close all;
 
 global whatstep;
 
@@ -13,7 +13,7 @@ Pm = 10; % (mmHg)
 
 %%% astrocyte parameters
 kappa = 1;
-mu = 0.001;
+mu = 0.0001;
 alpha1 = 0.028; %%% (/hr)
 alpha2 = 0.010; %%% (/hr)
 beta = 0.0525; %%% (/hr)
@@ -106,7 +106,7 @@ while tcurr < tmax && j<R-1
     %%%%%%%%%%%%%%%%%%%%%%%% solve eqn's with dt_p %%%%%%%%%%%%%%%%%%%%%%%%
     dt_c = 0;
     while abs(dt_p-dt_c)>=tol
-        PO2 = oxygen(tcurr + dt_p);
+        PO2 = oxygen(tcurr + dt_p,r);
     
         [c1_hat,c2_hat] = cellpopulations(j,c1_old,c2_old,PO2,dt_p,r,Pm,...
             kappa,mu,alpha1,alpha2,beta,gamma1,gamma2,cmin,rbar,ce);
@@ -131,7 +131,7 @@ while tcurr < tmax && j<R-1
         
 %         [3*k_old(j) - 4*k_old(j-1) + k_old(j-2) , 3*k_hat(j+1) - 4*k_hat(j) + k_hat(j-1)]
         
-        [dt_p, dt_c]
+%         [dt_p, dt_c]
 %         keyboard
         
         if abs(dt_p-dt_c)<tol
@@ -146,7 +146,7 @@ while tcurr < tmax && j<R-1
     end
     
     %%%%%%%%%%%%%%%%%%%%%%%% solve next time step %%%%%%%%%%%%%%%%%%%%%%%%%
-    PO2 = oxygen(tcurr + dt_c);
+    PO2 = oxygen(tcurr + dt_c,r);
     
     whatstep = 'corrector';
     
@@ -181,93 +181,93 @@ t(end)/24
 mvgbdy_vel = (mvgbdy(2:end) - mvgbdy(1:end-1)) ./ (t(2:end)-t(1:end-1));
 mvgbdy_vel(end)
 
-% %%
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% plotting %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% [PO2,thickness] = oxygen(t);
-% 
-% T = length(t);
-% numcurvesplot = 10;
-% if T<=numcurvesplot
-%     ind = 1:T;
-% else
-%     ind = 1:floor(T/numcurvesplot):T;
-% %     ind = 1:10;
-% end
-% 
-% %%% color order
-% co = [0    0.4470    0.7410
-%     0.8500    0.3250    0.0980
-%     0.9290    0.6940    0.1250
-%     0.4940    0.1840    0.5560
-%     0.4660    0.6740    0.1880
-%     0.3010    0.7450    0.9330
-%     0.6350    0.0780    0.1840];
-% 
-% %%% make moving boundary sharp
-% c1plot = zeros(T,R+1);
-% c2plot = zeros(T,R+1);
-% rplot = zeros(T,R+1);
-% for i = 1:T
-%     c1plot(i,:) = [c1(i,1:j_init+(i-1)) , zeros(1,R+1-(j_init+(i-1)))];
-%     c2plot(i,:) = [c2(i,1:j_init+(i-1)) , zeros(1,R+1-(j_init+(i-1)))];
-%     
-%     rplot(i,:) = [r(1:j_init+(i-1)) , r(j_init+(i-1)) , r(j_init+i:end)];
-% end
-% 
-% figure
-% subaxis(3,2,1,'MarginLeft',0.05,'MarginRight',0.01,'MarginTop',0.03,'MarginBottom',0.05)
-% hold on
-% for i=1:T
-%     plot(rplot(i,:),c1plot(i,:))
-% end
-% hold off
-% xlabel('radius r (mm)')
-% ylabel('c1 (APCs)')
-% set(gca,'XLim',[0,mvgbdy(end)+5*dr])
-% ylims_c1 = get(gca,'YLim');
-% 
-% subaxis(3,2,2,'MarginLeft',0.05,'MarginRight',0.01)
-% hold on
-% for i=1:T
-%     plot(rplot(i,:),c2plot(i,:))
-% end
-% hold off
-% xlabel('radius r (mm)')
-% ylabel('c2 (IPAs)')
-% set(gca,'XLim',[0,mvgbdy(end)+5*dr],'YLim',ylims_c1)
-% 
-% subaxis(3,2,3,'MarginLeft',0.05,'MarginRight',0.01)
-% hold on
-% for i=1:T
-%     plot(rplot(i,:),c1plot(i,:))%,'Color',co(i,:))
-% end
-% for i=1:T
-%     plot(rplot(i,:),c2plot(i,:),'--')%,'Color',co(i,:))
-% end
-% hold off
-% xlabel('radius r (mm)')
-% ylabel('Solid: c1 (APCs), Dashed: c2 (IPAs)')
-% set(gca,'XLim',[0,mvgbdy(end)+5*dr])
-% 
-% subaxis(3,2,4,'MarginTop',0.03,'MarginBottom',0.05)
-% plot(t,mvgbdy,'-o')
-% xlabel('t (hr)')
-% ylabel('moving boundary s(t) (mm)')
-% 
-% subaxis(3,2,5,'MarginTop',0.03,'MarginBottom',0.05)
-% plot(t,thickness,'-o')
-% xlabel('t (hr)')
-% ylabel('total retinal thickness (mm)')
-% 
-% subaxis(3,2,6)
-% plot(thickness,PO2,'-o')
-% xlabel('total retinal thickness (mm)')
-% ylabel('PO2 (mmHg)')
-% 
-% set(gcf,'Units','inches','Position',[2,2,12,8],'PaperPositionMode','auto')
-% % legend(['t=',num2str(tplot(1))],['t=',num2str(tplot(2))],...
-% %     ['t=',num2str(tplot(3))],['t=',num2str(tplot(4))],...
-% %     ['t=',num2str(tplot(5))])
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% plotting %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[PO2,thickness] = oxygen(t,r);
+
+T = length(t);
+numcurvesplot = 10;
+if T<=numcurvesplot
+    ind = 1:T;
+else
+    ind = 1:floor(T/numcurvesplot):T;
+%     ind = 1:10;
+end
+
+%%% color order
+co = [0    0.4470    0.7410
+    0.8500    0.3250    0.0980
+    0.9290    0.6940    0.1250
+    0.4940    0.1840    0.5560
+    0.4660    0.6740    0.1880
+    0.3010    0.7450    0.9330
+    0.6350    0.0780    0.1840];
+
+%%% make moving boundary sharp
+c1plot = zeros(T,R+1);
+c2plot = zeros(T,R+1);
+rplot = zeros(T,R+1);
+for i = 1:T
+    c1plot(i,:) = [c1(i,1:j_init+(i-1)) , zeros(1,R+1-(j_init+(i-1)))];
+    c2plot(i,:) = [c2(i,1:j_init+(i-1)) , zeros(1,R+1-(j_init+(i-1)))];
+    
+    rplot(i,:) = [r(1:j_init+(i-1)) , r(j_init+(i-1)) , r(j_init+i:end)];
+end
+
+figure
+subaxis(3,2,1,'MarginLeft',0.05,'MarginRight',0.01,'MarginTop',0.03,'MarginBottom',0.05)
+hold on
+for i=1:T
+    plot(rplot(i,:),c1plot(i,:))
+end
+hold off
+xlabel('radius r (mm)')
+ylabel('c1 (APCs)')
+set(gca,'XLim',[0,mvgbdy(end)+5*dr])
+ylims_c1 = get(gca,'YLim');
+
+subaxis(3,2,2,'MarginLeft',0.05,'MarginRight',0.01)
+hold on
+for i=1:T
+    plot(rplot(i,:),c2plot(i,:))
+end
+hold off
+xlabel('radius r (mm)')
+ylabel('c2 (IPAs)')
+set(gca,'XLim',[0,mvgbdy(end)+5*dr],'YLim',ylims_c1)
+
+subaxis(3,2,3,'MarginLeft',0.05,'MarginRight',0.01)
+hold on
+for i=1:T
+    plot(rplot(i,:),c1plot(i,:))%,'Color',co(i,:))
+end
+for i=1:T
+    plot(rplot(i,:),c2plot(i,:),'--')%,'Color',co(i,:))
+end
+hold off
+xlabel('radius r (mm)')
+ylabel('Solid: c1 (APCs), Dashed: c2 (IPAs)')
+set(gca,'XLim',[0,mvgbdy(end)+5*dr])
+
+subaxis(3,2,4,'MarginTop',0.03,'MarginBottom',0.05)
+plot(t,mvgbdy,'-o')
+xlabel('t (hr)')
+ylabel('moving boundary s(t) (mm)')
+
+subaxis(3,2,5,'MarginTop',0.03,'MarginBottom',0.05)
+plot(t,thickness,'-o')
+xlabel('t (hr)')
+ylabel('total retinal thickness (mm)')
+
+subaxis(3,2,6)
+plot(thickness,PO2,'-o')
+xlabel('total retinal thickness (mm)')
+ylabel('PO2 (mmHg)')
+
+set(gcf,'Units','inches','Position',[2,2,12,8],'PaperPositionMode','auto')
+% legend(['t=',num2str(tplot(1))],['t=',num2str(tplot(2))],...
+%     ['t=',num2str(tplot(3))],['t=',num2str(tplot(4))],...
+%     ['t=',num2str(tplot(5))])
 % 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % figure
