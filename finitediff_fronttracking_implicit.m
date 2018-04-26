@@ -35,7 +35,7 @@ Tprimeatce = Tderivative(ce,kappa,cmin,rbar); % T'(ce)
 dr = 0.01;
 
 rmax = 5; %%% max radius (mm) (estimate rat retinal radius = 4.1 mm)
-tmax = 1*24; %%% max time (hr) (7 days = 168 hr)
+tmax = 3*24; %%% max time (hr) (7 days = 168 hr)
 
 r = 0:dr:rmax;
 R = length(r);
@@ -45,7 +45,7 @@ tol = 10^(-6); % tolerance for predictor-corrector scheme
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%% initial conditions %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% moving boundary location
-s = 1;%10*dr;
+s = 0.5;%10*dr;
 
 if abs(s/dr - round(s/dr))>2*eps
     error('error specifying s(0): moving boundary must be located on grid node');
@@ -255,13 +255,23 @@ xlabel('t (hr)')
 ylabel('moving boundary s(t) (mm)')
 
 subaxis(3,2,5,'MarginTop',0.03,'MarginBottom',0.05)
-plot(t,thickness,'-o')
-xlabel('t (hr)')
+if size(thickness,1)==1 || size(thickness,2)==1
+    plot(t,thickness,'-o')
+    xlabel('t (hr)')
+else
+    plot(r,thickness)
+    xlabel('radius r (mm)')
+end
 ylabel('total retinal thickness (mm)')
 
 subaxis(3,2,6)
-plot(thickness,PO2,'-o')
-xlabel('total retinal thickness (mm)')
+if size(thickness,1)==1 || size(thickness,2)==1
+    plot(thickness,PO2,'-o')
+    xlabel('total retinal thickness (mm)')
+else
+    plot(r,PO2)
+    xlabel('radius r (mm)')
+end
 ylabel('PO2 (mmHg)')
 
 set(gcf,'Units','inches','Position',[2,2,12,8],'PaperPositionMode','auto')

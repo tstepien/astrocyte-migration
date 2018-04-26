@@ -12,9 +12,17 @@ function [PO2,thickness] = oxygen(t,r)
 tday = t/24;
 
 %%% radial thickness (in microns) where tday is number of days since E15
-thickness = 14.83 * tday + 85;
-%%% convert to mm
-thickness = thickness * 0.001;
+% % % thickness = 14.83 * tday + 85;
+% % % %%% convert to mm
+% % % thickness = thickness * 0.001;
+
+
+%%% plus convert from micron to mm
+thickness_peripheral = (13.77 * tday + 72.8) * 0.001;
+thickness_origin = (14.33 * tday + 98.78) * 0.001;
+width_retina = (414.17 * tday + 1029.17) * 0.001;
+thickness = ( (thickness_peripheral - thickness_origin)./width_retina .* r ...
+    + thickness_origin ) .* (r<width_retina);
 
 %%% parameters for partial pressure of O2
 Dalpha = 4.73*10^(-10); % cm^3 O2/cm/s/mmHg
@@ -35,8 +43,12 @@ M0 = M0 * (60/100*0.1^3); % cm^3 O2/hr
 %     sq_check2 = sqrt(check2)
 
 %%% partial pressure of O2
-ind = thickness <= sqrt(2*P0*Dalpha/M0);
-PO2 = ( P0 - M0/(2*Dalpha)*thickness.^2 ) .*ind * ones(size(r));
+ind = (0 < thickness) & (thickness <= sqrt(2*P0*Dalpha/M0));
+if length(thickness)==1
+    PO2 = ( P0 - M0/(2*Dalpha)*thickness.^2 ) .*ind .* ones(size(r));
+else
+    PO2 = ( P0 - M0/(2*Dalpha)*thickness.^2 ) .*ind;
+end
 
 %     plot(thickness,PO2)
 %     xlabel('retinal thickness (mm)')
