@@ -275,38 +275,38 @@ end
 ylabel('PO2 (mmHg)')
 
 set(gcf,'Units','inches','Position',[2,2,12,8],'PaperPositionMode','auto')
-% legend(['t=',num2str(tplot(1))],['t=',num2str(tplot(2))],...
-%     ['t=',num2str(tplot(3))],['t=',num2str(tplot(4))],...
-%     ['t=',num2str(tplot(5))])
-% 
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% figure
-% subaxis(2,2,1,'MarginLeft',0.05,'MarginRight',0.01,'MarginTop',0.03,'MarginBottom',0.05)
-% plot(r,vel_cir)
-% xlabel('r')
-% ylabel('circumferential velocity')
-% set(gca,'XLim',[0,mvgbdy(end)+5*dr])
-% 
-% subaxis(2,2,2,'MarginLeft',0.05,'MarginRight',0.01)
-% plot(r,vel_rad)
-% xlabel('r')
-% ylabel('radial velocity')
-% set(gca,'XLim',[0,mvgbdy(end)+5*dr])
-% 
-% subaxis(2,2,3,'MarginTop',0.03,'MarginBottom',0.05)
-% plot(r,vel_cir+vel_rad)
-% xlabel('r')
-% ylabel('circumferential + radial velocity')
-% set(gca,'XLim',[0,mvgbdy(end)+5*dr])
-% 
-% subaxis(2,2,4,'MarginTop',0.03,'MarginBottom',0.05)
-% plot(r,vel_cir.*r)
-% xlabel('r')
-% ylabel('velocity')
-% set(gca,'XLim',[0,mvgbdy(end)+5*dr])
-% 
-% 
-% set(gcf,'Units','inches','Position',[2,2,12,8],'PaperPositionMode','auto')
+% % % legend(['t=',num2str(tplot(1))],['t=',num2str(tplot(2))],...
+% % %     ['t=',num2str(tplot(3))],['t=',num2str(tplot(4))],...
+% % %     ['t=',num2str(tplot(5))])
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+figure
+subaxis(2,2,1,'MarginLeft',0.05,'MarginRight',0.01,'MarginTop',0.03,'MarginBottom',0.05)
+plot(r,vel_cir)
+xlabel('r')
+ylabel('circumferential velocity')
+set(gca,'XLim',[0,mvgbdy(end)+5*dr])
+
+subaxis(2,2,2,'MarginLeft',0.05,'MarginRight',0.01)
+plot(r,vel_rad)
+xlabel('r')
+ylabel('radial velocity')
+set(gca,'XLim',[0,mvgbdy(end)+5*dr])
+
+subaxis(2,2,3,'MarginTop',0.03,'MarginBottom',0.05)
+plot(r,vel_cir+vel_rad)
+xlabel('r')
+ylabel('circumferential + radial velocity')
+set(gca,'XLim',[0,mvgbdy(end)+5*dr])
+
+subaxis(2,2,4,'MarginTop',0.03,'MarginBottom',0.05)
+plot(r,vel_cir.*r)
+xlabel('r')
+ylabel('velocity')
+set(gca,'XLim',[0,mvgbdy(end)+5*dr])
+
+
+set(gcf,'Units','inches','Position',[2,2,12,8],'PaperPositionMode','auto')
 
 
 %%%%%%%%%%%%%%%%%%%%%% testing: conservation of mass %%%%%%%%%%%%%%%%%%%%%%
