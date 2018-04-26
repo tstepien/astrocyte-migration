@@ -13,10 +13,10 @@ Pm = 10; % (mmHg)
 
 %%% astrocyte parameters
 kappa = 1;
-mu = 0.0001;
-alpha1 = 0.028; %%% (/hr)
-alpha2 = 0.010; %%% (/hr)
-beta = 0.0525; %%% (/hr)
+mu = 0.1;
+alpha1 = 0.1; %%% (/hr)
+alpha2 = 0.1; %%% (/hr)
+beta = 0.2; %%% (/hr)
 gamma1 = 0;%0;
 gamma2 = 0;%0.5;
 
@@ -35,7 +35,7 @@ Tprimeatce = Tderivative(ce,kappa,cmin,rbar); % T'(ce)
 dr = 0.01;
 
 rmax = 5; %%% max radius (mm) (estimate rat retinal radius = 4.1 mm)
-tmax = 3*24; %%% max time (hr) (7 days = 168 hr)
+tmax = 2*24; %%% max time (hr) (7 days = 168 hr)
 
 r = 0:dr:rmax;
 R = length(r);
@@ -239,11 +239,11 @@ set(gca,'XLim',[0,mvgbdy(end)+5*dr],'YLim',ylims_c1)
 subaxis(3,2,3,'MarginLeft',0.05,'MarginRight',0.01)
 hold on
 for i=1:T
-    plot(rplot(i,:),c1plot(i,:))%,'Color',co(i,:))
+    plot(rplot(i,:),c1plot(i,:)+c2plot(i,:))%,'Color',co(i,:))
 end
-for i=1:T
-    plot(rplot(i,:),c2plot(i,:),'--')%,'Color',co(i,:))
-end
+% for i=1:T
+%     plot(rplot(i,:),c2plot(i,:),'--')%,'Color',co(i,:))
+% end
 hold off
 xlabel('radius r (mm)')
 ylabel('Solid: c1 (APCs), Dashed: c2 (IPAs)')
