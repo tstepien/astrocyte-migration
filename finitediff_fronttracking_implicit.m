@@ -14,8 +14,8 @@ Pm = 10; % (mmHg)
 %%% astrocyte parameters
 kappa = 1;
 mu = 0.1;
-alpha1 = 0.1; %%% (/hr)
-alpha2 = 0.1; %%% (/hr)
+alpha1 = 0.08; %%% (/hr)
+alpha2 = 0.06; %%% (/hr)
 beta = 0.2; %%% (/hr)
 gamma1 = 0;%0;
 gamma2 = 0;%0.5;
@@ -32,10 +32,10 @@ ce = densityatbdy(Te,kappa,cmin,rbar); % c1+c2 on boundary
 Tprimeatce = Tderivative(ce,kappa,cmin,rbar); % T'(ce)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% mesh %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-dr = 0.01;
+dr = 0.1;
 
 rmax = 5; %%% max radius (mm) (estimate rat retinal radius = 4.1 mm)
-tmax = 2*24; %%% max time (hr) (7 days = 168 hr)
+tmax = 7*24; %%% max time (hr) (7 days = 168 hr)
 
 r = 0:dr:rmax;
 R = length(r);
@@ -214,29 +214,32 @@ for i = 1:T
     rplot(i,:) = [r(1:j_init+(i-1)) , r(j_init+(i-1)) , r(j_init+i:end)];
 end
 
+fslabel = 16;
+fsticks = 14;
+
 figure
-subaxis(3,2,1,'MarginLeft',0.05,'MarginRight',0.01,'MarginTop',0.03,'MarginBottom',0.05)
+subaxis(2,3,1,'MarginLeft',0.055,'MarginRight',0.01,'MarginTop',0.03,'MarginBottom',0.15)
 hold on
 for i=1:T
     plot(rplot(i,:),c1plot(i,:))
 end
 hold off
-xlabel('radius r (mm)')
-ylabel('c1 (APCs)')
-set(gca,'XLim',[0,mvgbdy(end)+5*dr])
+xlabel('radius r (mm)','FontSize',fslabel)
+ylabel('APCs (cells/mm^2)','FontSize',fslabel)
+set(gca,'XLim',[0,mvgbdy(end)+5*dr],'FontSize',fsticks)
 ylims_c1 = get(gca,'YLim');
 
-subaxis(3,2,2,'MarginLeft',0.05,'MarginRight',0.01)
+subaxis(2,3,2,'MarginLeft',0.06,'MarginRight',0.01)
 hold on
 for i=1:T
     plot(rplot(i,:),c2plot(i,:))
 end
 hold off
-xlabel('radius r (mm)')
-ylabel('c2 (IPAs)')
-set(gca,'XLim',[0,mvgbdy(end)+5*dr],'YLim',ylims_c1)
+xlabel('radius r (mm)','FontSize',fslabel)
+ylabel('IPAs (cells/mm^2)','FontSize',fslabel)
+set(gca,'XLim',[0,mvgbdy(end)+5*dr],'FontSize',fsticks)%,'YLim',ylims_c1)
 
-subaxis(3,2,3,'MarginLeft',0.05,'MarginRight',0.01)
+subaxis(2,3,3,'MarginLeft',0.06,'MarginRight',0.01)
 hold on
 for i=1:T
     plot(rplot(i,:),c1plot(i,:)+c2plot(i,:))%,'Color',co(i,:))
@@ -245,36 +248,40 @@ end
 %     plot(rplot(i,:),c2plot(i,:),'--')%,'Color',co(i,:))
 % end
 hold off
-xlabel('radius r (mm)')
-ylabel('Solid: c1 (APCs), Dashed: c2 (IPAs)')
-set(gca,'XLim',[0,mvgbdy(end)+5*dr])
+xlabel('radius r (mm)','FontSize',fslabel)
+% ylabel('Solid: c1 (APCs), Dashed: c2 (IPAs)')
+ylabel('APCs + IPAs','FontSize',fslabel)
+set(gca,'XLim',[0,mvgbdy(end)+5*dr],'FontSize',fsticks)
 
-subaxis(3,2,4,'MarginTop',0.03,'MarginBottom',0.05)
-plot(t,mvgbdy,'-o')
-xlabel('t (hr)')
-ylabel('moving boundary s(t) (mm)')
+subaxis(2,3,4,'MarginTop',0.03,'MarginBottom',0.08)
+plot(t/24,mvgbdy,'-o')
+xlabel('t (days)','FontSize',fslabel)
+ylabel('moving boundary (mm)','FontSize',fslabel)
+set(gca,'FontSize',fsticks)
 
-subaxis(3,2,5,'MarginTop',0.03,'MarginBottom',0.05)
+subaxis(2,3,5,'MarginTop',0.03,'MarginBottom',0.08)
 if size(thickness,1)==1 || size(thickness,2)==1
-    plot(t,thickness,'-o')
-    xlabel('t (hr)')
+    plot(t/24,thickness,'-o')
+    xlabel('t (days)','FontSize',fslabel)
 else
     plot(r,thickness)
-    xlabel('radius r (mm)')
+    xlabel('radius r (mm)','FontSize',fslabel)
 end
-ylabel('total retinal thickness (mm)')
+ylabel('average total retinal thickness (mm)','FontSize',fslabel)
+set(gca,'FontSize',fsticks)
 
-subaxis(3,2,6)
+subaxis(2,3,6)
 if size(thickness,1)==1 || size(thickness,2)==1
     plot(thickness,PO2,'-o')
-    xlabel('total retinal thickness (mm)')
+    xlabel('average total retinal thickness (mm)','FontSize',fslabel)
 else
     plot(r,PO2)
-    xlabel('radius r (mm)')
+    xlabel('radius r (mm)','FontSize',fslabel)
 end
-ylabel('PO2 (mmHg)')
+ylabel('PO_2 (mmHg)','FontSize',fslabel)
+set(gca,'FontSize',fsticks)
 
-set(gcf,'Units','inches','Position',[2,2,12,8],'PaperPositionMode','auto')
+set(gcf,'Units','inches','Position',[2,2,16,8],'PaperPositionMode','auto')
 % legend(['t=',num2str(tplot(1))],['t=',num2str(tplot(2))],...
 %     ['t=',num2str(tplot(3))],['t=',num2str(tplot(4))],...
 %     ['t=',num2str(tplot(5))])

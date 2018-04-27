@@ -49,7 +49,6 @@ g11 = alpha1 * PO2./(Pm+PO2) - beta * Pm./(Pm+PO2) - gamma1; %mult by c1
 g22 = alpha2 * PO2./(Pm+PO2) - gamma2; %mult by c2
 g21 = beta * Pm./(Pm+PO2); %mult by c1
 
-
 % if strcmp(whatstep,'corrector')==1
 %     [PO2,g11,g21,g22]
 % end
@@ -140,6 +139,10 @@ c1_new = [c_new(1:j+1) , zeros(1,R-(j+1))];
 c2_new = [c_new(j+2:end-1) , zeros(1,R-(j+1))];
 
 c_newT = c_new(1:end-1)';
+
+% if g11(1)<0
+%     keyboard
+% end
 
 
 % if strcmp(whatstep,'predictor')==1
