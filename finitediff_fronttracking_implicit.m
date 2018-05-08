@@ -113,7 +113,7 @@ while tcurr < tmax && j<R-1
         
         %%%%%%%%%%%%%%%%%%%%%%%%% corrector step %%%%%%%%%%%%%%%%%%%%%%%%%%
         
-        bb = 1/2;
+        bb = 1;%1/2;
         k_hat = c1_hat + c2_hat;
         if s==0
             dt_c = mu/Tprimeatce * dr / ( ...
