@@ -32,7 +32,7 @@ ce = densityatbdy(Te,kappa,cmin,rbar); % c1+c2 on boundary
 Tprimeatce = Tderivative(ce,kappa,cmin,rbar); % T'(ce)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% mesh %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-dr = 0.1;
+dr = 0.01;
 
 rmax = 5; %%% max radius (mm) (estimate rat retinal radius = 4.1 mm)
 tmax = 7*24; %%% max time (hr) (7 days = 168 hr)
@@ -221,7 +221,7 @@ figure
 subaxis(2,3,1,'MarginLeft',0.055,'MarginRight',0.01,'MarginTop',0.03,'MarginBottom',0.15)
 hold on
 for i=1:T
-    plot(rplot(i,:),c1plot(i,:))
+    plot(rplot(i,ind),c1plot(i,ind))
 end
 hold off
 xlabel('radius r (mm)','FontSize',fslabel)
@@ -232,7 +232,7 @@ ylims_c1 = get(gca,'YLim');
 subaxis(2,3,2,'MarginLeft',0.06,'MarginRight',0.01)
 hold on
 for i=1:T
-    plot(rplot(i,:),c2plot(i,:))
+    plot(rplot(i,ind),c2plot(i,ind))
 end
 hold off
 xlabel('radius r (mm)','FontSize',fslabel)
@@ -242,7 +242,7 @@ set(gca,'XLim',[0,mvgbdy(end)+5*dr],'FontSize',fsticks)%,'YLim',ylims_c1)
 subaxis(2,3,3,'MarginLeft',0.06,'MarginRight',0.01)
 hold on
 for i=1:T
-    plot(rplot(i,:),c1plot(i,:)+c2plot(i,:))%,'Color',co(i,:))
+    plot(rplot(i,ind),c1plot(i,ind)+c2plot(i,ind))%,'Color',co(i,:))
 end
 % for i=1:T
 %     plot(rplot(i,:),c2plot(i,:),'--')%,'Color',co(i,:))
@@ -287,33 +287,33 @@ set(gcf,'Units','inches','Position',[2,2,16,8],'PaperPositionMode','auto')
 %     ['t=',num2str(tplot(5))])
 % 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% figure
-% subaxis(2,2,1,'MarginLeft',0.05,'MarginRight',0.01,'MarginTop',0.03,'MarginBottom',0.05)
-% plot(r,vel_cir)
-% xlabel('r')
-% ylabel('circumferential velocity')
-% set(gca,'XLim',[0,mvgbdy(end)+5*dr])
-% 
-% subaxis(2,2,2,'MarginLeft',0.05,'MarginRight',0.01)
-% plot(r,vel_rad)
-% xlabel('r')
-% ylabel('radial velocity')
-% set(gca,'XLim',[0,mvgbdy(end)+5*dr])
-% 
-% subaxis(2,2,3,'MarginTop',0.03,'MarginBottom',0.05)
-% plot(r,vel_cir+vel_rad)
-% xlabel('r')
-% ylabel('circumferential + radial velocity')
-% set(gca,'XLim',[0,mvgbdy(end)+5*dr])
-% 
-% subaxis(2,2,4,'MarginTop',0.03,'MarginBottom',0.05)
-% plot(r,vel_cir.*r)
-% xlabel('r')
-% ylabel('velocity')
-% set(gca,'XLim',[0,mvgbdy(end)+5*dr])
-% 
-% 
-% set(gcf,'Units','inches','Position',[2,2,12,8],'PaperPositionMode','auto')
+figure
+subaxis(2,2,1,'MarginLeft',0.05,'MarginRight',0.01,'MarginTop',0.03,'MarginBottom',0.05)
+plot(r,vel_cir)
+xlabel('r')
+ylabel('circumferential velocity')
+set(gca,'XLim',[0,mvgbdy(end)+5*dr])
+
+subaxis(2,2,2,'MarginLeft',0.05,'MarginRight',0.01)
+plot(r,vel_rad)
+xlabel('r')
+ylabel('radial velocity')
+set(gca,'XLim',[0,mvgbdy(end)+5*dr])
+
+subaxis(2,2,3,'MarginTop',0.03,'MarginBottom',0.05)
+plot(r,vel_cir+vel_rad)
+xlabel('r')
+ylabel('circumferential + radial velocity')
+set(gca,'XLim',[0,mvgbdy(end)+5*dr])
+
+subaxis(2,2,4,'MarginTop',0.03,'MarginBottom',0.05)
+plot(r,vel_cir.*r)
+xlabel('r')
+ylabel('velocity')
+set(gca,'XLim',[0,mvgbdy(end)+5*dr])
+
+
+set(gcf,'Units','inches','Position',[2,2,12,8],'PaperPositionMode','auto')
 
 
 %%%%%%%%%%%%%%%%%%%%%% testing: conservation of mass %%%%%%%%%%%%%%%%%%%%%%
