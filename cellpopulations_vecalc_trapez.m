@@ -1,5 +1,5 @@
-function [c1_new,c2_new] = cellpopulations(j,c1_old,c2_old,k_new,PO2,dt,...
-    r,Pm,kappa,mu,alpha1,alpha2,beta,gamma1,gamma2,cmin,rbar,ce)
+function [c1_new,c2_new] = cellpopulations_vecalc_trapez(j,c1_old,c2_old,k_new,PO2,dt,...
+    r,ve_old,Pm,kappa,mu,alpha1,alpha2,beta,gamma1,gamma2,cmin,rbar,ce)
 % [c1_new,c2_new] = cellpopulations(j,c1_old,c2_old,k_hat,PO2,dt,...
 %     r,Pm,kappa,mu,alpha1,alpha2,beta,gamma1,gamma2,cmin,rbar,ce)
 %
@@ -54,7 +54,7 @@ upperdiag11 = [dt/(mu*dr^2)*Tp(1)*(k_new(2)-k_new(1)) , ...
     omega.*Psi(2:j)];
 maindiag11 = [1 + dt/(mu*dr^2)*Tp(1)*(k_new(2)-k_new(1)) - dt*g11(1) , ...
     1 + omega.*(Psi(2:j) - Psi(1:j-1)) - dt*g11(2:j) , ...
-    1 - dt*g11(j+1)];
+    1 + dt/(2*ce)*((g11(j)+g21(j))*c1_old(j)+g22(j)*c2_old(j)) - dt/2*g11(j)];
 lowerdiag11 = [-omega.*Psi(1:j-1) , ...
     0];
 
@@ -62,13 +62,11 @@ block11 = diag(maindiag11) + diag(upperdiag11,1) + diag(lowerdiag11,-1);
 
 %%% block 12
 block12 = zeros(size(block11));
-block12 = [block12 , [zeros(j,1) ; dt*c1_old(j)] ]; % add on right-most column
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% c2 - IPA %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% block 21
-block21 = diag(-dt*g21(1:j+1));
-block21 = [block21 ; [zeros(1,j) , 1] ]; % add on bottom row
+block21 = diag([-dt*g21(1:j) , -dt/2*g21(j)]);
 
 
 %%% block 22
@@ -76,13 +74,11 @@ upperdiag22 = [dt/(mu*dr^2)*Tp(1)*(k_new(2)-k_new(1)) , ...
     omega.*Psi(2:j)];
 maindiag22 = [1 + dt/(mu*dr^2)*Tp(1)*(k_new(2)-k_new(1)) - dt*g22(1) , ...
     1 + omega .* (Psi(2:j) - Psi(1:j-1)) - dt*g22(2:j) , ...
-    1 - dt*g22(j+1)];
+    1 + dt/(2*ce)*((g11(j)+g21(j))*c1_old(j)+g22(j)*c2_old(j)) - dt/2*g22(j)];
 lowerdiag22 = [-omega.*Psi(1:j-1) , ...
     0];
 
 block22 = diag(maindiag22) + diag(upperdiag22,1) + diag(lowerdiag22,-1);
-block22 = [block22 ; [zeros(1,j) , 1] ]; % add on bottom row
-block22 = [block22 , [zeros(j,1) ; dt*c2_old(j) ; 0] ]; % add on right-most column
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%% construct matrix %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -90,14 +86,16 @@ block22 = [block22 , [zeros(j,1) ; dt*c2_old(j) ; 0] ]; % add on right-most colu
 thetamatrix = [block11 , block12 ; ...
     block21 , block22];
     
-bvector = [c1_old(1:j)' ; c1_old(j) ; ...
-    c2_old(1:j)' ; c2_old(j) ; ce] ;
+bvector = [c1_old(1:j)' ; ...
+    c1_old(j)*(1 - dt/2*ve_old + dt/2*g11(j)); ...
+    c2_old(1:j)' ; ...
+    c2_old(j)*(1 - dt/2*ve_old + dt/2*g22(j)) + c1_old(j)*dt/2*g21(j)] ;
     
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% solve system %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 c_new = ( thetamatrix \ bvector )';
     
 c1_new = [c_new(1:j+1) , zeros(1,R-(j+1))];
-c2_new = [c_new(j+2:end-1) , zeros(1,R-(j+1))];
+c2_new = [c_new(j+2:end) , zeros(1,R-(j+1))];
 
 c_newT = c_new(1:end-1)';
 

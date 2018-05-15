@@ -107,10 +107,19 @@ while tcurr < tmax && j<R-1
     dt_c = 0;
     while abs(dt_p-dt_c)>=tol
         PO2 = oxygen(tcurr + dt_p,r);
-    
-        [c1_hat,c2_hat] = cellpopulations(j,c1_old,c2_old,PO2,dt_p,r,Pm,...
-            kappa,mu,alpha1,alpha2,beta,gamma1,gamma2,cmin,rbar,ce);
         
+        ve_old = ve_calc(j,tcurr,r,c1_old,c2_old,Pm,alpha1,alpha2,gamma1,gamma2,ce);
+        
+        k_hat = cellpops_sum(j,c1_old,c2_old,PO2,dt_p,r,Pm,kappa,mu,...
+            alpha1,alpha2,gamma1,gamma2,cmin,rbar,ce);
+    
+%         [c1_hat,c2_hat] = cellpopulations_may14(j,c1_old,c2_old,PO2,dt_p,r,Pm,...
+%             kappa,mu,alpha1,alpha2,beta,gamma1,gamma2,cmin,rbar,ce);
+        [c1_hat,c2_hat] = cellpopulations(j,c1_old,c2_old,k_hat,PO2,dt_p,...
+            r,Pm,kappa,mu,alpha1,alpha2,beta,gamma1,gamma2,cmin,rbar,ce);
+%         [c1_hat,c2_hat] = cellpopulations_vecalc_trapez(j,c1_old,c2_old,k_hat,PO2,dt_p,...
+%             r,ve_old,Pm,kappa,mu,alpha1,alpha2,beta,gamma1,gamma2,cmin,rbar,ce);
+        stop
         %%%%%%%%%%%%%%%%%%%%%%%%% corrector step %%%%%%%%%%%%%%%%%%%%%%%%%%
         
         bb = 1;%1/2;
@@ -146,12 +155,15 @@ while tcurr < tmax && j<R-1
     end
     
     %%%%%%%%%%%%%%%%%%%%%%%% solve next time step %%%%%%%%%%%%%%%%%%%%%%%%%
-    PO2 = oxygen(tcurr + dt_c,r);
-    
     whatstep = 'corrector';
     
-    [c1_new,c2_new] = cellpopulations(j,c1_old,c2_old,PO2,dt_c,r,Pm,...
-        kappa,mu,alpha1,alpha2,beta,gamma1,gamma2,cmin,rbar,ce);
+    PO2 = oxygen(tcurr + dt_c,r);
+    
+    k_new = cellpops_sum(j,c1_old,c2_old,PO2,dt,r,Pm,kappa,mu,...
+        alpha1,alpha2,gamma1,gamma2,cmin,rbar,ce);
+    
+    [c1_new,c2_new] = cellpopulations(j,c1_old,c2_old,k_new,PO2,dt_c,...
+        r,Pm,kappa,mu,alpha1,alpha2,beta,gamma1,gamma2,cmin,rbar,ce);
     
     %%%%%%%%%%%%%%%%%%%%%% reset for next time step %%%%%%%%%%%%%%%%%%%%%%%
     j = j+1;
