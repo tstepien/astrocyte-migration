@@ -35,7 +35,7 @@ Tprimeatce = Tderivative(ce,kappa,cmin,rbar); % T'(ce)
 dr = 0.01;
 
 rmax = 5; %%% max radius (mm) (estimate rat retinal radius = 4.1 mm)
-tmax = 7*24; %%% max time (hr) (7 days = 168 hr)
+tmax = 0.1*24; %%% max time (hr) (7 days = 168 hr)
 
 r = 0:dr:rmax;
 R = length(r);
@@ -119,11 +119,11 @@ while tcurr < tmax && j<R-1
             r,Pm,kappa,mu,alpha1,alpha2,beta,gamma1,gamma2,cmin,rbar,ce);
 %         [c1_hat,c2_hat] = cellpopulations_vecalc_trapez(j,c1_old,c2_old,k_hat,PO2,dt_p,...
 %             r,ve_old,Pm,kappa,mu,alpha1,alpha2,beta,gamma1,gamma2,cmin,rbar,ce);
-        stop
+%         stop
         %%%%%%%%%%%%%%%%%%%%%%%%% corrector step %%%%%%%%%%%%%%%%%%%%%%%%%%
         
         bb = 1;%1/2;
-        k_hat = c1_hat + c2_hat;
+%         k_hat = c1_hat + c2_hat;
         if s==0
             dt_c = mu/Tprimeatce * dr / ( ...
                 bb*( k_hat(j+1) - k_hat(j) )/dr ...
@@ -159,7 +159,7 @@ while tcurr < tmax && j<R-1
     
     PO2 = oxygen(tcurr + dt_c,r);
     
-    k_new = cellpops_sum(j,c1_old,c2_old,PO2,dt,r,Pm,kappa,mu,...
+    k_new = cellpops_sum(j,c1_old,c2_old,PO2,dt_c,r,Pm,kappa,mu,...
         alpha1,alpha2,gamma1,gamma2,cmin,rbar,ce);
     
     [c1_new,c2_new] = cellpopulations(j,c1_old,c2_old,k_new,PO2,dt_c,...

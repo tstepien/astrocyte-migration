@@ -58,3 +58,5 @@ bvector = [k_old(1:j)' + dt*g' ; ce];
 k_new = ( thetamatrix \ bvector )';
 
 k_new = [k_new(1:j+1) , zeros(1,R-(j+1))];
+
+% keyboard

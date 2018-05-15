@@ -29,8 +29,12 @@ rhalf = (r(1:R-1)+r(2:R))/2;
 
 %%% initialize
 khalf = (k_new(1:R-1)+k_new(2:R))/2;
-Tp = Tderivative(khalf,kappa,cmin,rbar);
+k_old = c1_old+c2_old;
+khalf_old = (k_old(1:R-1)+k_old(2:R))/2;
+Tp = Tderivative(khalf_old,kappa,cmin,rbar);
 Psi = rhalf.*Tp.*diff(k_new);
+
+Psi(j) = interp1(rhalf(1:j-1),Psi(1:j-1),rhalf(j),'pchip','extrap');
 
 omega = dt./(2*mu*r(2:j)*dr^2);
 
@@ -52,9 +56,9 @@ g21 = beta * Pm./(Pm+PO2); %mult by c1
 %%% block 11
 upperdiag11 = [dt/(mu*dr^2)*Tp(1)*(k_new(2)-k_new(1)) , ...
     omega.*Psi(2:j)];
-maindiag11 = [1 + dt/(mu*dr^2)*Tp(1)*(k_new(2)-k_new(1)) - dt*g11(1) , ...
-    1 + omega.*(Psi(2:j) - Psi(1:j-1)) - dt*g11(2:j) , ...
-    1 - dt*g11(j+1)];
+maindiag11 = [1 + dt/(mu*dr^2)*Tp(1)*(k_new(2)-k_new(1)), ...% - dt*g11(1) , ...
+    1 + omega.*(Psi(2:j) - Psi(1:j-1)),...% - dt*g11(2:j) , ...
+    1 ];%- dt*g11(j+1)];
 lowerdiag11 = [-omega.*Psi(1:j-1) , ...
     0];
 
@@ -67,16 +71,16 @@ block12 = [block12 , [zeros(j,1) ; dt*c1_old(j)] ]; % add on right-most column
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% c2 - IPA %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% block 21
-block21 = diag(-dt*g21(1:j+1));
+block21 = diag(zeros(size(g21(1:j+1))));%-dt*g21(1:j+1));
 block21 = [block21 ; [zeros(1,j) , 1] ]; % add on bottom row
 
 
 %%% block 22
 upperdiag22 = [dt/(mu*dr^2)*Tp(1)*(k_new(2)-k_new(1)) , ...
     omega.*Psi(2:j)];
-maindiag22 = [1 + dt/(mu*dr^2)*Tp(1)*(k_new(2)-k_new(1)) - dt*g22(1) , ...
-    1 + omega .* (Psi(2:j) - Psi(1:j-1)) - dt*g22(2:j) , ...
-    1 - dt*g22(j+1)];
+maindiag22 = [1 + dt/(mu*dr^2)*Tp(1)*(k_new(2)-k_new(1)),...% - dt*g22(1) , ...
+    1 + omega .* (Psi(2:j) - Psi(1:j-1)), ...% - dt*g22(2:j) , ...
+    1 ];%- dt*g22(j+1)];
 lowerdiag22 = [-omega.*Psi(1:j-1) , ...
     0];
 
@@ -90,8 +94,9 @@ block22 = [block22 , [zeros(j,1) ; dt*c2_old(j) ; 0] ]; % add on right-most colu
 thetamatrix = [block11 , block12 ; ...
     block21 , block22];
     
-bvector = [c1_old(1:j)' ; c1_old(j) ; ...
-    c2_old(1:j)' ; c2_old(j) ; ce] ;
+bvector = [c1_old(1:j)' + dt*g11(1:j)'.*c1_old(1:j)' ; c1_old(j) ; ...
+    c2_old(1:j)' + dt*g22(1:j)'.*c2_old(1:j)' + dt*g21(1:j)'.*c1_old(1:j)'; ...
+    c2_old(j) ; ce] ;
     
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% solve system %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 c_new = ( thetamatrix \ bvector )';
@@ -105,7 +110,7 @@ c_newT = c_new(1:end-1)';
 %     keyboard
 % end
 
-keyboard
+% keyboard
 
 
 % if strcmp(whatstep,'predictor')==1
