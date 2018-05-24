@@ -16,7 +16,7 @@ kappa = 1;
 mu = 0.1;
 alpha1 = 0.08; %%% (/hr)
 alpha2 = 0.06; %%% (/hr)
-beta = 0.2; %%% (/hr)
+beta = 0;%0.2; %%% (/hr)
 gamma1 = 0;%0;
 gamma2 = 0;%0.5;
 
@@ -69,11 +69,13 @@ c2_init = zeros(1,R);
 
 c1_old = c1_init;
 c2_old = c2_init;
+k_old = c1_old + c2_old;
 
 %%%%%%%%%%%%%%%%%%%%%%% initialize final variables %%%%%%%%%%%%%%%%%%%%%%%%
 mvgbdy = s;
 c1 = c1_init;
 c2 = c2_init;
+k = k_old;
 t = tcurr;
 
 %%% subscript i is for space, j is for time (write in the order (j,i)) 
@@ -93,7 +95,6 @@ while tcurr < tmax && j<R-1
     whatstep = 'predictor';
     
     aa = 1;
-    k_old = c1_old + c2_old;
     if s==0
         dt_p = dr;
     elseif s==dr
@@ -119,11 +120,12 @@ while tcurr < tmax && j<R-1
             r,Pm,kappa,mu,alpha1,alpha2,beta,gamma1,gamma2,cmin,rbar,ce);
 %         [c1_hat,c2_hat] = cellpopulations_vecalc_trapez(j,c1_old,c2_old,k_hat,PO2,dt_p,...
 %             r,ve_old,Pm,kappa,mu,alpha1,alpha2,beta,gamma1,gamma2,cmin,rbar,ce);
+%         [c1_new,c2_new] = cellpopulations_changehalfnode(j,c1_old,c2_old,k_hat,PO2,dt_p,...
+%             r,Pm,kappa,mu,alpha1,alpha2,beta,gamma1,gamma2,cmin,rbar,ce)
 %         stop
         %%%%%%%%%%%%%%%%%%%%%%%%% corrector step %%%%%%%%%%%%%%%%%%%%%%%%%%
         
         bb = 1;%1/2;
-%         k_hat = c1_hat + c2_hat;
         if s==0
             dt_c = mu/Tprimeatce * dr / ( ...
                 bb*( k_hat(j+1) - k_hat(j) )/dr ...
@@ -171,11 +173,13 @@ while tcurr < tmax && j<R-1
     tcurr = tcurr + dt_c;
     c1_old = c1_new;
     c2_old = c2_new;
+    k_old = k_new;
     
     %%% save variables
     mvgbdy = [mvgbdy ; s];
     c1 = [c1 ; c1_new];
     c2 = [c2 ; c2_new];
+    k = [k ; k_new];
     t = [t ; tcurr];
     c1mb = [c1mb ; c1_new(j)];
     c2mb = [c2mb ; c2_new(j)];

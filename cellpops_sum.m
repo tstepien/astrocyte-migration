@@ -25,13 +25,15 @@ rhalf = (r(1:R-1)+r(2:R))/2;
 k_old = c1_old + c2_old;
 khalf = (k_old(1:R-1)+k_old(2:R))/2;
 Tp = Tderivative(khalf,kappa,cmin,rbar);
-Psi = rhalf.*khalf.*Tp;
+Psi = rhalf.*Tp.*khalf;
 
 %%% extrapolate Psi to get node j+1/2
 Psi(j) = interp1(rhalf(1:j-1),Psi(1:j-1),rhalf(j),'pchip','extrap');
 
 %%% cells at time step j are at mesh points 1:j
 %%% cells at time step j are at mesh points 1:j+1
+
+omega = 1./(mu*r(2:j)) * dt/dr^2;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% growth function %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 g = PO2(1:j)./(Pm+PO2(1:j)).*(alpha1*c1_old(1:j) + alpha2*c2_old(1:j)) ...
@@ -40,11 +42,11 @@ g = PO2(1:j)./(Pm+PO2(1:j)).*(alpha1*c1_old(1:j) + alpha2*c2_old(1:j)) ...
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%% construct matrix %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 upperdiag = [2/mu * dt/dr^2 * khalf(1)*Tp(1) , ...
-    1./(mu*r(2:j)) * dt/dr^2 .* Psi(2:j)];
+    omega .* Psi(2:j)];
 maindiag = [1 - 2/mu * dt/dr^2 * khalf(1)*Tp(1) , ...
-    1 - 1./(mu*r(2:j)) * dt/dr^2 .* ( Psi(2:j) + Psi(1:j-1) ) , ...
+    1 - omega .* ( Psi(2:j) + Psi(1:j-1) ) , ...
     1];
-lowerdiag = [1./(mu*r(2:j)) * dt/dr^2 .* Psi(1:j-1) , ...
+lowerdiag = [omega .* Psi(1:j-1) , ...
     0];
 
 thetamatrix = diag(maindiag) + diag(upperdiag,1) + diag(lowerdiag,-1);
