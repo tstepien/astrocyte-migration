@@ -14,9 +14,9 @@ Pm = 10; % (mmHg)
 %%% astrocyte parameters
 kappa = 1;
 mu = 0.1;
-alpha1 = 0.1; %%% (/hr)
-alpha2 = 0.1; %%% (/hr)
-beta = 0.2; %%% (/hr)
+alpha1 = 0.08; %%% (/hr)
+alpha2 = 0.06; %%% (/hr)
+beta = 0;%0.2; %%% (/hr)
 gamma1 = 0;%0;
 gamma2 = 0;%0.5;
 
@@ -35,7 +35,7 @@ Tprimeatce = Tderivative(ce,kappa,cmin,rbar); % T'(ce)
 dr = 0.01;
 
 rmax = 5; %%% max radius (mm) (estimate rat retinal radius = 4.1 mm)
-tmax = 2*24; %%% max time (hr) (7 days = 168 hr)
+tmax = 0.1*24; %%% max time (hr) (7 days = 168 hr)
 
 r = 0:dr:rmax;
 R = length(r);
@@ -69,11 +69,13 @@ c2_init = zeros(1,R);
 
 c1_old = c1_init;
 c2_old = c2_init;
+k_old = c1_old + c2_old;
 
 %%%%%%%%%%%%%%%%%%%%%%% initialize final variables %%%%%%%%%%%%%%%%%%%%%%%%
 mvgbdy = s;
 c1 = c1_init;
 c2 = c2_init;
+k = k_old;
 t = tcurr;
 
 %%% subscript i is for space, j is for time (write in the order (j,i)) 
@@ -93,7 +95,6 @@ while tcurr < tmax && j<R-1
     whatstep = 'predictor';
     
     aa = 1;
-    k_old = c1_old + c2_old;
     if s==0
         dt_p = dr;
     elseif s==dr
@@ -107,14 +108,24 @@ while tcurr < tmax && j<R-1
     dt_c = 0;
     while abs(dt_p-dt_c)>=tol
         PO2 = oxygen(tcurr + dt_p,r);
-    
-        [c1_hat,c2_hat] = cellpopulations(j,c1_old,c2_old,PO2,dt_p,r,Pm,...
-            kappa,mu,alpha1,alpha2,beta,gamma1,gamma2,cmin,rbar,ce);
         
+        ve_old = ve_calc(j,tcurr,r,c1_old,c2_old,Pm,alpha1,alpha2,gamma1,gamma2,ce);
+        
+        k_hat = cellpops_sum(j,c1_old,c2_old,PO2,dt_p,r,Pm,kappa,mu,...
+            alpha1,alpha2,gamma1,gamma2,cmin,rbar,ce);
+    
+%         [c1_hat,c2_hat] = cellpopulations_may14(j,c1_old,c2_old,PO2,dt_p,r,Pm,...
+%             kappa,mu,alpha1,alpha2,beta,gamma1,gamma2,cmin,rbar,ce);
+        [c1_hat,c2_hat] = cellpopulations(j,c1_old,c2_old,k_hat,PO2,dt_p,...
+            r,Pm,kappa,mu,alpha1,alpha2,beta,gamma1,gamma2,cmin,rbar,ce);
+%         [c1_hat,c2_hat] = cellpopulations_vecalc_trapez(j,c1_old,c2_old,k_hat,PO2,dt_p,...
+%             r,ve_old,Pm,kappa,mu,alpha1,alpha2,beta,gamma1,gamma2,cmin,rbar,ce);
+%         [c1_new,c2_new] = cellpopulations_changehalfnode(j,c1_old,c2_old,k_hat,PO2,dt_p,...
+%             r,Pm,kappa,mu,alpha1,alpha2,beta,gamma1,gamma2,cmin,rbar,ce)
+%         stop
         %%%%%%%%%%%%%%%%%%%%%%%%% corrector step %%%%%%%%%%%%%%%%%%%%%%%%%%
         
-        bb = 1/2;
-        k_hat = c1_hat + c2_hat;
+        bb = 1;%1/2;
         if s==0
             dt_c = mu/Tprimeatce * dr / ( ...
                 bb*( k_hat(j+1) - k_hat(j) )/dr ...
@@ -146,12 +157,15 @@ while tcurr < tmax && j<R-1
     end
     
     %%%%%%%%%%%%%%%%%%%%%%%% solve next time step %%%%%%%%%%%%%%%%%%%%%%%%%
-    PO2 = oxygen(tcurr + dt_c,r);
-    
     whatstep = 'corrector';
     
-    [c1_new,c2_new] = cellpopulations(j,c1_old,c2_old,PO2,dt_c,r,Pm,...
-        kappa,mu,alpha1,alpha2,beta,gamma1,gamma2,cmin,rbar,ce);
+    PO2 = oxygen(tcurr + dt_c,r);
+    
+    k_new = cellpops_sum(j,c1_old,c2_old,PO2,dt_c,r,Pm,kappa,mu,...
+        alpha1,alpha2,gamma1,gamma2,cmin,rbar,ce);
+    
+    [c1_new,c2_new] = cellpopulations(j,c1_old,c2_old,k_new,PO2,dt_c,...
+        r,Pm,kappa,mu,alpha1,alpha2,beta,gamma1,gamma2,cmin,rbar,ce);
     
     %%%%%%%%%%%%%%%%%%%%%% reset for next time step %%%%%%%%%%%%%%%%%%%%%%%
     j = j+1;
@@ -159,11 +173,13 @@ while tcurr < tmax && j<R-1
     tcurr = tcurr + dt_c;
     c1_old = c1_new;
     c2_old = c2_new;
+    k_old = k_new;
     
     %%% save variables
     mvgbdy = [mvgbdy ; s];
     c1 = [c1 ; c1_new];
     c2 = [c2 ; c2_new];
+    k = [k ; k_new];
     t = [t ; tcurr];
     c1mb = [c1mb ; c1_new(j)];
     c2mb = [c2mb ; c2_new(j)];
@@ -214,72 +230,79 @@ for i = 1:T
     rplot(i,:) = [r(1:j_init+(i-1)) , r(j_init+(i-1)) , r(j_init+i:end)];
 end
 
+fslabel = 16;
+fsticks = 14;
+
 figure
-subaxis(3,2,1,'MarginLeft',0.05,'MarginRight',0.01,'MarginTop',0.03,'MarginBottom',0.05)
+subaxis(2,3,1,'MarginLeft',0.055,'MarginRight',0.01,'MarginTop',0.03,'MarginBottom',0.15)
 hold on
 for i=1:T
-    plot(rplot(i,:),c1plot(i,:))
+    plot(rplot(i,ind),c1plot(i,ind))
 end
 hold off
-xlabel('radius r (mm)')
-ylabel('c1 (APCs)')
-set(gca,'XLim',[0,mvgbdy(end)+5*dr])
+xlabel('radius r (mm)','FontSize',fslabel)
+ylabel('APCs (cells/mm^2)','FontSize',fslabel)
+set(gca,'XLim',[0,mvgbdy(end)+5*dr],'FontSize',fsticks)
 ylims_c1 = get(gca,'YLim');
 
-subaxis(3,2,2,'MarginLeft',0.05,'MarginRight',0.01)
+subaxis(2,3,2,'MarginLeft',0.06,'MarginRight',0.01)
 hold on
 for i=1:T
-    plot(rplot(i,:),c2plot(i,:))
+    plot(rplot(i,ind),c2plot(i,ind))
 end
 hold off
-xlabel('radius r (mm)')
-ylabel('c2 (IPAs)')
-set(gca,'XLim',[0,mvgbdy(end)+5*dr],'YLim',ylims_c1)
+xlabel('radius r (mm)','FontSize',fslabel)
+ylabel('IPAs (cells/mm^2)','FontSize',fslabel)
+set(gca,'XLim',[0,mvgbdy(end)+5*dr],'FontSize',fsticks)%,'YLim',ylims_c1)
 
-subaxis(3,2,3,'MarginLeft',0.05,'MarginRight',0.01)
+subaxis(2,3,3,'MarginLeft',0.06,'MarginRight',0.01)
 hold on
 for i=1:T
-    plot(rplot(i,:),c1plot(i,:)+c2plot(i,:))%,'Color',co(i,:))
+    plot(rplot(i,ind),c1plot(i,ind)+c2plot(i,ind))%,'Color',co(i,:))
 end
 % for i=1:T
 %     plot(rplot(i,:),c2plot(i,:),'--')%,'Color',co(i,:))
 % end
 hold off
-xlabel('radius r (mm)')
-ylabel('Solid: c1 (APCs), Dashed: c2 (IPAs)')
-set(gca,'XLim',[0,mvgbdy(end)+5*dr])
+xlabel('radius r (mm)','FontSize',fslabel)
+% ylabel('Solid: c1 (APCs), Dashed: c2 (IPAs)')
+ylabel('APCs + IPAs','FontSize',fslabel)
+set(gca,'XLim',[0,mvgbdy(end)+5*dr],'FontSize',fsticks)
 
-subaxis(3,2,4,'MarginTop',0.03,'MarginBottom',0.05)
-plot(t,mvgbdy,'-o')
-xlabel('t (hr)')
-ylabel('moving boundary s(t) (mm)')
+subaxis(2,3,4,'MarginTop',0.03,'MarginBottom',0.08)
+plot(t/24,mvgbdy,'-o')
+xlabel('t (days)','FontSize',fslabel)
+ylabel('moving boundary (mm)','FontSize',fslabel)
+set(gca,'FontSize',fsticks)
 
-subaxis(3,2,5,'MarginTop',0.03,'MarginBottom',0.05)
+subaxis(2,3,5,'MarginTop',0.03,'MarginBottom',0.08)
 if size(thickness,1)==1 || size(thickness,2)==1
-    plot(t,thickness,'-o')
-    xlabel('t (hr)')
+    plot(t/24,thickness,'-o')
+    xlabel('t (days)','FontSize',fslabel)
 else
     plot(r,thickness)
-    xlabel('radius r (mm)')
+    xlabel('radius r (mm)','FontSize',fslabel)
 end
-ylabel('total retinal thickness (mm)')
+ylabel('average total retinal thickness (mm)','FontSize',fslabel)
+set(gca,'FontSize',fsticks)
 
-subaxis(3,2,6)
+subaxis(2,3,6)
 if size(thickness,1)==1 || size(thickness,2)==1
     plot(thickness,PO2,'-o')
-    xlabel('total retinal thickness (mm)')
+    xlabel('average total retinal thickness (mm)','FontSize',fslabel)
 else
     plot(r,PO2)
-    xlabel('radius r (mm)')
+    xlabel('radius r (mm)','FontSize',fslabel)
 end
-ylabel('PO2 (mmHg)')
+ylabel('PO_2 (mmHg)','FontSize',fslabel)
+set(gca,'FontSize',fsticks)
 
-set(gcf,'Units','inches','Position',[2,2,12,8],'PaperPositionMode','auto')
-% % % legend(['t=',num2str(tplot(1))],['t=',num2str(tplot(2))],...
-% % %     ['t=',num2str(tplot(3))],['t=',num2str(tplot(4))],...
-% % %     ['t=',num2str(tplot(5))])
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+set(gcf,'Units','inches','Position',[2,2,16,8],'PaperPositionMode','auto')
+% legend(['t=',num2str(tplot(1))],['t=',num2str(tplot(2))],...
+%     ['t=',num2str(tplot(3))],['t=',num2str(tplot(4))],...
+%     ['t=',num2str(tplot(5))])
+% 
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 figure
 subaxis(2,2,1,'MarginLeft',0.05,'MarginRight',0.01,'MarginTop',0.03,'MarginBottom',0.05)
 plot(r,vel_cir)
