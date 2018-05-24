@@ -34,10 +34,9 @@ khalf = (k_new(1:R-1)+k_new(2:R))/2;
 k_old = c1_old+c2_old;
 khalf_old = (k_old(1:R-1)+k_old(2:R))/2;
 kinterp = interp1(r,k_new,rhalf,'pchip');
-Tp = Tderivative(kinterp,kappa,cmin,rbar);
+Tp = Tderivative(khalf,kappa,cmin,rbar);
+%     Tp(j) = interp1(rhalf(1:j-1),Tp(1:j-1),rhalf(j),'pchip','extrap');
 Psi = rhalf.*Tp.*diff(k_new);
-
-keyboard
 
 % Psi(j) = interp1(rhalf(1:j-1),Psi(1:j-1),rhalf(j),'pchip','extrap');
 % Psi(j) = Psi(j-1)/2;
@@ -45,7 +44,7 @@ keyboard
 % Psi(j) = 1.81*10^-5;
 % Psi(j-1) = 1.79*10^-5;
 
-omega = 1./(2*mu*r(2:j)) * dt/dr^2;%dt./(2*mu*r(2:j)*dr^2);
+omega = 1./(2*mu*r(2:j)) * dt/dr^2;
 
 %%% cells at time step j are at mesh points 1:j
 %%% cells at time step j+1 are at mesh points 1:j+1
@@ -146,11 +145,13 @@ c_newT = c_new(1:end-1)';
 % end
 
 %%% check value of ve obtained
-[c_new(end) , (c1_old(j)-(1-dt*g11(j+1))*c1_new(j+1))/(dt*c1_old(j))]
+[c_new(end) , (c1_old(j)-(1-dt*g11(j+1))*c1_new(j+1))/(dt*c1_old(j)) , g11(j+1)]
 
 
 s=c1_new+c2_new;
-plot(r,s,r,k_new)
+figure
+plot(r,s,'-o',r,k_new,'-o')
+legend('c1+c1','k')
 
 keyboard
 
