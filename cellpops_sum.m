@@ -34,7 +34,7 @@ khalf = (k_old(1:R-1)+k_old(2:R))/2;
 
 rinterp = linspace(0,r(j),j+1);
 rinterp_half = (rinterp(1:end-1)+rinterp(2:end))/2;
-kinterp = [interp1(r(1:j),k_old(1:j),rinterp_half,'phip') , zeros(1,R-j-1)];
+kinterp = [interp1(r(1:j),k_old(1:j),rinterp_half,'pchip') , zeros(1,R-j-1)];
 Tp = Tderivative(kinterp,kappa,cmin,rbar);
 Psi = rhalf.*Tp.*kinterp;
 

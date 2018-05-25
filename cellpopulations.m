@@ -149,18 +149,25 @@ c_newT = c_new(1:end-1)';
 
 
 s=c1_new+c2_new;
-figure
-plot(r,s,'-o',r,k_new,'-o')
+% figure
+if dr<0.01
+    plot(r,s,'-o',r,k_new,'-o')
+else
+    hold on
+    plot(r,s,'Linewidth',1.5)
+    plot(r,k_new,'--','LineWidth',1.5)
+    hold off
+end
 legend('c1+c1','k')
 
-keyboard
+% keyboard
 
 
-% if strcmp(whatstep,'predictor')==1
-%     1
-% elseif strcmp(whatstep,'corrector')==1
-%     keyboard
-% end
+if strcmp(whatstep,'predictor')==1
+    1
+elseif strcmp(whatstep,'corrector')==1
+    keyboard
+end
 
 % if j==11+5 && c1_new(1)<1000
 %     keyboard
