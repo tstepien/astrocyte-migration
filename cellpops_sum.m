@@ -22,21 +22,21 @@ dr = r(2)-r(1);
 rhalf = (r(1:R-1)+r(2:R))/2;
 
 %%% initialize
-k_old = c1_old + c2_old;
+k_old = c1_old + c2_old; %%% CLEAN UP
 khalf = (k_old(1:R-1)+k_old(2:R))/2;
 % keyboard
-% Tp = Tderivative(khalf,kappa,cmin,rbar);
-% Psi = rhalf.*Tp.*khalf;
+Tp = Tderivative(khalf,kappa,cmin,rbar);
+Psi = rhalf.*Tp.*khalf;
 
 %%% extrapolate Psi to get node j+1/2
 % Psi(j) = interp1(rhalf(1:j-1),Psi(1:j-1),rhalf(j),'pchip','extrap');
-% Psi(j) = interp1(rhalf(j-2:j-1),Psi(j-2:j-1),rhalf(j),'pchip','extrap');
+Psi(j) = interp1(rhalf(j-2:j-1),Psi(j-2:j-1),rhalf(j),'pchip','extrap');
 
-rinterp = linspace(0,r(j),j+1);
-rinterp_half = (rinterp(1:end-1)+rinterp(2:end))/2;
-kinterp = [interp1(r(1:j),k_old(1:j),rinterp_half,'pchip') , zeros(1,R-j-1)];
-Tp = Tderivative(kinterp,kappa,cmin,rbar);
-Psi = rhalf.*Tp.*kinterp;
+% rinterp = linspace(0,r(j),j+1);
+% rinterp_half = (rinterp(1:end-1)+rinterp(2:end))/2;
+% kinterp = [interp1(r(1:j),k_old(1:j),rinterp_half,'pchip') , zeros(1,R-j-1)];
+% Tp = Tderivative(kinterp,kappa,cmin,rbar);
+% Psi = rhalf.*Tp.*kinterp;
 
 %%% cells at time step j are at mesh points 1:j
 %%% cells at time step j are at mesh points 1:j+1
@@ -49,16 +49,17 @@ g = PO2(1:j)./(Pm+PO2(1:j)).*(alpha1*c1_old(1:j) + alpha2*c2_old(1:j)) ...
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%% construct matrix %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% upperdiag = [2/mu * dt/dr^2 * khalf(1)*Tp(1) , ...
-%     omega .* Psi(2:j)];
-% maindiag = [1 - 2/mu * dt/dr^2 * khalf(1)*Tp(1) , ...
-%     1 - omega .* ( Psi(2:j) + Psi(1:j-1) ) , ...
-%     1];
-upperdiag = [2/mu * dt/dr^2 * kinterp(1)*Tp(1) , ...
+for m=1:5
+upperdiag = [2/mu * dt/dr^2 * khalf(1)*Tp(1) , ...
     omega .* Psi(2:j)];
-maindiag = [1 - 2/mu * dt/dr^2 * kinterp(1)*Tp(1) , ...
+maindiag = [1 - 2/mu * dt/dr^2 * khalf(1)*Tp(1) , ...
     1 - omega .* ( Psi(2:j) + Psi(1:j-1) ) , ...
     1];
+% upperdiag = [2/mu * dt/dr^2 * kinterp(1)*Tp(1) , ...
+%     omega .* Psi(2:j)];
+% maindiag = [1 - 2/mu * dt/dr^2 * kinterp(1)*Tp(1) , ...
+%     1 - omega .* ( Psi(2:j) + Psi(1:j-1) ) , ...
+%     1];
 lowerdiag = [omega .* Psi(1:j-1) , ...
     0];
 
@@ -74,4 +75,25 @@ k_new = ( thetamatrix \ bvector )';
 
 k_new = [k_new(1:j+1) , zeros(1,R-(j+1))];
 
+
+%%% iterate
+khalf = (k_new(1:R-1)+k_new(2:R))/2;
+% keyboard
+Tp = Tderivative(khalf,kappa,cmin,rbar);
+Psi = rhalf.*Tp.*khalf;
+
+% hold on
+% plot(r,k_new,'-o')
+% hold off
+
+
+end
+
+% -1/(mu*r(j)*dr^2) * ...
+% ( rhalf(j)*(k_new(j)+k_new(j+1))/2*Tderivative((k_new(j)+k_new(j+1))/2,kappa,cmin,rbar)*(k_new(j+1)-k_new(j)) ...
+% - rhalf(j-1)*(k_new(j-1)+k_new(j))/2*Tderivative((k_new(j-1)+k_new(j))/2,kappa,cmin,rbar)*(k_new(j)-k_new(j-1)) ) ...
+% +g(j)
+% 
+% (k_new(j)-k_old(j))/dt
+% 
 % keyboard

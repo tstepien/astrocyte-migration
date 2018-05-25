@@ -32,10 +32,10 @@ ce = densityatbdy(Te,kappa,cmin,rbar); % c1+c2 on boundary
 Tprimeatce = Tderivative(ce,kappa,cmin,rbar); % T'(ce)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% mesh %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-dr = 0.01;
+dr = 0.1;
 
 rmax = 5; %%% max radius (mm) (estimate rat retinal radius = 4.1 mm)
-tmax = 1*24; %%% max time (hr) (7 days = 168 hr)
+tmax = 10*24; %%% max time (hr) (7 days = 168 hr)
 
 r = 0:dr:rmax;
 R = length(r);

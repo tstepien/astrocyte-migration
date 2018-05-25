@@ -22,7 +22,7 @@ function [c1_new,c2_new] = cellpopulations(j,c1_old,c2_old,k_new,PO2,dt,...
 
 global whatstep;
 
-whatmethod = 'implicit';
+whatmethod = 'explicit';
 
 %%% spatial mesh
 R = length(r);
@@ -148,27 +148,47 @@ c_newT = c_new(1:end-1)';
 [c_new(end) , (c1_old(j)-(1-dt*g11(j+1))*c1_new(j+1))/(dt*c1_old(j)) , g11(j+1)]
 
 
-s=c1_new+c2_new;
+% s=c1_new+c2_new;
 % figure
-if dr<0.01
-    plot(r,s,'-o',r,k_new,'-o')
-else
-    hold on
-    plot(r,s,'Linewidth',1.5)
-    plot(r,k_new,'--','LineWidth',1.5)
-    hold off
-end
-legend('c1+c1','k')
-
+% if dr>0.01
+%     plot(r,s,'-o',r,k_new,'-o')
+% else
+%     hold on
+%     plot(r,s,'Linewidth',1.5)
+%     plot(r,k_new,'--','LineWidth',1.5)
+%     hold off
+% end
+% legend('c1+c1','k')
+% 
 % keyboard
 
 
-if strcmp(whatstep,'predictor')==1
-    1
-elseif strcmp(whatstep,'corrector')==1
-    keyboard
-end
+% if strcmp(whatstep,'predictor')==1
+%     1
+% elseif strcmp(whatstep,'corrector')==1
+%     keyboard
+% end
 
 % if j==11+5 && c1_new(1)<1000
 %     keyboard
 % end
+
+
+
+
+
+
+% -1/(mu*r(j)*dr^2) * ...
+% ( rhalf(j)*(k_new(j)+k_new(j+1))/2*Tderivative((k_new(j)+k_new(j+1))/2,kappa,cmin,rbar)*(k_new(j+1)-k_new(j)) ...
+% - rhalf(j-1)*(k_new(j-1)+k_new(j))/2*Tderivative((k_new(j-1)+k_new(j))/2,kappa,cmin,rbar)*(k_new(j)-k_new(j-1)) ) ...
+% +g11(j)*k_new(j)
+% 
+% (k_new(j)-k_old(j))/dt
+% 
+% 
+% -1/(mu*r(j)*dr^2) * ...
+% ( rhalf(j)*(c1_new(j)+c1_new(j+1))/2*Tderivative((k_new(j)+k_new(j+1))/2,kappa,cmin,rbar)*(k_new(j+1)-k_new(j)) ...
+% - rhalf(j-1)*(c1_new(j-1)+c1_new(j))/2*Tderivative((k_new(j-1)+k_new(j))/2,kappa,cmin,rbar)*(k_new(j)-k_new(j-1)) ) ...
+% +g11(j)*c1_new(j)
+% 
+% (c1_new(j)-c1_old(j))/dt
