@@ -9,7 +9,7 @@ function [PO2,thickness] = oxygen(t,r)
 %   thickness = total retinal thickness (mm)
 
 %%% uniform thickness = 1, nonuniform thickness = 0
-uniformthick = 1;
+uniformthick = 0;
 
 %%% convert time from hours to days
 tday = t/24;
@@ -26,11 +26,11 @@ elseif uniformthick==0
     %%% thickness at center of retina (optic nerve head) (convert from
     %%% micron to mm)
     thickness_origin = (14.33 * tday + 98.78) * 0.001;
-    %%% width/diameter of retina (convert from micron to mm)
+    %%% width/radius of retina (convert from micron to mm)
     width_retina = (414.17 * tday + 1029.17) * 0.001;
-    %%% nonuniform thickness throughout retina
-    thickness = ( (thickness_peripheral - thickness_origin)./width_retina .* r ...
-        + thickness_origin ) .* (r<width_retina);
+    %%% parabolic nonuniform thickness throughout retina
+    thickness = (( thickness_peripheral - thickness_origin )./width_retina.^2 .*r.^2 ...
+        + thickness_origin ) .* (r<=width_retina);
 end
 
 %%% parameters for partial pressure of O2
@@ -60,6 +60,8 @@ if length(thickness)==1
 else
     PO2 = ( P0 - M0/(2*Dalpha)*thickness.^2 ) .*ind;
 end
+
+% keyboard
 
 %%% figures
 %     plot(thickness,PO2)
