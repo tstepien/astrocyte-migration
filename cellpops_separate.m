@@ -1,7 +1,9 @@
-function [c1_new,c2_new] = cellpopulations(j,c1_old,c2_old,k_new,PO2,dt,...
+function [c1_new,c2_new] = cellpops_separate(j,c1_old,c2_old,k_new,PO2,dt,...
     r,Pm,kappa,mu,alpha1,alpha2,beta,gamma1,gamma2,cmin,rbar,ce)
-% [c1_new,c2_new] = cellpopulations(j,c1_old,c2_old,k_hat,PO2,dt,...
+% [c1_new,c2_new] = cellpops_separate(j,c1_old,c2_old,k_hat,PO2,dt,...
 %     r,Pm,kappa,mu,alpha1,alpha2,beta,gamma1,gamma2,cmin,rbar,ce)
+%
+% EXPLICIT method for growth terms
 %
 % inputs:
 %   j      = node that moving boundary is located at
@@ -23,8 +25,6 @@ function [c1_new,c2_new] = cellpopulations(j,c1_old,c2_old,k_new,PO2,dt,...
 % %%%%%%%%%%%%%%% adding v_e as unknown ------------------------
 
 global whatstep tcurr;
-
-whatmethod = 'explicit';
 
 %%% spatial mesh
 R = length(r);
@@ -50,18 +50,8 @@ omega = 1./(2*mu*r(2:j)) * dt/dr^2;
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% growth function %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% g11 = alpha1 * PO2./(Pm+PO2) - beta * Pm./(Pm+PO2) - gamma1; %mult by c1
-g11 = alpha1 * PO2./(Pm+PO2) - beta - gamma1; %mult by c1
-g22 = alpha2 * PO2./(Pm+PO2) - gamma2; %mult by c2
-% g21 = beta * Pm./(Pm+PO2); %mult by c1
-% g21 = beta * ones(size(PO2)); %mult by c1
-g21 = beta * PO2./(Pm+PO2); %mult by c1
-
-% keyboard
-
-% if strcmp(whatstep,'corrector')==1
-%     [PO2,g11,g21,g22]
-% end
+g1 = growthterms_c1(c1_old(1:j),c2_old(1:j),PO2(1:j),Pm,alpha1,beta,gamma1,rbar);
+g2 = growthterms_c2(c1_old(1:j),c2_old(1:j),PO2(1:j),Pm,alpha2,beta,gamma2,rbar);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%% construct matrix %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -71,16 +61,9 @@ upperdiag11 = [dt/(mu*dr^2)*Tp(1)*(k_new(2)-k_new(1)) , ...
     omega.*Psi(2:j)];
 maindiag11 = [1 + dt/(mu*dr^2)*Tp(1)*(k_new(2)-k_new(1)), ...
     1 + omega.*(Psi(2:j) - Psi(1:j-1)),...
-    1 ];
+    1];
 lowerdiag11 = [-omega.*Psi(1:j-1) , ...
     0];
-if strcmp(whatmethod,'explicit')==1
-    maindiag11(end) = maindiag11(end) - dt*g11(j+1);
-end
-if strcmp(whatmethod,'implicit')==1
-    maindiag11 = maindiag11 - dt*g11(1:j+1);
-end
-
 block11 = diag(maindiag11) + diag(upperdiag11,1) + diag(lowerdiag11,-1);
 
 %%% block 12
@@ -90,13 +73,7 @@ block12 = [block12 , [zeros(j,1) ; dt*c1_old(j)] ]; % add on right-most column
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% c2 - IPA %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% block 21
-block21 = diag(zeros(size(g21(1:j+1))));
-if strcmp(whatmethod,'explicit')==1
-    block21(end,end) = block21(end,end) - dt*g21(j+1);
-end
-if strcmp(whatmethod,'implicit')==1
-    block21 = block21 + diag(-dt*g21(1:j+1));
-end
+block21 = zeros(size(block11));
 block21 = [block21 ; [zeros(1,j) , 1] ]; % add on bottom row
 
 %%% block 22
@@ -104,16 +81,9 @@ upperdiag22 = [dt/(mu*dr^2)*Tp(1)*(k_new(2)-k_new(1)) , ...
     omega.*Psi(2:j)];
 maindiag22 = [1 + dt/(mu*dr^2)*Tp(1)*(k_new(2)-k_new(1)),...
     1 + omega .* (Psi(2:j) - Psi(1:j-1)), ...
-    1 ];
+    1];
 lowerdiag22 = [-omega.*Psi(1:j-1) , ...
     0];
-if strcmp(whatmethod,'explicit')==1
-    maindiag22(end) = maindiag22(end) - dt*g22(j+1);
-end
-if strcmp(whatmethod,'implicit')==1
-    maindiag22 = maindiag22 - dt*g22(1:j+1);
-end
-
 block22 = diag(maindiag22) + diag(upperdiag22,1) + diag(lowerdiag22,-1);
 block22 = [block22 ; [zeros(1,j) , 1] ]; % add on bottom row
 block22 = [block22 , [zeros(j,1) ; dt*c2_old(j) ; 0] ]; % add on right-most column
@@ -127,15 +97,12 @@ bvector = [c1_old(1:j)' ; ...
     c1_old(j) ; ...
     c2_old(1:j)'; ...
     c2_old(j) ; ...
-    ce] ;
-if strcmp(whatmethod,'explicit')==1
-    bvector = bvector ...
-        + [dt*g11(1:j)'.*c1_old(1:j)' ; ...
-        0 ; ...
-        dt*g22(1:j)'.*c2_old(1:j)' + dt*g21(1:j)'.*c1_old(1:j)'; ...
-        0 ; ...
-        0];
-end
+    ce] ...
+    + [dt*g1' ; ...
+    dt*g1(end); ...
+    dt*g2';...
+    dt*g2(end); ...
+    0];
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% solve system %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 c_new = ( thetamatrix \ bvector )';

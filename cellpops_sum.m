@@ -1,7 +1,7 @@
-function k_new = cellpops_sum(j,c1_old,c2_old,PO2,dt,r,Pm,kappa,mu,...
-    alpha1,alpha2,gamma1,gamma2,cmin,rbar,ce)
-% c_new = cellpops_sum(j,c1_old,c2_old,PO2,dt,r,Pm,kappa,mu,...
-%     alpha1,alpha2,gamma1,gamma2,cmin,rbar,ce)
+function k_new = cellpops_sum(j,c1_old,c2_old,PO2,dt,r,Pm,kappa,mu,alpha1,alpha2,...
+    gamma1,gamma2,cmin,rbar,ce)
+% k_new = cellpops_sum(j,c1_old,c2_old,PO2,dt,r,Pm,kappa,mu,alpha1,alpha2,...
+%     gamma1,gamma2,cmin,rbar,ce)
 %
 % inputs:
 %   j      = node that moving boundary is located at
@@ -14,7 +14,11 @@ function k_new = cellpops_sum(j,c1_old,c2_old,PO2,dt,r,Pm,kappa,mu,...
 %
 % outputs:
 %   k_new = APC+IPA cell concentration at next time
+%
+% note: cells at time step j are at mesh points 1:j
+%       cells at time step j+1 are at mesh points 1:j+1
 
+global whatstep tcurr;
 
 %%% spatial mesh
 R = length(r);
@@ -22,9 +26,8 @@ dr = r(2)-r(1);
 rhalf = (r(1:R-1)+r(2:R))/2;
 
 %%% initialize
-k_old = c1_old + c2_old; %%% CLEAN UP
+k_old = c1_old + c2_old;
 khalf = (k_old(1:R-1)+k_old(2:R))/2;
-% keyboard
 Tp = Tderivative(khalf,kappa,cmin,rbar);
 Psi = rhalf.*Tp.*khalf;
 
@@ -38,56 +41,59 @@ Psi(j) = interp1(rhalf(j-2:j-1),Psi(j-2:j-1),rhalf(j),'pchip','extrap');
 % Tp = Tderivative(kinterp,kappa,cmin,rbar);
 % Psi = rhalf.*Tp.*kinterp;
 
-%%% cells at time step j are at mesh points 1:j
-%%% cells at time step j are at mesh points 1:j+1
-
 omega = 1./(mu*r(2:j)) * dt/dr^2;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% growth function %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-g = PO2(1:j)./(Pm+PO2(1:j)).*(alpha1*c1_old(1:j) + alpha2*c2_old(1:j)) ...
-    - (gamma1*c1_old(1:j)+gamma2*c2_old(1:j));
+g = growthterms_sum(c1_old(1:j),c2_old(1:j),PO2(1:j),Pm,alpha1,alpha2,...
+    gamma1,gamma2,rbar);
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%% construct matrix %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%% iterate for convergence %%%%%%%%%%%%%%%%%%%%%%%%%
 for m=1:5
-upperdiag = [2/mu * dt/dr^2 * khalf(1)*Tp(1) , ...
-    omega .* Psi(2:j)];
-maindiag = [1 - 2/mu * dt/dr^2 * khalf(1)*Tp(1) , ...
-    1 - omega .* ( Psi(2:j) + Psi(1:j-1) ) , ...
-    1];
-% upperdiag = [2/mu * dt/dr^2 * kinterp(1)*Tp(1) , ...
-%     omega .* Psi(2:j)];
-% maindiag = [1 - 2/mu * dt/dr^2 * kinterp(1)*Tp(1) , ...
-%     1 - omega .* ( Psi(2:j) + Psi(1:j-1) ) , ...
-%     1];
-lowerdiag = [omega .* Psi(1:j-1) , ...
-    0];
+    %%%%%%%%%%%%%%%%%%%%%%%%%% construct matrix %%%%%%%%%%%%%%%%%%%%%%%%%%%
+    upperdiag = [2/mu * dt/dr^2 * khalf(1)*Tp(1) , ...
+        omega .* Psi(2:j)];
+    maindiag = [1 - 2/mu * dt/dr^2 * khalf(1)*Tp(1) , ...
+        1 - omega .* ( Psi(2:j) + Psi(1:j-1) ) , ...
+        1];
+    % upperdiag = [2/mu * dt/dr^2 * kinterp(1)*Tp(1) , ...
+    %     omega .* Psi(2:j)];
+    % maindiag = [1 - 2/mu * dt/dr^2 * kinterp(1)*Tp(1) , ...
+    %     1 - omega .* ( Psi(2:j) + Psi(1:j-1) ) , ...
+    %     1];
+    lowerdiag = [omega .* Psi(1:j-1) , ...
+        0];
 
-thetamatrix = diag(maindiag) + diag(upperdiag,1) + diag(lowerdiag,-1);
+    thetamatrix = diag(maindiag) + diag(upperdiag,1) + diag(lowerdiag,-1);
 
+    %%%%%%%%%%%%%%%%%%%%%%%%%%% right hand side %%%%%%%%%%%%%%%%%%%%%%%%%%%
+    bvector = [k_old(1:j)' + dt*g' ; ce];
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%% right hand side %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-bvector = [k_old(1:j)' + dt*g' ; ce];
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%% solve system %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    k_new = ( thetamatrix \ bvector )';
 
+    k_new = [k_new(1:j+1) , zeros(1,R-(j+1))];
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% solve system %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-k_new = ( thetamatrix \ bvector )';
+    %%%%%%%%%%%%%%%%%%%%%% update for next iteration %%%%%%%%%%%%%%%%%%%%%%
+    khalf = (k_new(1:R-1)+k_new(2:R))/2;
+    Tp = Tderivative(khalf,kappa,cmin,rbar);
+    Psi = rhalf.*Tp.*khalf;
 
-k_new = [k_new(1:j+1) , zeros(1,R-(j+1))];
-
-
-%%% iterate
-khalf = (k_new(1:R-1)+k_new(2:R))/2;
-% keyboard
-Tp = Tderivative(khalf,kappa,cmin,rbar);
-Psi = rhalf.*Tp.*khalf;
-
-% hold on
-% plot(r,k_new,'-o')
-% hold off
-
+%     if tcurr>3.22*24
+%         hold on
+%         if dr>0.01
+%             plot(r,k_new,'-o')
+%         else
+%             plot(r,k_new)
+%         end
+%         hold off
+%     end
 
 end
+
+% if tcurr>3.22*24
+%     disp(whatstep)
+%     keyboard
+% end
 
 % -1/(mu*r(j)*dr^2) * ...
 % ( rhalf(j)*(k_new(j)+k_new(j+1))/2*Tderivative((k_new(j)+k_new(j+1))/2,kappa,cmin,rbar)*(k_new(j+1)-k_new(j)) ...
