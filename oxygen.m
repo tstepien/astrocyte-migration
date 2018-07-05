@@ -36,7 +36,27 @@ end
 %%% parameters for partial pressure of O2
 Dalpha = 4.73*10^(-10); % cm^3 O2/cm/s/mmHg
 M0 = 1.8; % cm^3 O2/100g/min
-P0 = 60; % mmHg
+
+%%% ramp function (over time) for partial pressure of O2 for choroid
+% lowP0 = 50;
+% highP0 = 60;
+% rampstart = 1; %1 day since E15 (E16)
+% rampend = 4; %4 days since E15 (E19)
+% timeoframp = rampend - rampstart; % days
+% P0 = zeros(size(tday));
+% 
+% for i=1:length(tday)
+%     if tday(i)<=rampstart
+%         P0(i) = lowP0;
+%     elseif tday(i)>rampstart && tday(i)<=rampend
+%         P0(i) = (highP0-lowP0)/(timeoframp*24)*t(i) ...
+%             + (lowP0 - (highP0-lowP0)/timeoframp);
+%     else
+%         P0(i) = highP0; % mmHg
+%     end
+% end
+
+P0 = 60;
 
 %%% check calculations
 %     M0to_s = 1.8/(60*100);

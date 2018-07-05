@@ -22,11 +22,33 @@ dr = r(2)-r(1);
 p1BC = 0;
 p2BC = 0;
 
+%%% iterate based off of CFL condition
+if dt >= dr^2/(2*D1)
+% %     newdt = (dr^2/(2*D1)) *(7/8);
+% %     t = 0:newdt:dt;
+% %     if t(end)<dt
+% %         t = [t, dt];
+% %     end
+% %     num_iter = length(t)-1;
+% %     tnew = linspace(0,dt,num_iter+1);
+% %     dt = tnew(2)-tnew(1);
+
+    %%% /\ above iteration will result in waaaay too many iterations
+    %%% \/ below iteration controls that we only add on 10 iterations to
+    %%%    attempt to control blow up (which shouldn't be happening...)
+    num_iter = 5;
+    dt = dt/num_iter;
+else
+    num_iter = 1;
+end
+
+for i=1:num_iter
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% p1 - PDGFA %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 theta1_1 = -D1 * dt/dr^2 * (1 + dr./(2*r(2:R-1)));
 theta2_1 = 1 + 2*D1*dt/dr^2*ones(1,R-1) - dt*eta1;
 theta3_1 = -D1 * dt/dr^2 * (1 - dr./(2*r(2:R-1)));
+
 theta4_1 = -4*D1 * dt/dr^2;
 theta5_1 = 1 + 4*D1 * dt/dr^2 - dt*eta1;
 theta6_1 = -2*D1 * dt/dr^2;
@@ -41,6 +63,7 @@ thetamatrix1 = diag(maindiag1) + diag(upperdiag1,1) + diag(lowerdiag1,-1);
 bvector1 = p1_old' + [zeros(R-1,1) ; theta7_1];
 
 p1_new = ( thetamatrix1 \ bvector1 )';
+p1_old = p1_new;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% p2 - LIF %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 theta1_2 = -D2 * dt/dr^2 * (1 + dr./(2*r(2:R-1)));
@@ -60,3 +83,6 @@ thetamatrix2 = diag(maindiag2) + diag(upperdiag2,1) + diag(lowerdiag2,-1);
 bvector2 = p2_old' + [zeros(R-1,1) ; theta7_2];
 
 p2_new = ( thetamatrix2 \ bvector2 )';
+p2_old = p2_new;
+
+end
