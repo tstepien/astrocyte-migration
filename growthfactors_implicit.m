@@ -1,6 +1,6 @@
 function [p1_new,p2_new] = growthfactors_implicit(p1_old,p2_old,dt,r,...
-    D1,D2,eta1,eta2)
-% [p1_new,p2_new] = growthfactors_implicit(p1_old,p2_old,dt,r,D1,D2,eta1,eta2)
+    D1,D2,xi1,xi2)
+% [p1_new,p2_new] = growthfactors_implicit(p1_old,p2_old,dt,r,D1,D2,xi1,xi2)
 %
 % inputs:
 %   p1_old = PDGFA growth factor concentration at previous time
@@ -46,11 +46,11 @@ for i=1:num_iter
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% p1 - PDGFA %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 theta1_1 = -D1 * dt/dr^2 * (1 + dr./(2*r(2:R-1)));
-theta2_1 = 1 + 2*D1*dt/dr^2*ones(1,R-1) - dt*eta1;
+theta2_1 = 1 + 2*D1*dt/dr^2*ones(1,R-1);
 theta3_1 = -D1 * dt/dr^2 * (1 - dr./(2*r(2:R-1)));
 
 theta4_1 = -4*D1 * dt/dr^2;
-theta5_1 = 1 + 4*D1 * dt/dr^2 - dt*eta1;
+theta5_1 = 1 + 4*D1 * dt/dr^2;
 theta6_1 = -2*D1 * dt/dr^2;
 theta7_1 = 2*D1 * dt/dr^2 * p1BC*dr * ( 1 + dr/(2*r(R)) );
 
@@ -60,17 +60,17 @@ lowerdiag1 = [theta3_1 , theta6_1];
 
 thetamatrix1 = diag(maindiag1) + diag(upperdiag1,1) + diag(lowerdiag1,-1);
 
-bvector1 = p1_old' + [zeros(R-1,1) ; theta7_1];
+bvector1 = p1_old' + [zeros(R-1,1) ; theta7_1] + dt*xi1;
 
 p1_new = ( thetamatrix1 \ bvector1 )';
 p1_old = p1_new;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% p2 - LIF %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 theta1_2 = -D2 * dt/dr^2 * (1 + dr./(2*r(2:R-1)));
-theta2_2 = 1 + 2*D2*dt/dr^2*ones(1,R-1) - dt*eta2;
+theta2_2 = 1 + 2*D2*dt/dr^2*ones(1,R-1);
 theta3_2 = -D2 * dt/dr^2 * (1 - dr./(2*r(2:R-1)));
 theta4_2 = -4*D2 * dt/dr^2;
-theta5_2 = 1 + 4*D2 * dt/dr^2 - dt*eta2;
+theta5_2 = 1 + 4*D2 * dt/dr^2;
 theta6_2 = 0;%-2*D2 * dt/dr^2;
 theta7_2 = 0;%2*D2 * dt/dr^2 * p2BC*dr * ( 1 + dr/(2*r(R)) );
 
@@ -81,7 +81,7 @@ lowerdiag2 = [theta3_2 , theta6_2];
 thetamatrix2 = diag(maindiag2) + diag(upperdiag2,1) + diag(lowerdiag2,-1);
 thetamatrix2(end,end) = 1;
 
-bvector2 = p2_old' + [zeros(R-1,1) ; theta7_2];
+bvector2 = p2_old' + [zeros(R-1,1) ; theta7_2] + dt*xi2;
 
 p2_new = ( thetamatrix2 \ bvector2 )';
 p2_old = p2_new;

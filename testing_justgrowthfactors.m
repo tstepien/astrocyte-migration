@@ -7,12 +7,12 @@ lambda = 1.6; %%% tortuosity of medium (unitless)
 phi = 0.2; %%% porosity/volume fraction in extracellular space (%)
 Dwater_PDGFA = 1.2*10^(-6) *(60*60*10^2); %%% diffusion of PDGFA in water at 37C (cm^2/s)
                                      %%% but then converted to (mm^2/hr)
-eta_PDGFA = 0.02;
+xi_PDGFA = 0.02;
 
 D1 = Dwater_PDGFA / lambda^2; %%% effective diffusivity of PDGFA
 D2 = 1;
-eta1 = eta_PDGFA / phi; %%% production/release rate of PDGFA
-eta2 = 0.1;
+xi1 = xi_PDGFA / phi; %%% production/release rate of PDGFA
+xi2 = 0.1;
 
 p1max = 0.0001;
 
@@ -26,7 +26,7 @@ if dt >=dr^2/(2*D1)%dr^2/(2*max(D1,D2))
 end
 
 rmax = 5;
-tmax = 7*24;
+tmax = 0.1*24;
 
 r = 0:dr:rmax;
 R = length(r);
@@ -57,16 +57,16 @@ p2_imp(1,:) = p2_old;
 
 for i = 2:length(t)
 %     [p1_exp(i,:),p2_exp(i,:)] = growthfactors_explicit(p1_exp(i-1,:),...
-%         p2_exp(i-1,:),dt,r,D1,D2,eta1,eta2);
+%         p2_exp(i-1,:),dt,r,D1,D2,xi1,xi2);
     [p1_imp(i,:),p2_imp(i,:)] = growthfactors_implicit(p1_imp(i-1,:),...
-        p2_imp(i-1,:),dt,r,D1,D2,eta1,eta2);
+        p2_imp(i-1,:),dt,r,D1,D2,xi1,xi2);
 end
 
 diffp1 = abs(p1_exp-p1_imp);
 diffp2 = abs(p2_exp-p2_imp);
 
 
-tplot = length(t);%1:floor(length(t)/10):length(t);
+tplot = 1:floor(length(t)/10):length(t); %length(t);
 
 max(p1_imp(tplot,:))
 

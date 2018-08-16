@@ -34,19 +34,19 @@ Dwater_PDGFA = 1.2*10^(-6) *(60^2*10^2); %%% diffusion of PDGFA in water at 37C 
                                      %%% but then converted to (mm^2/hr)
 Dwater_LIF = 1.38*10^(-6) *(60^2*10^2); %%% diffusion of LIF in water at 37C (cm^2/s)
                                     %%% but then converted to (mm^2/hr)
-eta_PDGFA = 0.015;
-eta_LIF = 0.015;
+xi_PDGFA = 0.015;
+xi_LIF = 0.015;
 
 D1 = Dwater_PDGFA / lambda^2; %%% effective diffusivity of PDGFA
 D2 = Dwater_LIF / lambda^2; %%% effective diffusivity of LIF
-eta1 = eta_PDGFA / phi; %%% production/release rate of PDGFA
-eta2 = eta_LIF / phi; %%% production/release rate of LIF
+xi1 = xi_PDGFA / phi; %%% production/release rate of PDGFA
+xi2 = xi_LIF / phi; %%% production/release rate of LIF
 
 %%% the constants seem way too big for the length scale that we're on
 D1 = D1/10;
-eta1 = eta1/2;
+xi1 = xi1/2;
 D2 = D2/100;
-eta2 = eta2/2;
+xi2 = xi2/2;
 
 p1max = 0.01;
 p1beta = 0.45;
@@ -156,7 +156,7 @@ while tcurr < tmax && j<R-1
     dt_c = 0;
     while abs(dt_p-dt_c)>=tol        
         [p1_hat,p2_hat] = growthfactors_implicit(p1_old,p2_old,dt_p,r,D1,...
-            D2,eta1,eta2);
+            D2,xi1,xi2);
         
         PO2 = oxygen(tcurr + dt_p,r);
         
@@ -200,7 +200,7 @@ while tcurr < tmax && j<R-1
     whatstep = 'corrector';
     
     [p1_new,p2_new] = growthfactors_implicit(p1_old,p2_old,dt_c,r,D1,...
-        D2,eta1,eta2);
+        D2,xi1,xi2);
     
     PO2 = oxygen(tcurr + dt_c,r);
     
