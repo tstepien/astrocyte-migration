@@ -1,5 +1,5 @@
-function g = growthterms_sum_withgrowthfactors(c1,c2,p1,PO2,Pm,alpha1,alpha2,gamma1,gamma2,rbar)
-% g = growthterms_sum(c1,c2,p1,PO2,Pm,alpha1,alpha2,beta,gamma1,gamma2,rbar)
+function g = growthterms_sum_withgrowthfactors(c1,c2,p1,p2,PO2,Pm,alpha1,alpha2,gamma1,gamma2,rbar)
+% g = growthterms_sum(c1,c2,p1,p2,PO2,Pm,alpha1,alpha2,beta,gamma1,gamma2,rbar)
 %
 % growth terms
 

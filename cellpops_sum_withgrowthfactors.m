@@ -1,13 +1,14 @@
-function k_new = cellpops_sum_withgrowthfactors(j,c1_old,c2_old,p1,PO2,dt,r,Pm,kappa,mu,alpha1,alpha2,...
-    gamma1,gamma2,cmin,rbar,ce)
-% k_new = cellpops_sum(j,c1_old,c2_old,p1,PO2,dt,r,Pm,kappa,mu,alpha1,alpha2,...
-%     gamma1,gamma2,cmin,rbar,ce)
+function k_new = cellpops_sum_withgrowthfactors(j,c1_old,c2_old,p1,p2,PO2,...
+    dt,r,Pm,kappa,mu,alpha1,alpha2,gamma1,gamma2,cmin,rbar,ce)
+% k_new = cellpops_sum_withgrowthfactors(j,c1_old,c2_old,p1,p2,PO2,...
+%     dt,r,Pm,kappa,mu,alpha1,alpha2,gamma1,gamma2,cmin,rbar,ce)
 %
 % inputs:
 %   j      = node that moving boundary is located at
 %   c1_old = APC cell concentration at previous time
 %   c2_old = IPA cell concentration at previous time
 %   p1     = PDGFA at next time
+%   p2     = LIF at next time
 %   PO2    = partial pressure of oxygen at next time
 %   dt     = time step size
 %   r      = spatial mesh
@@ -45,8 +46,8 @@ Psi(j) = interp1(rhalf(j-2:j-1),Psi(j-2:j-1),rhalf(j),'pchip','extrap');
 omega = 1./(mu*r(2:j)) * dt/dr^2;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% growth function %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-g = growthterms_sum_withgrowthfactors(c1_old(1:j),c2_old(1:j),p1(1:j),PO2(1:j),Pm,alpha1,alpha2,...
-    gamma1,gamma2,rbar);
+g = growthterms_sum_withgrowthfactors(c1_old(1:j),c2_old(1:j),p1(1:j),...
+    p2(1:j),PO2(1:j),Pm,alpha1,alpha2,gamma1,gamma2,rbar);
 
 %%%%%%%%%%%%%%%%%%%%%%%%% iterate for convergence %%%%%%%%%%%%%%%%%%%%%%%%%
 for m=1:5

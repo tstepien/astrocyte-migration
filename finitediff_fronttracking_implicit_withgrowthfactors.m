@@ -14,7 +14,7 @@ Pm = 10; % (mmHg)
 %%% astrocyte parameters
 kappa = 1;
 mu = 0.1;
-alpha1 = 0.2; %%% (/hr)
+alpha1 = 0.1975; %%% (/hr)
 alpha2 = alpha1 *(7/12); %%% (/hr)
 beta = 0.03; %%% (/hr)
 gamma1 = 0;%0.0001;%0;
@@ -30,21 +30,28 @@ gamma2 = 0;%0.0001;%0.5;
 %%% growth factor parameters
 lambda = 1.6; %%% tortuosity of medium (unitless)
 phi = 0.2; %%% porosity/volume fraction in extracellular space (%)
-Dwater_PDGFA = 1.2*10^(-6) *(60*60*10^2); %%% diffusion of PDGFA in water at 37C (cm^2/s)
+Dwater_PDGFA = 1.2*10^(-6) *(60^2*10^2); %%% diffusion of PDGFA in water at 37C (cm^2/s)
                                      %%% but then converted to (mm^2/hr)
-Dwater_LIF = 1.38*10^(-6) *(60*60*10^2); %%% diffusion of LIF in water at 37C (cm^2/s)
+Dwater_LIF = 1.38*10^(-6) *(60^2*10^2); %%% diffusion of LIF in water at 37C (cm^2/s)
                                     %%% but then converted to (mm^2/hr)
 eta_PDGFA = 0.015;
-eta_LIF = 0;
+eta_LIF = 0.015;
 
 D1 = Dwater_PDGFA / lambda^2; %%% effective diffusivity of PDGFA
 D2 = Dwater_LIF / lambda^2; %%% effective diffusivity of LIF
 eta1 = eta_PDGFA / phi; %%% production/release rate of PDGFA
 eta2 = eta_LIF / phi; %%% production/release rate of LIF
 
-p1max = 0.0001;
+%%% the constants seem way too big for the length scale that we're on
+D1 = D1/10;
+eta1 = eta1/2;
+D2 = D2/100;
+eta2 = eta2/2;
+
+p1max = 0.01;
 p1beta = 0.45;
 p1epsilon = 0.45;
+p2max = 0.1;
 
 %%% tension parameters
 rbar = 7.75*10^(-3); %%% reference radius (mm)
@@ -105,7 +112,8 @@ p1_old = p1max * (-heaviside(r-initwidth_retina)+1);
     %p1max * (1 - p1beta*exp(-r.^2/p1epsilon));
         %p1_old(1) = 0;
     %100*ones(1,R);
-p2_old = 10*ones(1,R);%smooth(100*heaviside(1-r))';
+p2_old = p2max * (-heaviside(r-5*dr)+1);
+    % 10*ones(1,R);%smooth(100*heaviside(1-r))';
 
 %%%%%%%%%%%%%%%%%%%%%%% initialize final variables %%%%%%%%%%%%%%%%%%%%%%%%
 mvgbdy = s;
@@ -154,11 +162,11 @@ while tcurr < tmax && j<R-1
         
         ve_old = ve_calc(j,tcurr,r,c1_old,c2_old,Pm,alpha1,alpha2,gamma1,gamma2,ce);
         
-        k_hat = cellpops_sum_withgrowthfactors(j,c1_old,c2_old,p1_hat,PO2,...
-            dt_p,r,Pm,kappa,mu,alpha1,alpha2,gamma1,gamma2,cmin,rbar,ce);
+        k_hat = cellpops_sum_withgrowthfactors(j,c1_old,c2_old,p1_hat,p2_hat,...
+            PO2,dt_p,r,Pm,kappa,mu,alpha1,alpha2,gamma1,gamma2,cmin,rbar,ce);
     
         [c1_hat,c2_hat] = cellpops_separate_withgrowthfactors(j,c1_old,...
-            c2_old,k_hat,p1_hat,PO2,dt_p,r,Pm,kappa,mu,alpha1,alpha2,...
+            c2_old,k_hat,p1_hat,p2_hat,PO2,dt_p,r,Pm,kappa,mu,alpha1,alpha2,...
             beta,gamma1,gamma2,cmin,rbar,ce);
         
         %%%%%%%%%%%%%%%%%%%%%%%%% corrector step %%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -196,11 +204,11 @@ while tcurr < tmax && j<R-1
     
     PO2 = oxygen(tcurr + dt_c,r);
     
-    k_new = cellpops_sum_withgrowthfactors(j,c1_old,c2_old,p1_new,PO2,...
-        dt_c,r,Pm,kappa,mu,alpha1,alpha2,gamma1,gamma2,cmin,rbar,ce);
+    k_new = cellpops_sum_withgrowthfactors(j,c1_old,c2_old,p1_new,p2_new,...
+        PO2,dt_c,r,Pm,kappa,mu,alpha1,alpha2,gamma1,gamma2,cmin,rbar,ce);
     
     [c1_new,c2_new] = cellpops_separate_withgrowthfactors(j,c1_old,...
-        c2_old,k_new,p1_new,PO2,dt_c,r,Pm,kappa,mu,alpha1,alpha2,beta,...
+        c2_old,k_new,p1_new,p2_new,PO2,dt_c,r,Pm,kappa,mu,alpha1,alpha2,beta,...
         gamma1,gamma2,cmin,rbar,ce);
 
     %%%%%%%%%%%%%%%%%%%%%% reset for next time step %%%%%%%%%%%%%%%%%%%%%%%

@@ -1,7 +1,9 @@
-function [c1_new,c2_new] = cellpops_separate_withgrowthfactors(j,c1_old,c2_old,k_new,p1,PO2,dt,...
-    r,Pm,kappa,mu,alpha1,alpha2,beta,gamma1,gamma2,cmin,rbar,ce)
-% [c1_new,c2_new] = cellpops_separate(j,c1_old,c2_old,k_hat,p1,PO2,dt,...
-%     r,Pm,kappa,mu,alpha1,alpha2,beta,gamma1,gamma2,cmin,rbar,ce)
+function [c1_new,c2_new] = cellpops_separate_withgrowthfactors(j,c1_old,...
+    c2_old,k_new,p1,p2,PO2,dt,r,Pm,kappa,mu,alpha1,alpha2,beta,gamma1,...
+    gamma2,cmin,rbar,ce)
+% [c1_new,c2_new] = cellpops_separate_withgrowthfactors(j,c1_old,...
+%     c2_old,k_new,p1,p2,PO2,dt,r,Pm,kappa,mu,alpha1,alpha2,beta,gamma1,...
+%     gamma2,cmin,rbar,ce)
 %
 % EXPLICIT method for growth terms
 %
@@ -11,6 +13,7 @@ function [c1_new,c2_new] = cellpops_separate_withgrowthfactors(j,c1_old,c2_old,k
 %   c2_old = IPA cell concentration at previous time
 %   k_new  = APC+IPA concentration at next time
 %   p1     = PDGFA at next time
+%   p2     = LIF at next time
 %   PO2    = partial pressure of oxygen at next time
 %   dt     = time step size
 %   r      = spatial mesh
@@ -51,8 +54,10 @@ omega = 1./(2*mu*r(2:j)) * dt/dr^2;
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% growth function %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-g1 = growthterms_c1_withgrowthfactors(c1_old(1:j),c2_old(1:j),p1(1:j),PO2(1:j),Pm,alpha1,beta,gamma1,rbar);
-g2 = growthterms_c2_withgrowthfactors(c1_old(1:j),c2_old(1:j),p1(1:j),PO2(1:j),Pm,alpha2,beta,gamma2,rbar);
+g1 = growthterms_c1_withgrowthfactors(c1_old(1:j),c2_old(1:j),p1(1:j),...
+    p2(1:j),PO2(1:j),Pm,alpha1,beta,gamma1,rbar);
+g2 = growthterms_c2_withgrowthfactors(c1_old(1:j),c2_old(1:j),p1(1:j),...
+    p2(1:j),PO2(1:j),Pm,alpha2,beta,gamma2,rbar);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%% construct matrix %%%%%%%%%%%%%%%%%%%%%%%%%%%%%

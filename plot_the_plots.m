@@ -54,13 +54,14 @@ fsticks = 14;
 
 figure
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-subaxis(2,4,3,'MarginLeft',0.07,'MarginRight',0.01,'MarginTop',0.03,'MarginBottom',0.15)
+subaxis(3,3,3,'MarginLeft',0.07,'MarginRight',0.01,'MarginTop',0.03,'MarginBottom',0.15)
 hold on
 for i=1:numcurvesplot
     plot(rplot(plotind(i),:),c1plot(plotind(i),:)+c2plot(plotind(i),:),...
         'LineWidth',1.5,'Color',co(i,:))
 end
-ylim_sum = get(gca,'YLim');
+% ylim_sum = get(gca,'YLim');
+    ylim_sum = [0,5000];
 line([max_astrocytes,max_astrocytes],ylim_sum,'LineStyle','--',...
     'Color',[0.5,0.5,0.5],'LineWidth',1.25)
 hold off
@@ -72,18 +73,8 @@ else
     set(gca,'XLim',[0,rmax],'FontSize',fsticks)
 end
 
-h = legend([num2str(t(plotind(1))/24),' days (E15)'],...
-    [num2str(t(plotind(2))/24,3),' days (E',num2str(round(15+t(plotind(2))/24,1)),')'],...
-    [num2str(t(plotind(3))/24,3),' days (E',num2str(round(15+t(plotind(3))/24,1)),')'],...
-    [num2str(t(plotind(4))/24,3),' days (E',num2str(round(15+t(plotind(4))/24,1)),')'],...
-    [num2str(t(plotind(5))/24,3),' days (E',num2str(round(15+t(plotind(5))/24,1)),')'],...
-    [num2str(t(plotind(6))/24,3),' days (E',num2str(round(15+t(plotind(6))/24,1)),')'],...
-    [num2str(t(plotind(7))/24,3),' days (E',num2str(round(15+t(plotind(7))/24,1)),')'],...
-    [num2str(t(plotind(8))/24,3),' days (E',num2str(round(15+t(plotind(8))/24,1)),')']);
-set(h,'FontSize',fsticks,'Position',[0.78 0.67 0.11 0.22]);
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-subaxis(2,4,1,'MarginLeft',0.055,'MarginRight',0.01)
+subaxis(3,3,1,'MarginLeft',0.055,'MarginRight',0.01)
 hold on
 for i=1:numcurvesplot
     plot(rplot(plotind(i),:),c1plot(plotind(i),:),'LineWidth',1.5,...
@@ -101,7 +92,7 @@ else
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-subaxis(2,4,2,'MarginLeft',0.06,'MarginRight',0.01)
+subaxis(3,3,2,'MarginLeft',0.06,'MarginRight',0.01)
 hold on
 for i=1:numcurvesplot
     plot(rplot(plotind(i),:),c2plot(plotind(i),:),'LineWidth',1.5,...
@@ -119,7 +110,7 @@ else
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-subaxis(2,4,5,'MarginTop',0.03,'MarginBottom',0.08)
+subaxis(3,3,4,'MarginTop',0.03,'MarginBottom',0.08)
 plot(t/24,mvgbdy,'-o')
 xlabel('t (days)','FontSize',fslabel)
 ylabel('moving boundary (mm)','FontSize',fslabel)
@@ -135,7 +126,7 @@ else
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-subaxis(2,4,6,'MarginTop',0.03,'MarginBottom',0.08)
+subaxis(3,3,5,'MarginTop',0.03)
 if size(thickness,1)==1 || size(thickness,2)==1
     plot(t/24,thickness,'-o','LineWidth',1.5)
     xlabel('t (days)','FontSize',fslabel)
@@ -151,7 +142,7 @@ ylabel('retinal thickness (mm)','FontSize',fslabel)
 set(gca,'XLim',[0,rmax],'FontSize',fsticks)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-subaxis(2,4,7)
+subaxis(3,3,6)
 if size(thickness,1)==1 || size(thickness,2)==1
     plot(thickness,PO2,'-o','LineWidth',1.5)
     xlabel('total retinal thickness (mm)','FontSize',fslabel)
@@ -167,24 +158,47 @@ ylabel('PO_2 (mmHg)','FontSize',fslabel)
 set(gca,'XLim',[0,rmax],'FontSize',fsticks)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-if isempty(p1)==0
-    subaxis(2,4,8,'MarginLeft',0.08)
-    hold on
-    for i=1:numcurvesplot
-        plot(r,p1(plotind(i),:),'LineWidth',1.5,'Color',co(i,:))
-    end
-    hold off
-    xlabel('radius (mm)','FontSize',fslabel)
-    ylabel('PDGFA concentration','FontSize',fslabel)
-    if mvgbdy(end)<1.5
-        set(gca,'XLim',[0,mvgbdy(end)+5*dr],'FontSize',fsticks)
-    else
-        set(gca,'XLim',[0,rmax],'FontSize',fsticks)
-    end
+subaxis(3,3,7,'MarginBottom',0.06)
+hold on
+for i=1:numcurvesplot
+    plot(r,p1(plotind(i),:),'LineWidth',1.5,'Color',co(i,:))
+end
+hold off
+xlabel('radius (mm)','FontSize',fslabel)
+ylabel('PDGFA concentration','FontSize',fslabel)
+if mvgbdy(end)<1.5
+    set(gca,'XLim',[0,mvgbdy(end)+5*dr],'FontSize',fsticks)
+else
+    set(gca,'XLim',[0,rmax],'FontSize',fsticks)
 end
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+subaxis(3,3,8,'MarginBottom',0.06)
+hold on
+for i=1:numcurvesplot
+    plot(r,p2(plotind(i),:),'LineWidth',1.5,'Color',co(i,:))
+end
+hold off
+xlabel('radius (mm)','FontSize',fslabel)
+ylabel('LIF concentration','FontSize',fslabel)
+if mvgbdy(end)<1.5
+    set(gca,'XLim',[0,mvgbdy(end)+5*dr],'FontSize',fsticks)
+else
+    set(gca,'XLim',[0,rmax],'FontSize',fsticks)
+end
 
-set(gcf,'Units','inches','Position',[2,2,16,8],'PaperPositionMode','auto')
+h = legend([num2str(t(plotind(1))/24),' days (E15)'],...
+    [num2str(t(plotind(2))/24,3),' days (E',num2str(round(15+t(plotind(2))/24,1)),')'],...
+    [num2str(t(plotind(3))/24,3),' days (E',num2str(round(15+t(plotind(3))/24,1)),')'],...
+    [num2str(t(plotind(4))/24,3),' days (E',num2str(round(15+t(plotind(4))/24,1)),')'],...
+    [num2str(t(plotind(5))/24,3),' days (E',num2str(round(15+t(plotind(5))/24,1)),')'],...
+    [num2str(t(plotind(6))/24,3),' days (E',num2str(round(15+t(plotind(6))/24,1)),')'],...
+    [num2str(t(plotind(7))/24,3),' days (E',num2str(round(15+t(plotind(7))/24,1)),')'],...
+    [num2str(t(plotind(8))/24,3),' days (E',num2str(round(15+t(plotind(8))/24,1)),')']);
+set(h,'FontSize',fsticks,'Position',[0.713 0.08 0.13 0.22]);
+
+set(gcf,'Units','inches','Position',[2,2,16,10],'PaperPositionMode','auto')
+
 
 
 %% plot velocities

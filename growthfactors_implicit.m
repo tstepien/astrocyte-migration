@@ -71,14 +71,15 @@ theta2_2 = 1 + 2*D2*dt/dr^2*ones(1,R-1) - dt*eta2;
 theta3_2 = -D2 * dt/dr^2 * (1 - dr./(2*r(2:R-1)));
 theta4_2 = -4*D2 * dt/dr^2;
 theta5_2 = 1 + 4*D2 * dt/dr^2 - dt*eta2;
-theta6_2 = -2*D2 * dt/dr^2;
-theta7_2 = 2*D2 * dt/dr^2 * p2BC*dr * ( 1 + dr/(2*r(R)) );
+theta6_2 = 0;%-2*D2 * dt/dr^2;
+theta7_2 = 0;%2*D2 * dt/dr^2 * p2BC*dr * ( 1 + dr/(2*r(R)) );
 
 maindiag2 = [theta5_2 , theta2_2];
 upperdiag2 = [theta4_2 , theta1_2];
 lowerdiag2 = [theta3_2 , theta6_2];
 
 thetamatrix2 = diag(maindiag2) + diag(upperdiag2,1) + diag(lowerdiag2,-1);
+thetamatrix2(end,end) = 1;
 
 bvector2 = p2_old' + [zeros(R-1,1) ; theta7_2];
 
