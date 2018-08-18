@@ -1,17 +1,17 @@
-function [p1_new,p2_new] = growthfactors_implicit(p1_old,p2_old,dt,r,...
-    D1,D2,xi1,xi2)
-% [p1_new,p2_new] = growthfactors_implicit(p1_old,p2_old,dt,r,D1,D2,xi1,xi2)
+function [q1_new,q2_new] = growthfactors_implicit(q1_old,q2_old,dt,r,...
+    D1,D2,xi1,xi2,thickness)
+% [q1_new,q2_new] = growthfactors_implicit(q1_old,q2_old,dt,r,D1,D2,xi1,xi2)
 %
 % inputs:
-%   p1_old = PDGFA growth factor concentration at previous time
-%   p2_old = LIF growth factor concentration at previous time
+%   q1_old = PDGFA growth factor concentration at previous time
+%   q2_old = LIF growth factor concentration at previous time
 %   dt     = time step size
 %   r      = spatial mesh
 %   {others} = parameters
 %
 % outputs:
-%   p1_new = PDGFA growth factor concentration at next time
-%   p2_new = LIF growth factor concentration at next time
+%   q1_new = PDGFA growth factor concentration at next time
+%   q2_new = LIF growth factor concentration at next time
 
 %%% spatial mesh
 R = length(r);
@@ -60,10 +60,10 @@ lowerdiag1 = [theta3_1 , theta6_1];
 
 thetamatrix1 = diag(maindiag1) + diag(upperdiag1,1) + diag(lowerdiag1,-1);
 
-bvector1 = p1_old' + [zeros(R-1,1) ; theta7_1] + dt*xi1;
+bvector1 = q1_old' + [zeros(R-1,1) ; theta7_1] + dt*xi1.*(thickness>0)';
 
-p1_new = ( thetamatrix1 \ bvector1 )';
-p1_old = p1_new;
+q1_new = ( thetamatrix1 \ bvector1 )';
+q1_old = q1_new;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% p2 - LIF %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 theta1_2 = -D2 * dt/dr^2 * (1 + dr./(2*r(2:R-1)));
@@ -81,9 +81,9 @@ lowerdiag2 = [theta3_2 , theta6_2];
 thetamatrix2 = diag(maindiag2) + diag(upperdiag2,1) + diag(lowerdiag2,-1);
 thetamatrix2(end,end) = 1;
 
-bvector2 = p2_old' + [zeros(R-1,1) ; theta7_2] + dt*xi2;
+bvector2 = q2_old' + [zeros(R-1,1) ; theta7_2] + dt*xi2.*(r==0)';
 
-p2_new = ( thetamatrix2 \ bvector2 )';
-p2_old = p2_new;
+q2_new = ( thetamatrix2 \ bvector2 )';
+q2_old = q2_new;
 
 end

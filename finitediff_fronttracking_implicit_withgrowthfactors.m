@@ -34,24 +34,24 @@ Dwater_PDGFA = 1.2*10^(-6) *(60^2*10^2); %%% diffusion of PDGFA in water at 37C 
                                      %%% but then converted to (mm^2/hr)
 Dwater_LIF = 1.38*10^(-6) *(60^2*10^2); %%% diffusion of LIF in water at 37C (cm^2/s)
                                     %%% but then converted to (mm^2/hr)
-xi_PDGFA = 0.015;
-xi_LIF = 0.015;
+xibar_PDGFA = 0.015;
+xibar_LIF = 0.015;
 
 D1 = Dwater_PDGFA / lambda^2; %%% effective diffusivity of PDGFA
 D2 = Dwater_LIF / lambda^2; %%% effective diffusivity of LIF
-xi1 = xi_PDGFA / phi; %%% production/release rate of PDGFA
-xi2 = xi_LIF / phi; %%% production/release rate of LIF
+xi1 = xibar_PDGFA / phi; %%% production/release rate of PDGFA
+xi2 = xibar_LIF / phi; %%% production/release rate of LIF
 
 %%% the constants seem way too big for the length scale that we're on
-D1 = D1/10;
-xi1 = xi1/2;
-D2 = D2/100;
-xi2 = xi2/2;
+% D1 = D1/10;
+% xi1 = xi1/2;
+% D2 = D2/100;
+% xi2 = xi2/2;
 
-p1max = 0.01;
-p1beta = 0.45;
-p1epsilon = 0.45;
-p2max = 0.1;
+% q1max = 0.01;
+% q1beta = 0.45;
+% q1epsilon = 0.45;
+% q2max = 0.1;
 
 %%% tension parameters
 rbar = 7.75*10^(-3); %%% reference radius (mm)
@@ -68,7 +68,7 @@ Tprimeatce = Tderivative(ce,kappa,cmin,rbar); % T'(ce)
 dr = 0.01;
 
 rmax = 5; %%% max radius (mm) (estimate rat retinal radius = 4.1 mm)
-tmax = 7*24; %%% max time (hr) (7 days = 168 hr)
+tmax = 3*24; %%% max time (hr) (7 days = 168 hr)
 
 r = 0:dr:rmax;
 R = length(r);
@@ -108,11 +108,13 @@ k_old = c1_old + c2_old;
 sympref('HeavisideAtOrigin', 1); %%% set Heaviside at origin to be 1 
                                  %%% instead of MATLAB's default 1/2
 initwidth_retina = 1029.17*0.001;
-p1_old = p1max * (-heaviside(r-initwidth_retina)+1);
-    %p1max * (1 - p1beta*exp(-r.^2/p1epsilon));
-        %p1_old(1) = 0;
-    %100*ones(1,R);
-p2_old = p2max * (-heaviside(r-5*dr)+1);
+q1_old = zeros(1,R);
+    % q1max * (-heaviside(r-initwidth_retina)+1);
+    % q1max * (1 - q1beta*exp(-r.^2/q1epsilon));
+        %q1_old(1) = 0;
+    % 100*ones(1,R);
+q2_old = zeros(1,R);
+    % q2max * (-heaviside(r-5*dr)+1);
     % 10*ones(1,R);%smooth(100*heaviside(1-r))';
 
 %%%%%%%%%%%%%%%%%%%%%%% initialize final variables %%%%%%%%%%%%%%%%%%%%%%%%
@@ -120,8 +122,8 @@ mvgbdy = s;
 c1 = c1_init;
 c2 = c2_init;
 k = k_old;
-p1 = p1_old;
-p2 = p2_old;
+q1 = q1_old;
+q2 = q2_old;
 t = tcurr;
 
 %%% subscript i is for space, j is for time (write in the order (j,i)) 
@@ -154,19 +156,19 @@ while tcurr < tmax && j<R-1
     
     %%%%%%%%%%%%%%%%%%%%%%%% solve eqn's with dt_p %%%%%%%%%%%%%%%%%%%%%%%%
     dt_c = 0;
-    while abs(dt_p-dt_c)>=tol        
-        [p1_hat,p2_hat] = growthfactors_implicit(p1_old,p2_old,dt_p,r,D1,...
-            D2,xi1,xi2);
+    while abs(dt_p-dt_c)>=tol
+        [PO2,thickness] = oxygen(tcurr + dt_p,r);
         
-        PO2 = oxygen(tcurr + dt_p,r);
+        [q1_hat,q2_hat] = growthfactors_implicit(q1_old,q2_old,dt_p,r,D1,...
+            D2,xi1,xi2,thickness);
         
-        ve_old = ve_calc(j,tcurr,r,c1_old,c2_old,Pm,alpha1,alpha2,gamma1,gamma2,ce);
+%         ve_old = ve_calc(j,tcurr,r,c1_old,c2_old,Pm,alpha1,alpha2,gamma1,gamma2,ce);
         
-        k_hat = cellpops_sum_withgrowthfactors(j,c1_old,c2_old,p1_hat,p2_hat,...
+        k_hat = cellpops_sum_withgrowthfactors(j,c1_old,c2_old,q1_hat,q2_hat,...
             PO2,dt_p,r,Pm,kappa,mu,alpha1,alpha2,gamma1,gamma2,cmin,rbar,ce);
     
         [c1_hat,c2_hat] = cellpops_separate_withgrowthfactors(j,c1_old,...
-            c2_old,k_hat,p1_hat,p2_hat,PO2,dt_p,r,Pm,kappa,mu,alpha1,alpha2,...
+            c2_old,k_hat,q1_hat,q2_hat,PO2,dt_p,r,Pm,kappa,mu,alpha1,alpha2,...
             beta,gamma1,gamma2,cmin,rbar,ce);
         
         %%%%%%%%%%%%%%%%%%%%%%%%% corrector step %%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -199,16 +201,16 @@ while tcurr < tmax && j<R-1
     %%%%%%%%%%%%%%%%%%%%%%%% solve next time step %%%%%%%%%%%%%%%%%%%%%%%%%
     whatstep = 'corrector';
     
-    [p1_new,p2_new] = growthfactors_implicit(p1_old,p2_old,dt_c,r,D1,...
-        D2,xi1,xi2);
+    [PO2,thickness] = oxygen(tcurr + dt_c,r);
     
-    PO2 = oxygen(tcurr + dt_c,r);
+    [q1_new,q2_new] = growthfactors_implicit(q1_old,q2_old,dt_c,r,D1,...
+        D2,xi1,xi2,thickness);
     
-    k_new = cellpops_sum_withgrowthfactors(j,c1_old,c2_old,p1_new,p2_new,...
+    k_new = cellpops_sum_withgrowthfactors(j,c1_old,c2_old,q1_new,q2_new,...
         PO2,dt_c,r,Pm,kappa,mu,alpha1,alpha2,gamma1,gamma2,cmin,rbar,ce);
     
     [c1_new,c2_new] = cellpops_separate_withgrowthfactors(j,c1_old,...
-        c2_old,k_new,p1_new,p2_new,PO2,dt_c,r,Pm,kappa,mu,alpha1,alpha2,beta,...
+        c2_old,k_new,q1_new,q2_new,PO2,dt_c,r,Pm,kappa,mu,alpha1,alpha2,beta,...
         gamma1,gamma2,cmin,rbar,ce);
 
     %%%%%%%%%%%%%%%%%%%%%% reset for next time step %%%%%%%%%%%%%%%%%%%%%%%
@@ -218,16 +220,16 @@ while tcurr < tmax && j<R-1
     c1_old = c1_new;
     c2_old = c2_new;
     k_old = k_new;
-    p1_old = p1_new;
-    p2_old = p2_new;
+    q1_old = q1_new;
+    q2_old = q2_new;
     
     %%% save variables
     mvgbdy = [mvgbdy ; s];
     c1 = [c1 ; c1_new];
     c2 = [c2 ; c2_new];
     k = [k ; k_new];
-    p1 = [p1 ; p1_new];
-    p2 = [p2 ; p2_new];
+    q1 = [q1 ; q1_new];
+    q2 = [q2 ; q2_new];
     t = [t ; tcurr];
     c1mb = [c1mb ; c1_new(j)];
     c2mb = [c2mb ; c2_new(j)];

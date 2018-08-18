@@ -161,31 +161,23 @@ set(gca,'XLim',[0,rmax],'FontSize',fsticks)
 subaxis(3,3,7,'MarginBottom',0.06)
 hold on
 for i=1:numcurvesplot
-    plot(r,p1(plotind(i),:),'LineWidth',1.5,'Color',co(i,:))
+    plot(r,q1(plotind(i),:),'LineWidth',1.5,'Color',co(i,:))
 end
 hold off
 xlabel('radius (mm)','FontSize',fslabel)
 ylabel('PDGFA concentration','FontSize',fslabel)
-if mvgbdy(end)<1.5
-    set(gca,'XLim',[0,mvgbdy(end)+5*dr],'FontSize',fsticks)
-else
-    set(gca,'XLim',[0,rmax],'FontSize',fsticks)
-end
+set(gca,'XLim',[0,rmax],'FontSize',fsticks)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 subaxis(3,3,8,'MarginBottom',0.06)
 hold on
 for i=1:numcurvesplot
-    plot(r,p2(plotind(i),:),'LineWidth',1.5,'Color',co(i,:))
+    plot(r,q2(plotind(i),:),'LineWidth',1.5,'Color',co(i,:))
 end
 hold off
 xlabel('radius (mm)','FontSize',fslabel)
 ylabel('LIF concentration','FontSize',fslabel)
-if mvgbdy(end)<1.5
-    set(gca,'XLim',[0,mvgbdy(end)+5*dr],'FontSize',fsticks)
-else
-    set(gca,'XLim',[0,rmax],'FontSize',fsticks)
-end
+set(gca,'XLim',[0,rmax],'FontSize',fsticks)
 
 h = legend([num2str(t(plotind(1))/24),' days (E15)'],...
     [num2str(t(plotind(2))/24,3),' days (E',num2str(round(15+t(plotind(2))/24,1)),')'],...
