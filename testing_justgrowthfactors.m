@@ -27,7 +27,7 @@ if dt >=dr^2/(2*D1)%dr^2/(2*max(D1,D2))
 end
 
 rmax = 5;
-tmax = 1*24;
+tmax = 7*24;
 
 r = 0:dr:rmax;
 R = length(r);

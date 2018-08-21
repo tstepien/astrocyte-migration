@@ -165,7 +165,7 @@ for i=1:numcurvesplot
 end
 hold off
 xlabel('radius (mm)','FontSize',fslabel)
-ylabel('PDGFA concentration','FontSize',fslabel)
+ylabel('PDGFA (mM)','FontSize',fslabel)
 set(gca,'XLim',[0,rmax],'FontSize',fsticks)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -176,7 +176,7 @@ for i=1:numcurvesplot
 end
 hold off
 xlabel('radius (mm)','FontSize',fslabel)
-ylabel('LIF concentration','FontSize',fslabel)
+ylabel('LIF (mM)','FontSize',fslabel)
 set(gca,'XLim',[0,rmax],'FontSize',fsticks)
 
 h = legend([num2str(t(plotind(1))/24),' days (E15)'],...
