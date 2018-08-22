@@ -1,17 +1,25 @@
-function [q1_new,q2_new] = growthfactors_implicit(q1_old,q2_old,dt,r,...
-    D1,D2,xi1,xi2,thickness)
-% [q1_new,q2_new] = growthfactors_implicit(q1_old,q2_old,dt,r,D1,D2,xi1,xi2)
+function [q1_new,q2_new] = growthfactors_implicit(q1_old,q2_old,dt,tcurr,...
+    r,D1,D2,xi1,xi2,thickness)
+% [q1_new,q2_new] = growthfactors_implicit(q1_old,q2_old,dt,tcurr,r,D1,D2,xi1,xi2)
 %
 % inputs:
 %   q1_old = PDGFA growth factor concentration at previous time
 %   q2_old = LIF growth factor concentration at previous time
 %   dt     = time step size
+%   tcurr  = current time
 %   r      = spatial mesh
 %   {others} = parameters
 %
 % outputs:
 %   q1_new = PDGFA growth factor concentration at next time
 %   q2_new = LIF growth factor concentration at next time
+
+%%% convert current time from hours to days
+tday = (tcurr+dt)/24;
+timeind = (tday>=3); %day 3 = E18
+
+%%% max total thickness (from Braekevelt and Hollenburg)
+maxthick = 280 * 1/1000; %280 micon converted to mm
 
 %%% spatial mesh
 nodesretina = sum(thickness>0); %%% PDGFA and LIF can spread through the
@@ -20,6 +28,8 @@ Rorig = length(r);
 r = r(1:nodesretina); %%% restrict domain
 R = length(r);
 dr = r(2)-r(1);
+
+thickness = thickness(1:nodesretina)';
 
 q1_old = q1_old(1:nodesretina);
 q2_old = q2_old(1:nodesretina);
@@ -67,7 +77,8 @@ lowerdiag1 = [theta3_1 , theta6_1];
 
 thetamatrix1 = diag(maindiag1) + diag(upperdiag1,1) + diag(lowerdiag1,-1);
 
-bvector1 = q1_old' + [zeros(R-1,1) ; theta7_1] + dt*xi1;%.*(thickness>0)';
+bvector1 = q1_old' + [zeros(R-1,1) ; theta7_1] ...
+    + dt*xi1.*thickness/maxthick * timeind;%.*(thickness>0)';
 
 q1_new = ( thetamatrix1 \ bvector1 )';
 % % % q1_old = q1_new;

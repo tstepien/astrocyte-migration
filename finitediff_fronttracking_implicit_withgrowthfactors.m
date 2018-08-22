@@ -68,7 +68,7 @@ Tprimeatce = Tderivative(ce,kappa,cmin,rbar); % T'(ce)
 dr = 0.01;
 
 rmax = 5; %%% max radius (mm) (estimate rat retinal radius = 4.1 mm)
-tmax = 3*24; %%% max time (hr) (7 days = 168 hr)
+tmax = 7*24; %%% max time (hr) (7 days = 168 hr)
 
 r = 0:dr:rmax;
 R = length(r);
@@ -159,8 +159,8 @@ while tcurr < tmax && j<R-1
     while abs(dt_p-dt_c)>=tol
         [PO2,thickness] = oxygen(tcurr + dt_p,r);
         
-        [q1_hat,q2_hat] = growthfactors_implicit(q1_old,q2_old,dt_p,r,D1,...
-            D2,xi1,xi2,thickness);
+        [q1_hat,q2_hat] = growthfactors_implicit(q1_old,q2_old,dt_p,tcurr,...
+            r,D1,D2,xi1,xi2,thickness);
         
 %         ve_old = ve_calc(j,tcurr,r,c1_old,c2_old,Pm,alpha1,alpha2,gamma1,gamma2,ce);
         
@@ -203,8 +203,8 @@ while tcurr < tmax && j<R-1
     
     [PO2,thickness] = oxygen(tcurr + dt_c,r);
     
-    [q1_new,q2_new] = growthfactors_implicit(q1_old,q2_old,dt_c,r,D1,...
-        D2,xi1,xi2,thickness);
+    [q1_new,q2_new] = growthfactors_implicit(q1_old,q2_old,dt_c,tcurr,r,...
+        D1,D2,xi1,xi2,thickness);
     
     k_new = cellpops_sum_withgrowthfactors(j,c1_old,c2_old,q1_new,q2_new,...
         PO2,dt_c,r,Pm,kappa,mu,alpha1,alpha2,gamma1,gamma2,cmin,rbar,ce);
