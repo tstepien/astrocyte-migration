@@ -1,5 +1,5 @@
 function [q1_new,q2_new] = growthfactors_implicit(q1_old,q2_old,dt,tcurr,...
-    r,D1,D2,xi1,xi2,thickness)
+    r,D1,D2,xi1,xi2,thickness,width_retina)
 % [q1_new,q2_new] = growthfactors_implicit(q1_old,q2_old,dt,tcurr,r,D1,D2,xi1,xi2)
 %
 % inputs:
@@ -18,9 +18,6 @@ function [q1_new,q2_new] = growthfactors_implicit(q1_old,q2_old,dt,tcurr,...
 tday = (tcurr+dt)/24;
 timeind = (tday>=3); %day 3 = E18
 
-%%% max total thickness (from Braekevelt and Hollenburg)
-maxthick = 280 * 1/1000; %280 micon converted to mm
-
 %%% spatial mesh
 nodesretina = sum(thickness>0); %%% PDGFA and LIF can spread through the
                                 %%% current extent of the retina
@@ -29,7 +26,17 @@ r = r(1:nodesretina); %%% restrict domain
 R = length(r);
 dr = r(2)-r(1);
 
-thickness = thickness(1:nodesretina)';
+%%% thickness of retinal ganglion cell layer (from Braekevelt and Hollenburg)
+thickness_posterior = max(-1.27*tday^4 + 18.26*tday^3 - 91.69*tday^2 ...
+    + 183.49*tday - 81.5 , 0);
+thickness_posterior = thickness_posterior * 0.001; %%% convert to mm
+
+thickness_peripheral = max(-3.66*tday^2 + 26.83*tday - 14.7 , 0);
+thickness_peripheral = thickness_peripheral * 0.001; %%% convert to mm
+
+thickness_RGC = (thickness_peripheral-thickness_posterior)/width_retina^2 ...
+    * r.^2 + thickness_posterior;
+maxthick = 46 * 1/1000; %46 micon converted to mm
 
 q1_old = q1_old(1:nodesretina);
 q2_old = q2_old(1:nodesretina);
@@ -78,7 +85,7 @@ lowerdiag1 = [theta3_1 , theta6_1];
 thetamatrix1 = diag(maindiag1) + diag(upperdiag1,1) + diag(lowerdiag1,-1);
 
 bvector1 = q1_old' + [zeros(R-1,1) ; theta7_1] ...
-    + dt*xi1.*thickness/maxthick * timeind;%.*(thickness>0)';
+    + dt*xi1.*thickness_RGC'/maxthick * timeind;%.*(thickness>0)';
 
 q1_new = ( thetamatrix1 \ bvector1 )';
 % % % q1_old = q1_new;

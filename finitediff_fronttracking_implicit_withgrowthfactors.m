@@ -157,10 +157,10 @@ while tcurr < tmax && j<R-1
     %%%%%%%%%%%%%%%%%%%%%%%% solve eqn's with dt_p %%%%%%%%%%%%%%%%%%%%%%%%
     dt_c = 0;
     while abs(dt_p-dt_c)>=tol
-        [PO2,thickness] = oxygen(tcurr + dt_p,r);
+        [PO2,thickness,width_retina] = oxygen(tcurr + dt_p,r);
         
         [q1_hat,q2_hat] = growthfactors_implicit(q1_old,q2_old,dt_p,tcurr,...
-            r,D1,D2,xi1,xi2,thickness);
+            r,D1,D2,xi1,xi2,thickness,width_retina);
         
 %         ve_old = ve_calc(j,tcurr,r,c1_old,c2_old,Pm,alpha1,alpha2,gamma1,gamma2,ce);
         
@@ -204,7 +204,7 @@ while tcurr < tmax && j<R-1
     [PO2,thickness] = oxygen(tcurr + dt_c,r);
     
     [q1_new,q2_new] = growthfactors_implicit(q1_old,q2_old,dt_c,tcurr,r,...
-        D1,D2,xi1,xi2,thickness);
+        D1,D2,xi1,xi2,thickness,width_retina);
     
     k_new = cellpops_sum_withgrowthfactors(j,c1_old,c2_old,q1_new,q2_new,...
         PO2,dt_c,r,Pm,kappa,mu,alpha1,alpha2,gamma1,gamma2,cmin,rbar,ce);

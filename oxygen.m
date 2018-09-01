@@ -1,4 +1,4 @@
-function [PO2,thickness] = oxygen(t,r)
+function [PO2,thickness,width_retina] = oxygen(t,r)
 % [PO2,thickness] = oxygen(t,r)
 %
 % inputs:
