@@ -27,8 +27,7 @@ R = length(r);
 dr = r(2)-r(1);
 
 %%% thickness of retinal ganglion cell layer (from Braekevelt and Hollenburg)
-thickness_posterior = max(-1.27*tday^4 + 18.26*tday^3 - 91.69*tday^2 ...
-    + 183.49*tday - 81.5 , 0);
+thickness_posterior = max(-1.95*tday^2 + 14.84*tday + 9.01 , 0);
 thickness_posterior = thickness_posterior * 0.001; %%% convert to mm
 
 thickness_peripheral = max(-3.66*tday^2 + 26.83*tday - 14.7 , 0);
@@ -37,6 +36,10 @@ thickness_peripheral = thickness_peripheral * 0.001; %%% convert to mm
 thickness_RGC = (thickness_peripheral-thickness_posterior)/width_retina^2 ...
     * r.^2 + thickness_posterior;
 maxthick = 46 * 1/1000; %46 micon converted to mm
+
+%%% radius of endothelial cells
+radius_endo = max(425*tday - 1675 , 0);
+radius_endo = radius_endo * 0.001; %%% convert to mm
 
 q1_old = q1_old(1:nodesretina);
 q2_old = q2_old(1:nodesretina);
@@ -106,7 +109,7 @@ lowerdiag2 = [theta3_2 , theta6_2];
 thetamatrix2 = diag(maindiag2) + diag(upperdiag2,1) + diag(lowerdiag2,-1);
 thetamatrix2(end,end) = 1;
 
-bvector2 = q2_old' + [zeros(R-1,1) ; theta7_2] + dt*xi2.*(r==0)';
+bvector2 = q2_old' + [zeros(R-1,1) ; theta7_2] + dt*xi2.*(r<=radius_endo)';
 
 q2_new = ( thetamatrix2 \ bvector2 )';
 % % % q2_old = q2_new;
