@@ -34,8 +34,8 @@ Dwater_PDGFA = 1.2*10^(-6) *(60^2*10^2); %%% diffusion of PDGFA in water at 37C 
                                      %%% but then converted to (mm^2/hr)
 Dwater_LIF = 1.38*10^(-6) *(60^2*10^2); %%% diffusion of LIF in water at 37C (cm^2/s)
                                     %%% but then converted to (mm^2/hr)
-xibar_PDGFA = 0.015;
-xibar_LIF = 0.015;
+xibar_PDGFA = 0.015/15;
+xibar_LIF = 0.015/7;
 
 D1 = Dwater_PDGFA / lambda^2; %%% effective diffusivity of PDGFA
 D2 = Dwater_LIF / lambda^2; %%% effective diffusivity of LIF

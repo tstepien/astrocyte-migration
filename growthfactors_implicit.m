@@ -26,6 +26,9 @@ r = r(1:nodesretina); %%% restrict domain
 R = length(r);
 dr = r(2)-r(1);
 
+q1_old = q1_old(1:nodesretina);
+q2_old = q2_old(1:nodesretina);
+
 %%% thickness of retinal ganglion cell layer (from Braekevelt and Hollenburg)
 thickness_posterior = max(-1.95*tday^2 + 14.84*tday + 9.01 , 0);
 thickness_posterior = thickness_posterior * 0.001; %%% convert to mm
@@ -47,7 +50,7 @@ q2_old = q2_old(1:nodesretina);
 %%% Neumann boundary conditions at end of domain (r=rmax)
 %%% (partial p/partial t) = constant
 p1BC = 0;
-p2BC = 0;
+% p2BC = 0;
 
 % % % %%% iterate based off of CFL condition
 % % % if dt >= dr^2/(2*D1)
