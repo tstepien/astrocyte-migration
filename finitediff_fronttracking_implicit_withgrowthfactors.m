@@ -7,11 +7,11 @@ global whatstep tcurr;
 %%% time unit: hr
 %%% space unit: mm
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% parameters %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%% oxygen parameters
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% oxygen parameters %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Pm = 10; % (mmHg)
 
-%%% astrocyte parameters
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% astrocyte parameters %%%%%%%%%%%%%%%%%%%%%%%%%%%
 kappa = 1;
 mu = 0.1;
 alpha1 = 0.1975; %%% (/hr)
@@ -19,21 +19,17 @@ alpha2 = alpha1 *(7/12); %%% (/hr)
 beta = 0.03; %%% (/hr)
 gamma1 = 0;%0.0001;%0;
 gamma2 = 0;%0.0001;%0.5;
-% kappa = 1;
-% mu = 0.2;
-% alpha1 = 0.00028; %%% (/hr)
-% alpha2 = 0.00010; %%% (/hr)
-% beta = 0;%0.0525; %%% (/hr)
-% gamma1 = 0;%0;
-% gamma2 = 0;%0.5;
 
-%%% growth factor parameters
+
+%%%%%%%%%%%%%%%%%%%%%%%% growth factor parameters %%%%%%%%%%%%%%%%%%%%%%%%%
 lambda = 1.6; %%% tortuosity of medium (unitless)
 phi = 0.2; %%% porosity/volume fraction in extracellular space (%)
-Dwater_PDGFA = 1.2*10^(-6) *(60^2*10^2); %%% diffusion of PDGFA in water at 37C (cm^2/s)
-                                     %%% but then converted to (mm^2/hr)
-Dwater_LIF = 1.38*10^(-6) *(60^2*10^2); %%% diffusion of LIF in water at 37C (cm^2/s)
-                                    %%% but then converted to (mm^2/hr)
+
+%%% diffusion of PDGFA in water at 37C (cm^2/s), converted to (mm^2/hr)
+Dwater_PDGFA = 1.2*10^(-6) *(60^2*10^2);
+%%% diffusion of LIF in water at 37C (cm^2/s), converted to (mm^2/hr)
+Dwater_LIF = 1.38*10^(-6) *(60^2*10^2);
+
 xibar_PDGFA = 0.015/15;
 xibar_LIF = 0.015/7;
 
@@ -42,27 +38,23 @@ D2 = Dwater_LIF / lambda^2; %%% effective diffusivity of LIF
 xi1 = xibar_PDGFA / phi; %%% production/release rate of PDGFA
 xi2 = xibar_LIF / phi; %%% production/release rate of LIF
 
-%%% the constants seem way too big for the length scale that we're on
-% D1 = D1/10;
-% xi1 = xi1/2;
-% D2 = D2/100;
-% xi2 = xi2/2;
+%%% degradation rates
+gamma3 = 0.001;
+gamma4 = 0.001;
 
-% q1max = 0.01;
-% q1beta = 0.45;
-% q1epsilon = 0.45;
-% q2max = 0.1;
 
-%%% tension parameters
+%%%%%%%%%%%%%%%%%%%%%%%%%%% tension parameters %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 rbar = 7.75*10^(-3); %%% reference radius (mm)
 rproc = 15.5*10^(-3); %%% reference radius with processes included (mm)
 cmin = 1/(pi*rproc^2); %%% reference cell density that includes processes (cells/mm^2)
 
-%%% moving boundary condition parameters
+
+%%%%%%%%%%%%%%%%%% moving boundary condition parameters %%%%%%%%%%%%%%%%%%%
 Te = 0.0035; %%% tension on boundary
 ce = densityatbdy(Te,kappa,cmin,rbar); % c1+c2 on boundary
 
 Tprimeatce = Tderivative(ce,kappa,cmin,rbar); % T'(ce)
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% mesh %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 dr = 0.01;
@@ -75,6 +67,7 @@ R = length(r);
 rhalf = (r(1:R-1)+r(2:R))/2;
 
 tol = 10^(-6); % tolerance for predictor-corrector scheme
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%% initial conditions %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% moving boundary location
@@ -116,6 +109,7 @@ q1_old = zeros(1,R);
 q2_old = zeros(1,R);
     % q2max * (-heaviside(r-5*dr)+1);
     % 10*ones(1,R);%smooth(100*heaviside(1-r))';
+
 
 %%%%%%%%%%%%%%%%%%%%%%% initialize final variables %%%%%%%%%%%%%%%%%%%%%%%%
 mvgbdy = s;
@@ -160,7 +154,7 @@ while tcurr < tmax && j<R-1
         [PO2,thickness,width_retina] = oxygen(tcurr + dt_p,r);
         
         [q1_hat,q2_hat] = growthfactors_implicit(q1_old,q2_old,dt_p,tcurr,...
-            r,D1,D2,xi1,xi2,thickness,width_retina);
+            r,D1,D2,xi1,xi2,gamma3,gamma4,thickness,width_retina);
         
 %         ve_old = ve_calc(j,tcurr,r,c1_old,c2_old,Pm,alpha1,alpha2,gamma1,gamma2,ce);
         
@@ -204,7 +198,7 @@ while tcurr < tmax && j<R-1
     [PO2,thickness] = oxygen(tcurr + dt_c,r);
     
     [q1_new,q2_new] = growthfactors_implicit(q1_old,q2_old,dt_c,tcurr,r,...
-        D1,D2,xi1,xi2,thickness,width_retina);
+        D1,D2,xi1,xi2,gamma3,gamma4,thickness,width_retina);
     
     k_new = cellpops_sum_withgrowthfactors(j,c1_old,c2_old,q1_new,q2_new,...
         PO2,dt_c,r,Pm,kappa,mu,alpha1,alpha2,gamma1,gamma2,cmin,rbar,ce);
