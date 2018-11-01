@@ -1,6 +1,6 @@
 clear variables global;
 clc;
-close all;
+% close all;
 
 global whatstep tcurr;
 
@@ -39,8 +39,11 @@ xi1 = xibar_PDGFA / phi; %%% production/release rate of PDGFA
 xi2 = xibar_LIF / phi; %%% production/release rate of LIF
 
 %%% degradation rates
-gamma3 = 0.001;
-gamma4 = 0.001;
+quasilength = 0.1;
+gamma3 = D1/quasilength^2;
+gamma4 = D2/quasilength^2;
+
+keyboard
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%% tension parameters %%%%%%%%%%%%%%%%%%%%%%%%%%%%
