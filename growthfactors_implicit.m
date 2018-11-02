@@ -37,8 +37,8 @@ dr = r(2)-r(1);
 thickness_posterior = max(-1.95*tday^2 + 14.84*tday + 9.01 , 0) * 0.001;
 thickness_peripheral = max(-3.66*tday^2 + 26.83*tday - 14.7 , 0) * 0.001;
 
-thickness_RGC = (thickness_peripheral-thickness_posterior)/width_retina^2 ...
-    * r.^2 + thickness_posterior;
+thickness_RGC = max( (thickness_peripheral-thickness_posterior)/width_retina^2 ...
+    * r.^2 + thickness_posterior, 0);
 maxthick = 46 * 0.001; % maximum thickness of RGC layer: 46 micon converted to mm
 
 %%% radius of endothelial cells (in microns, converted to mm)
@@ -72,12 +72,12 @@ radius_endo = max(425*tday - 1675 , 0) * 0.001;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% p1 - PDGFA %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 theta3_1 = -D1 * dt/dr^2 * (1 + dr./(2*r(2:R-1)));
-theta2_1 = 1 + 2*D1*dt/dr^2*ones(1,R-1) + dt*gamma3;
+theta2_1 = 1 + 2*D1*dt/dr^2*ones(1,R-1) + dt*gamma3*thickness_RGC(2:R)/maxthick;
 theta1_1 = -D1 * dt/dr^2 * (1 - dr./(2*r(2:R-1)));
 
 % origin
 theta5_1 = -4*D1 * dt/dr^2;
-theta4_1 = 1 + 4*D1 * dt/dr^2 + dt*gamma3;
+theta4_1 = 1 + 4*D1 * dt/dr^2 + dt*gamma3*thickness_RGC(1)/maxthick;
 
 % rmax
 theta6_1 = 0;%-2*D1 * dt/dr^2;

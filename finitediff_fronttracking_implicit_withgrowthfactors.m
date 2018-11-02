@@ -43,8 +43,6 @@ quasilength = 0.1;
 gamma3 = D1/quasilength^2;
 gamma4 = D2/quasilength^2;
 
-keyboard
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%% tension parameters %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 rbar = 7.75*10^(-3); %%% reference radius (mm)
