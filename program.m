@@ -7,9 +7,9 @@ global whatstep tcurr;
 %%% time unit: hr
 %%% space unit: mm
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%% oxygen parameters %%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Pm = 10; % (mmHg)
-
+%%%%%%%%%%%%%%%%%%% input all fixed parameters that are %%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%% known/derived from literature %%%%%%%%%%%%%%%%%%%%%%
+parameters_fixed
 
 %%%%%%%%%%%%%%%%%%%%%%%%%% astrocyte parameters %%%%%%%%%%%%%%%%%%%%%%%%%%%
 kappa = 1;
@@ -22,19 +22,9 @@ gamma2 = 0;%0.0001;%0.5;
 
 
 %%%%%%%%%%%%%%%%%%%%%%%% growth factor parameters %%%%%%%%%%%%%%%%%%%%%%%%%
-lambda = 1.6; %%% tortuosity of medium (unitless)
-phi = 0.2; %%% porosity/volume fraction in extracellular space (%)
-
-%%% diffusion of PDGFA in water at 37C (cm^2/s), converted to (mm^2/hr)
-Dwater_PDGFA = 1.2*10^(-6) *(60^2*10^2);
-%%% diffusion of LIF in water at 37C (cm^2/s), converted to (mm^2/hr)
-Dwater_LIF = 1.38*10^(-6) *(60^2*10^2);
-
 xibar_PDGFA = 0.015/15;
 xibar_LIF = 0.015/7;
 
-D1 = Dwater_PDGFA / lambda^2; %%% effective diffusivity of PDGFA
-D2 = Dwater_LIF / lambda^2; %%% effective diffusivity of LIF
 xi1 = xibar_PDGFA / phi; %%% production/release rate of PDGFA
 xi2 = xibar_LIF / phi; %%% production/release rate of LIF
 
@@ -44,10 +34,7 @@ gamma3 = D1/quasilength^2;
 gamma4 = D2/quasilength^2;
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%% tension parameters %%%%%%%%%%%%%%%%%%%%%%%%%%%%
-rbar = 7.75*10^(-3); %%% reference radius (mm)
-rproc = 15.5*10^(-3); %%% reference radius with processes included (mm)
-cmin = 1/(pi*rproc^2); %%% reference cell density that includes processes (cells/mm^2)
+
 
 
 %%%%%%%%%%%%%%%%%% moving boundary condition parameters %%%%%%%%%%%%%%%%%%%

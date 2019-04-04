@@ -1,21 +1,14 @@
 clear variables global;
 % clc;
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% parameters %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%% growth factor parameters
-lambda = 1.6; %%% tortuosity of medium (unitless)
-phi = 0.2; %%% porosity/volume fraction in extracellular space (%)
+%%%%%%%%%%%%%%%%%%% input all fixed parameters that are %%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%% known/derived from literature %%%%%%%%%%%%%%%%%%%%%%
+parameters_fixed
 
-%%% diffusion of PDGFA in water at 37C (cm^2/s), converted to (mm^2/hr)
-Dwater_PDGFA = 1.2*10^(-6) *(60^2*10^2);
-%%% diffusion of LIF in water at 37C (cm^2/s), converted to (mm^2/hr)
-Dwater_LIF = 1.38*10^(-6) *(60^2*10^2);
+%%%%%%%%%%%%%%%%%%%%%%%% growth factor parameters %%%%%%%%%%%%%%%%%%%%%%%%%
+xibar_PDGFA = 0.000000001;
+xibar_LIF = 0.001;
 
-xibar_PDGFA = 0.015/15;
-xibar_LIF = 0.015/7;
-
-D1 = Dwater_PDGFA / lambda^2; %%% effective diffusivity of PDGFA
-D2 = Dwater_LIF / lambda^2; %%% effective diffusivity of LIF
 xi1 = xibar_PDGFA / phi; %%% production/release rate of PDGFA
 xi2 = xibar_LIF / phi; %%% production/release rate of LIF
 
@@ -29,17 +22,19 @@ dr = 0.1;
 dt = 0.01;
 
 %check CFL
-if dt >=dr^2/(2*D1)%dr^2/(2*max(D1,D2))
+if dt >=dr^2/(2*max(D1,D2))
     disp('check CFL')
 end
 
-rmax = 5;
-tmax = 7*24;
+rmax = 5; %%% max radius (mm) (estimate rat retinal radius = 4.1 mm)
+tmax = 7*24; %%% max time (hr) (7 days = 168 hr)
 
 r = 0:dr:rmax;
 R = length(r);
 rhalf = (r(1:R-1)+r(2:R))/2;
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%% initial conditions %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% growth factors initial condition
 q1_old = zeros(1,R);
 q2_old = zeros(1,R);
@@ -84,9 +79,14 @@ diffq1 = abs(q1_exp-q1_imp);
 diffq2 = abs(q2_exp-q2_imp);
 
 
-tplot = 1:floor(length(t)/10):length(t); %length(t);
 
-% max(q1_imp(tplot,:))
+%% plots
+%%% plot times: day 0, 1, 2, 3, 4, 5, 6, 7
+numcurvesplot = 8;
+tplot = zeros(1,numcurvesplot);
+for i=0:numcurvesplot-1
+    tplot(i+1) = find(abs((t/24-i))==min(abs(t/24-i)));
+end
 
 
 figure
@@ -96,7 +96,7 @@ figure
 %     plot(r,q1_exp(i,:))
 % end
 % hold off
-% title('q1 - Explicit Method')
+% title('PDGFA - Explicit Method')
 
 % subplot(2,3,2)
 subplot(1,2,1)
@@ -105,7 +105,7 @@ for i=tplot
     plot(r,q1_imp(i,:))
 end
 hold off
-title('q1 - Implicit Method')
+title('PDGFA - Implicit Method')
 
 % subplot(2,3,3)
 % hold on
@@ -113,7 +113,7 @@ title('q1 - Implicit Method')
 %     plot(r,diffq1(i,:))
 % end
 % hold off
-% title('q1 - Difference between methods')
+% title('PDGFA - Difference between methods')
 
 % subplot(2,3,4)
 % hold on
@@ -121,7 +121,7 @@ title('q1 - Implicit Method')
 %     plot(r,q2_exp(i,:))
 % end
 % hold off
-% title('q2 - Explicit Method')
+% title('LIF - Explicit Method')
 % 
 % subplot(2,3,5)
 subplot(1,2,2)
@@ -130,7 +130,7 @@ for i=tplot
     plot(r,q2_imp(i,:))
 end
 hold off
-title('q2 - Implicit Method')
+title('LIF - Implicit Method')
 % 
 % subplot(2,3,6)
 % hold on
@@ -138,4 +138,8 @@ title('q2 - Implicit Method')
 %     plot(r,diffq2(i,:))
 % end
 % hold off
-% title('q2 - Difference between methods')
+% title('LIF - Difference between methods')
+
+h = legend('0 days (E15)','1 day (E16)','2 days (E17)','3 days (E18)',...
+    '4 days (E19)','5 days (E20)','6 days (E21)','7 days (E22/P0)');
+set(h,'FontSize',fsticks,'Position',[0.85 0.57827 0.0833 0.372]);
