@@ -29,7 +29,7 @@ xi1 = xibar_PDGFA / phi; %%% production/release rate of PDGFA
 xi2 = xibar_LIF / phi; %%% production/release rate of LIF
 
 %%% degradation rates
-quasilength = 0.1;
+quasilength = 0.2;
 gamma3 = D1/quasilength^2;
 gamma4 = D2/quasilength^2;
 
