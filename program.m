@@ -7,74 +7,76 @@ global whatstep tcurr;
 %%% time unit: hr
 %%% space unit: mm
 
-%%%%%%%%%%%%%%%%%%% input all fixed parameters that are %%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%% known/derived from literature %%%%%%%%%%%%%%%%%%%%%%
-parameters_fixed
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% VARIABLE CODE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%% astrocyte parameters %%%%%%%%%%%%%%%%%%%%%%%%%%%
-kappa = 1;
-mu = 0.1;
-alpha1 = 0.1975; %%% (/hr)
-alpha2 = alpha1 *(7/12); %%% (/hr)
-beta = 0.03; %%% (/hr)
-gamma1 = 0;%0.0001;%0;
-gamma2 = 0;%0.0001;%0.5;
+kappa = 1; %%% tension function scaling
+mu = 0.1; %%% adhesion constant
+alpha1 = 0.1975; %%% (/hr) proliferation rate APC
+alpha2 = alpha1 *(7/12); %%% (/hr) proliferation rate IPA
+beta = 0.03; %%% (/hr) differentiation rate
+gamma1 = 0;%0.0001;%0; apoptosis rate APC
+gamma2 = 0;%0.0001;%0.5; apoptosis rate IPA
 
 
 %%%%%%%%%%%%%%%%%%%%%%%% growth factor parameters %%%%%%%%%%%%%%%%%%%%%%%%%
-xibar_PDGFA = 0.015/15;
-xibar_LIF = 0.015/7;
-
-xi1 = xibar_PDGFA / phi; %%% production/release rate of PDGFA
-xi2 = xibar_LIF / phi; %%% production/release rate of LIF
-
-%%% degradation rates
-quasilength = 0.2;
-gamma3 = D1/quasilength^2;
-gamma4 = D2/quasilength^2;
-
-
-
+xibar_PDGFA = 0.015/15; %%% PDGFA production
+xibar_LIF = 0.015/7; %%% LIF production
 
 
 %%%%%%%%%%%%%%%%%% moving boundary condition parameters %%%%%%%%%%%%%%%%%%%
 Te = 0.0035; %%% tension on boundary
-ce = densityatbdy(Te,kappa,cmin,rbar); % c1+c2 on boundary
-
-Tprimeatce = Tderivative(ce,kappa,cmin,rbar); % T'(ce)
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% mesh %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%% mesh parameters %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 dr = 0.01;
 
 rmax = 5; %%% max radius (mm) (estimate rat retinal radius = 4.1 mm)
 tmax = 7*24; %%% max time (hr) (7 days = 168 hr)
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% FIXED CODE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%% input all fixed parameters that are %%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%% known/derived from literature %%%%%%%%%%%%%%%%%%%%%%
+parameters_fixed
+
+
+%%%%%%%%%%%%%%%%%%%%% parameter scalings/calculations %%%%%%%%%%%%%%%%%%%%%
+xi1 = xibar_PDGFA / phi;
+xi2 = xibar_LIF / phi;
+
+ce = densityatbdy(Te,kappa,cmin,rbar); % c1+c2 on boundary
+Tprimeatce = Tderivative(ce,kappa,cmin,rbar); % T'(ce)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% mesh set up %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 r = 0:dr:rmax;
 R = length(r);
 rhalf = (r(1:R-1)+r(2:R))/2;
 
 tol = 10^(-6); % tolerance for predictor-corrector scheme
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%% initial conditions %%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%% moving boundary location
-s = 0.2; %based on Chan-Ling et al. (2009) Fig 2G: E15
-
-if abs(s/dr - round(s/dr))>2*eps
+if abs(s0/dr - round(s0/dr))>2*eps
     error('error specifying s(0): moving boundary must be located on grid node');
 end
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%% initial conditions %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% time
 tcurr = 0;
 
 %%% astrocytes
 c1_init = zeros(1,R);
 for i=1:R
-    xval = s;
+    xval = s0;
     yval = 1.05*ce;
     if r(i)<=xval %fitted parabola
-        c1_init(i) = (ce-yval)/s^2*r(i)^2 + yval;
+        c1_init(i) = (ce-yval)/s0^2*r(i)^2 + yval;
     else
         c1_init(i) = 0;
     end
@@ -86,21 +88,13 @@ c2_old = c2_init;
 k_old = c1_old + c2_old;
 
 %%% growth factors
-sympref('HeavisideAtOrigin', 1); %%% set Heaviside at origin to be 1 
-                                 %%% instead of MATLAB's default 1/2
-initwidth_retina = 1029.17*0.001;
 q1_old = zeros(1,R);
-    % q1max * (-heaviside(r-initwidth_retina)+1);
-    % q1max * (1 - q1beta*exp(-r.^2/q1epsilon));
-        %q1_old(1) = 0;
-    % 100*ones(1,R);
 q2_old = zeros(1,R);
-    % q2max * (-heaviside(r-5*dr)+1);
-    % 10*ones(1,R);%smooth(100*heaviside(1-r))';
 
 
 %%%%%%%%%%%%%%%%%%%%%%% initialize final variables %%%%%%%%%%%%%%%%%%%%%%%%
-mvgbdy = s;
+mvgbdy = s0;
+s = s0;
 c1 = c1_init;
 c2 = c2_init;
 k = k_old;
@@ -108,9 +102,8 @@ q1 = q1_old;
 q2 = q2_old;
 t = tcurr;
 
-%%% subscript i is for space, j is for time (write in the order (j,i)) 
-
-j_init = s/dr+1;
+%%% subscript i is for space, j is for time (write in the order (j,i))
+j_init = s0/dr+1;
 j = j_init;
 
 %%% velocity
@@ -127,14 +120,17 @@ while tcurr < tmax && j<R-1
     whatstep = 'predictor';
     
     aa = 1;
-    if s==0
-        dt_p = dr;
-    elseif s==dr
-        dt_p = 1/aa * mu/Tprimeatce * dr^2 / ( k_old(j) - k_old(j-1) );
-    else
+    %%% should have s0 start further than 2 nodes in
+    %%% lines commented so code runs faster, but left in case they're
+    %%% desired
+%     if s0==0
+%         dt_p = dr;
+%     elseif s0==dr
+%         dt_p = 1/aa * mu/Tprimeatce * dr^2 / ( k_old(j) - k_old(j-1) );
+%     else
         dt_p = 1/aa * mu/Tprimeatce * 2*dr^2 / ...
             ( 3*k_old(j) - 4*k_old(j-1) + k_old(j-2) );
-    end
+%     end
     
     %%%%%%%%%%%%%%%%%%%%%%%% solve eqn's with dt_p %%%%%%%%%%%%%%%%%%%%%%%%
     dt_c = 0;
@@ -155,19 +151,23 @@ while tcurr < tmax && j<R-1
         
         %%%%%%%%%%%%%%%%%%%%%%%%% corrector step %%%%%%%%%%%%%%%%%%%%%%%%%%
         bb = 1/2;
-        if s==0
-            dt_c = mu/Tprimeatce * dr / ( ...
-                bb*( k_hat(j+1) - k_hat(j) )/dr ...
-                + (1-bb)*( 1/aa*mu/Tprimeatce ) );
-        elseif s==dr
-            dt_c = mu/Tprimeatce * dr^2 / ( ...
-                bb*( 3*k_hat(j+1) - 4*k_hat(j) + k_hat(j-1) )/2 ...
-                + (1-bb)*( k_old(j) - k_old(j-1) ) );
-        else
+        
+        %%% should have s0 start further than 2 nodes in
+        %%% lines commented so code runs faster, but left in case they're
+        %%% desired
+%         if s0==0
+%             dt_c = mu/Tprimeatce * dr / ( ...
+%                 bb*( k_hat(j+1) - k_hat(j) )/dr ...
+%                 + (1-bb)*( 1/aa*mu/Tprimeatce ) );
+%         elseif s0==dr
+%             dt_c = mu/Tprimeatce * dr^2 / ( ...
+%                 bb*( 3*k_hat(j+1) - 4*k_hat(j) + k_hat(j-1) )/2 ...
+%                 + (1-bb)*( k_old(j) - k_old(j-1) ) );
+%         else
             dt_c = mu/Tprimeatce * 2*dr^2 / ( ...
                 bb*( 3*k_hat(j+1) - 4*k_hat(j) + k_hat(j-1) ) ...
                 + (1-bb)*( 3*k_old(j) - 4*k_old(j-1) + k_old(j-2) ) );
-        end
+%         end
         
 %         [dt_p, dt_c]
 %         keyboard
