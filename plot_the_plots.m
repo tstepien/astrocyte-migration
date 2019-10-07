@@ -4,6 +4,7 @@ max_astrocytes = 2.67;
 %%% set up the plots
 [PO2,thickness] = oxygen(t,r);
 
+%%% variables
 T = length(t);
 
 %%% only plot a subset of the times
