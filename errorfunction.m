@@ -1,5 +1,5 @@
-function [err_rad,err_dens,err_tot] = errorfunction(t,r,mvgbdy,c1,c2)
-% [err_rad,err_dens,err_tot] = errorfunction(t,mvgbdy,c1,c2)
+function [err_rad,err_dens,err_time,err_tot] = errorfunction(t,r,mvgbdy,c1,c2)
+% [err_rad,err_dens,err_time,err_tot] = errorfunction(t,mvgbdy,c1,c2)
 %
 % This is the error function for comparing the experimental data with
 % simulations
@@ -14,7 +14,8 @@ function [err_rad,err_dens,err_tot] = errorfunction(t,r,mvgbdy,c1,c2)
 % outputs:
 %   err_rad  = error from astrocyte radius
 %   err_dens = error from astrocyte density
-%   err_tot  = total error = (err_rad + err_dens)
+%   err_time = error from ending time compared to 7 days
+%   err_tot  = total error = (err_rad + err_dens + err_time)
 
 %%% APC and IPA radius (mm) for E15-E16, E18-E22/P0
 rad_APC = [0.33; 0.33; 0.5; 0.67; 1.67; 2.17; 2.67];
@@ -56,5 +57,8 @@ diff_IPA = sum( abs(act_IPA - est_IPA) , 2) ./ numnodes;
 
 err_dens = sum( diff_APC + diff_IPA );
 
+%%% total error from time
+err_time = abs(7 - t(end)/24)/7;
+
 %%% total error
-err_tot = err_rad + err_dens;
+err_tot = err_rad + err_dens + err_time;

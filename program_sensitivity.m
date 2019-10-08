@@ -2,6 +2,7 @@ clear variables global;
 clc;
 
 %%% this script file is to run a sensitivity analysis of the parameters
+diary sensitivity_analysis.txt
 
 %%% time unit: hr
 %%% space unit: mm
@@ -29,17 +30,17 @@ p.Te = 0.0035; %%% tension on boundary
 %%%     xibar_LIF, Te
 bound = [1 10;
     0.01 2;
-    0 1;
-    0 1;
-    0 1;
-    0 0.0001;
-    0 0.0001;
-    0 0.1;
-    0 0.1;
-    0 0.0035];
+    0 3;
+    0 2;
+    0 3;
+    0 0.0009;
+    0 0.001;
+    0 0.12;
+    0 10;
+    0 0.00387499];
 numpar = length(bound);
 
-N = 2;
+N = 11;
 
 intrange = zeros(numpar,N);
 for i=1:numpar
@@ -49,8 +50,9 @@ end
 %%% preallocate
 err = zeros(size(intrange));
 
-for j = 1:numpar
-    for i = 1:N
+for j = 1:numpar %%% parameter
+    for i = 1:N %%% split up interval range
+        [j i]
         paramval = p;
         if j==1
             paramval.kappa = intrange(j,i);
@@ -75,13 +77,19 @@ for j = 1:numpar
         end
         
         %%% solve equation
+        tic
         [t,r,c1,c2,q1,q2,mvgbdy,vel_cir,vel_rad] = eqnsolver(paramval,m,plotsonoff);
+        toc
 
         %%% error calculation
-        [err_rad,err_dens,err_tot] = errorfunction(t,r,mvgbdy,c1,c2);
+        [err_rad,err_dens,err_time,err_tot] = errorfunction(t,r,mvgbdy,c1,c2);
         
         err(j,i) = err_tot;
 
         save('sensitivity_analysis.mat','p','intrange','err');
     end
 end
+
+save('sensitivity_analysis.mat')
+
+diary off
