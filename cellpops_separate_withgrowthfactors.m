@@ -59,7 +59,6 @@ g1 = growthterms_c1_withgrowthfactors(c1_old(1:j),c2_old(1:j),q1(1:j),...
 g2 = growthterms_c2_withgrowthfactors(c1_old(1:j),c2_old(1:j),q1(1:j),...
     q2(1:j),PO2(1:j),Pm,alpha2,beta,gamma2,rbar);
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%% construct matrix %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% c1 - APC %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% block 11

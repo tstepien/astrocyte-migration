@@ -28,6 +28,7 @@ rbar = 7.75*10^(-3); %%% reference radius (mm)
 rproc = 15.5*10^(-3); %%% reference radius with processes included (mm)
 cmin = 1/(pi*rproc^2); %%% reference cell density that includes processes
                        %%% (cells/mm^2)
+kappa = 1; %%% tension function scaling (mN/mm^2)
 
 
 %%%%%%%%%%%%%%%%%%%% moving boundary initial location %%%%%%%%%%%%%%%%%%%%%

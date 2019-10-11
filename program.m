@@ -6,7 +6,6 @@ clc;
 %%% space unit: mm
 
 %%%%%%%%%%%%%%%%%%%%%%%%%% astrocyte parameters %%%%%%%%%%%%%%%%%%%%%%%%%%%
-p.kappa = 1; %%% tension function scaling
 p.mu = 0.1; %%% adhesion constant
 p.alpha1 = 0.1975; %%% (/hr) proliferation rate APC
 p.alpha2 = p.alpha1 *(7/12); %%% (/hr) proliferation rate IPA
@@ -35,7 +34,7 @@ plotsonoff = 'on';
 
 %% error
 %%%%%%%%%%%%%%%%%%%%%%%%%%%% error calculation %%%%%%%%%%%%%%%%%%%%%%%%%%%%
-[err_rad,err_dens,err_time,err_tot] = errorfunction(t,r,mvgbdy,c1,c2);
+[err_rad,err_dens,err_time,err_tot] = errorfunction(t,r,mvgbdy,c1,c2,q1,q2);
 
 
 %% area under curve - trapezoidal rule

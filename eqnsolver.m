@@ -17,7 +17,6 @@ global whatstep tcurr;
 %%% space unit: mm
 
 %%%%%%%%%%%%%%%% rename inputted parameters from structure %%%%%%%%%%%%%%%%
-kappa = p.kappa; %%% tension function scaling
 mu = p.mu; %%% adhesion constant
 alpha1 = p.alpha1; %%% (/hr) proliferation rate APC
 alpha2 = p.alpha2; %%% (/hr) proliferation rate IPA
