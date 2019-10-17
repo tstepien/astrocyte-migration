@@ -33,3 +33,29 @@ kappa = 1; %%% tension function scaling (mN/mm^2)
 
 %%%%%%%%%%%%%%%%%%%% moving boundary initial location %%%%%%%%%%%%%%%%%%%%%
 s0 = 0.2; %%% based on Chan-Ling et al. (2009) Fig 2G: E15
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%% retinal ganglion cells %%%%%%%%%%%%%%%%%%%%%%%%%%
+maxRGCthick = 46*0.001; %%% maximum thickness of RGC layer: 46 micon converted to mm
+
+
+%%%%%%%%%%%%%%%%%%%%%%% partial pressure of oxygen %%%%%%%%%%%%%%%%%%%%%%%%
+P0 = 60;
+
+Dalpha = 4.73*10^(-10); % cm^3 O2/cm/s/mmHg
+M0 = 1.8; % cm^3 O2/100g/min
+
+%%% convert parameters to time units of hours and space units of mm
+Dalpha = Dalpha * (60*60*0.1); % cm^3 O2/mm/hr/mmHg
+M0 = M0 * (60/100*0.1^3); % cm^3 O2/hr
+
+%%% check calculations
+%     M0to_s = 1.8/(60*100);
+%     Dalpha/M0to_s
+%     check1 = 2*P0*Dalpha/M0to_s
+%     sq_check1 = sqrt(check1)
+
+%%% check calculations
+%     Dalpha/M0
+%     check2 = 2*P0*Dalpha/M0
+%     sq_check2 = sqrt(check2)

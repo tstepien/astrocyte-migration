@@ -55,22 +55,15 @@ q2_imp(1,:) = q2_old;
 tcurr = 0;
 
 for i = 2:length(t)
-    tday = t(i)/24;
-    %%% thickness at edge of retina (convert from micron to mm)
-    thickness_peripheral = (13.77 * tday + 72.8) * 0.001;
-    %%% thickness at center of retina (optic nerve head) (convert from
-    %%% micron to mm)
-    thickness_origin = (14.33 * tday + 98.78) * 0.001;
-    %%% width/radius of retina (convert from micron to mm)
-    width_retina = (414.17 * tday + 1029.17) * 0.001;
-    %%% parabolic nonuniform thickness throughout retina
-    thickness = (( thickness_peripheral - thickness_origin )./width_retina.^2 .*r.^2 ...
-        + thickness_origin ) .* (r<=width_retina);
+    [PO2,thickness,width_retina] = oxygen(tcurr + dt,r);
+    [thickness_RGC,radius_endo] = thick_rad(dt,tcurr,r,width_retina);
     
 %     [q1_exp(i,:),q2_exp(i,:)] = growthfactors_explicit(q1_exp(i-1,:),...
 %         q2_exp(i-1,:),dt,r,D1,D2,xi1,xi2);
     [q1_imp(i,:),q2_imp(i,:)] = growthfactors_implicit(q1_imp(i-1,:),...
-        q2_imp(i-1,:),dt,tcurr,r,D1,D2,xi1,xi2,gamma3,gamma4,thickness,width_retina);
+        q2_imp(i-1,:),dt,tcurr,r,dr,R,thickness_RGC,radius_endo,...
+        maxRGCthick,thickness,D1,D2,xi1,xi2,gamma3,gamma4);
+    
     
     tcurr = tcurr + dt;
 end
@@ -140,6 +133,7 @@ title('LIF - Implicit Method')
 % hold off
 % title('LIF - Difference between methods')
 
+fsticks = 14;
 h = legend('0 days (E15)','1 day (E16)','2 days (E17)','3 days (E18)',...
     '4 days (E19)','5 days (E20)','6 days (E21)','7 days (E22/P0)');
 set(h,'FontSize',fsticks,'Position',[0.85 0.57827 0.0833 0.372]);

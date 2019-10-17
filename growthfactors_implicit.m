@@ -1,7 +1,11 @@
 function [q1_new,q2_new] = growthfactors_implicit(q1_old,q2_old,dt,tcurr,...
-    r,D1,D2,xi1,xi2,gamma3,gamma4,thickness,width_retina)
+    r,dr,R,thickness_RGC,radius_endo,maxRGCthick,thickness,D1,D2,xi1,xi2,...
+    gamma3,gamma4)
 % [q1_new,q2_new] = growthfactors_implicit(q1_old,q2_old,dt,tcurr,...
-%     r,D1,D2,xi1,xi2,gamma3,gamma4,thickness,width_retina)
+%     r,dr,R,thickness_RGC,radius_endo,maxRGCthick,thickness,D1,D2,xi1,xi2,...
+%     gamma3,gamma4)
+%
+% Uses Dirichlet boundary condition q1=q2=0 at Rmax
 %
 % inputs:
 %   q1_old = PDGFA growth factor concentration at previous time
@@ -9,42 +13,23 @@ function [q1_new,q2_new] = growthfactors_implicit(q1_old,q2_old,dt,tcurr,...
 %   dt     = time step size
 %   tcurr  = current time
 %   r      = spatial mesh
+%   dr     = spatial mesh size
+%   R      = length of spatial mesh
 %   {others} = parameters
 %
 % outputs:
 %   q1_new = PDGFA growth factor concentration at next time
 %   q2_new = LIF growth factor concentration at next time
 
-%%% CURRENTLY USES DIRICHLET=0 BC AT RMAX
-
-%%% convert current time from hours to days
-tday = (tcurr+dt)/24;
-timeind = (tday>=3); %day 3 = E18
+timeind = ((tcurr+dt)/24>=3); %day 3 = E18
 
 %%% spatial mesh
 % nodesretina = sum(thickness>0); %%% PDGFA and LIF can spread through the
 %                                 %%% current extent of the retina
 % Rorig = length(r);
 % r = r(1:nodesretina); %%% restrict domain
-R = length(r);
-dr = r(2)-r(1);
-
 % q1_old = q1_old(1:nodesretina); %%% restrict domain
 % q2_old = q2_old(1:nodesretina);
-
-%%% thickness of retinal ganglion cell layer (from Braekevelt and Hollenburg)
-%%% in microns, converted to mm
-thickness_posterior = max(-1.95*tday^2 + 14.84*tday + 9.01 , 0) * 0.001;
-thickness_peripheral = max(-3.66*tday^2 + 26.83*tday - 14.7 , 0) * 0.001;
-
-thickness_RGC = max( (thickness_peripheral-thickness_posterior)/width_retina^2 ...
-    * r.^2 + thickness_posterior, 0) .* (r<=width_retina);
-maxthick = 46 * 0.001; % maximum thickness of RGC layer: 46 micon converted to mm
-
-[sum(thickness>0) sum(thickness_RGC>0)];
-
-%%% radius of endothelial cells (in microns, converted to mm)
-radius_endo = max(425*tday - 1675 , 0) * 0.001;
 
 %%% Neumann boundary conditions at end of domain (r=rmax)
 %%% (partial p/partial t) = constant
@@ -74,12 +59,12 @@ radius_endo = max(425*tday - 1675 , 0) * 0.001;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% q1 - PDGFA %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 theta3_1 = -D1 * dt/dr^2 * (1 + dr./(2*r(2:R-1)));
-theta2_1 = 1 + 2*D1*dt/dr^2*ones(1,R-1) + dt*gamma3;%*thickness_RGC(2:R)/maxthick;
+theta2_1 = 1 + 2*D1*dt/dr^2*ones(1,R-1) + dt*gamma3;%*thickness_RGC(2:R)/maxRGCthick;
 theta1_1 = -D1 * dt/dr^2 * (1 - dr./(2*r(2:R-1)));
 
 % origin
 theta5_1 = -4*D1 * dt/dr^2;
-theta4_1 = 1 + 4*D1 * dt/dr^2 + dt*gamma3;%*thickness_RGC(1)/maxthick;
+theta4_1 = 1 + 4*D1 * dt/dr^2 + dt*gamma3;%*thickness_RGC(1)/maxRGCthick;
 
 % rmax
 theta6_1 = 0;%-2*D1 * dt/dr^2;
@@ -93,7 +78,7 @@ thetamatrix1 = diag(maindiag1) + diag(upperdiag1,1) + diag(lowerdiag1,-1);
 thetamatrix1(end,end) = 1;
 
 bvector1 = q1_old' + [zeros(R-1,1) ; theta7_1] ...
-    + dt*xi1.*thickness_RGC'/maxthick * timeind.*(thickness>0)';
+    + dt*xi1.*thickness_RGC'/maxRGCthick * timeind.*(thickness>0)';
 
 q1_new = ( thetamatrix1 \ bvector1 )';
 % % % q1_old = q1_new;

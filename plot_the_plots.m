@@ -2,7 +2,14 @@
 max_astrocytes = 2.67;
 
 %%% set up the plots
-[PO2,thickness] = oxygen(t,r);
+
+%%% cell layer thickness and radius
+[thickness_ret,~,~] = thick_rad(t,r);
+    
+%%% oxygen
+PO2 = oxygen(r,thickness_ret,P0,Dalpha,M0);
+    
+% [PO2,thickness] = oxygen(t,r);
 
 %%% variables
 T = length(t);
@@ -128,13 +135,13 @@ end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 subaxis(3,3,5,'MarginTop',0.03)
-if size(thickness,1)==1 || size(thickness,2)==1
-    plot(t/24,thickness,'-o','LineWidth',1.5)
+if size(thickness_ret,1)==1 || size(thickness_ret,2)==1
+    plot(t/24,thickness_ret,'-o','LineWidth',1.5)
     xlabel('t (days)','FontSize',fslabel)
 else
     hold on
     for i=1:numcurvesplot
-        plot(r,thickness(plotind(i),:),'LineWidth',1.5,'Color',co(i,:))
+        plot(r,thickness_ret(plotind(i),:),'LineWidth',1.5,'Color',co(i,:))
     end
     hold off
     xlabel('radius (mm)','FontSize',fslabel)
@@ -144,8 +151,8 @@ set(gca,'XLim',[0,rmax],'FontSize',fsticks)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 subaxis(3,3,6)
-if size(thickness,1)==1 || size(thickness,2)==1
-    plot(thickness,PO2,'-o','LineWidth',1.5)
+if size(thickness_ret,1)==1 || size(thickness_ret,2)==1
+    plot(thickness_ret,PO2,'-o','LineWidth',1.5)
     xlabel('total retinal thickness (mm)','FontSize',fslabel)
 else
     hold on
