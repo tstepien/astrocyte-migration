@@ -126,7 +126,7 @@ while tcurr < tmax && j<R-1
     dt_c = 0;
     while abs(dt_p-dt_c)>=tol
         %%% cell layer thickness and radius
-        [thickness_ret,thickness_RGC,radius_endo] = thick_rad(tcurr+dt_p,r);
+        [thickness_ret,thickness_RGC,radius_endo,~] = thick_rad(tcurr+dt_p,r);
     
         %%% oxygen
         PO2 = oxygen(r,thickness_ret,P0,Dalpha,M0);
@@ -143,9 +143,13 @@ while tcurr < tmax && j<R-1
             PO2,dt_p,r,Pm,kappa,mu,alpha1,alpha2,gamma1,gamma2,cmin,rbar,ce);
         
         %%% cells separate
-        [c1_hat,c2_hat] = cellpops_separate_withgrowthfactors(j,c1_old,...
-            c2_old,k_hat,q1_hat,q2_hat,PO2,dt_p,r,Pm,kappa,mu,alpha1,alpha2,...
-            beta,gamma1,gamma2,cmin,rbar,ce);
+        %%% DON'T NEED! left in here in case we want to use it for
+        %%% debugging, but since the time steps dt are calculated only
+        %%% using the sum k=c1+c2, then this is unnecessary for
+        %%% computations
+%         [c1_hat,c2_hat] = cellpops_separate_withgrowthfactors(j,c1_old,...
+%             c2_old,k_hat,q1_hat,q2_hat,PO2,dt_p,r,Pm,kappa,mu,alpha1,alpha2,...
+%             beta,gamma1,gamma2,cmin,rbar,ce);
         
         %%%%%%%%%%%%%%%%%%%%%%%%% corrector step %%%%%%%%%%%%%%%%%%%%%%%%%%
         bb = 1/2;
@@ -182,7 +186,7 @@ while tcurr < tmax && j<R-1
     whatstep = 'corrector';
     
     %%% cell layer thickness and radius
-    [thickness_ret,thickness_RGC,radius_endo] = thick_rad(tcurr+dt_c,r);
+    [thickness_ret,thickness_RGC,radius_endo,~] = thick_rad(tcurr+dt_c,r);
     
     %%% oxygen
     PO2 = oxygen(r,thickness_ret,P0,Dalpha,M0);

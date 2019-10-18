@@ -1,5 +1,5 @@
-function [thickness_ret,thickness_RGC,radius_endo] = thick_rad(time,r)
-% [thickness_RGC,radius_endo] = thick_rad(dt,tcurr,r)
+function [thickness_ret,thickness_RGC,radius_endo,radius_ret] = thick_rad(time,r)
+% [thickness_ret,thickness_RGC,radius_endo,radius_ret] = thick_rad(time,r)
 %
 % Calculates the thickness of the retina and the retinal ganglion cell (RGC)
 % layer, and the radius of the endothelial cell spread
@@ -12,6 +12,7 @@ function [thickness_ret,thickness_RGC,radius_endo] = thick_rad(time,r)
 %   thickness_ret = thickness of the retina
 %   thickness_RGC = thickness of the RGC layer
 %   radius_endo   = radius of endothelial cell spread
+%   radius_ret    = radius of retina spread
 
 %%% convert current time from hours to days
 tday = time/24;
@@ -22,11 +23,11 @@ thickness_peripheral = (13.77 * tday + 72.8) * 0.001;
 %%% thickness at center of retina (optic nerve head) (convert from
 %%% micron to mm)
 thickness_origin = (14.33 * tday + 98.78) * 0.001;
-%%% width/radius of retina (convert from micron to mm)
-width_retina = (414.17 * tday + 1029.17) * 0.001;
+%%% radius of retina (convert from micron to mm)
+radius_ret = (414.17 * tday + 1029.17) * 0.001;
 %%% parabolic nonuniform thickness throughout retina
-thickness_ret = (( thickness_peripheral - thickness_origin )./width_retina.^2 .*r.^2 ...
-    + thickness_origin ) .* (r<=width_retina);
+thickness_ret = (( thickness_peripheral - thickness_origin )./radius_ret.^2 .*r.^2 ...
+    + thickness_origin ) .* (r<=radius_ret);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%% retinal ganglion cells %%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -35,8 +36,8 @@ thickness_ret = (( thickness_peripheral - thickness_origin )./width_retina.^2 .*
 thickness_posterior = max(-1.95*tday.^2 + 14.84*tday + 9.01 , 0) * 0.001;
 thickness_peripheral = max(-3.66*tday.^2 + 26.83*tday - 14.7 , 0) * 0.001;
 
-thickness_RGC = max( (thickness_peripheral-thickness_posterior)./width_retina.^2 ...
-    * r.^2 + thickness_posterior, 0) .* (r<=width_retina);
+thickness_RGC = max( (thickness_peripheral-thickness_posterior)./radius_ret.^2 ...
+    * r.^2 + thickness_posterior, 0) .* (r<=radius_ret);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%% endothelial cells %%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -4,7 +4,7 @@ max_astrocytes = 2.67;
 %%% set up the plots
 
 %%% cell layer thickness and radius
-[thickness_ret,~,~] = thick_rad(t,r);
+[thickness_ret,~,~,~] = thick_rad(t,r);
     
 %%% oxygen
 PO2 = oxygen(r,thickness_ret,P0,Dalpha,M0);
