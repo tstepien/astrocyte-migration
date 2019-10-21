@@ -19,8 +19,8 @@ p.alpha2 = 0.13; %%% (/hr) proliferation rate IPA
 p.beta = 0.03; %%% (/hr) differentiation rate
 p.gamma1 = 0.0001; %%% (/hr) apoptosis rate APC
 p.gamma2 = 0.0001; %%% (/hr) apoptosis rate IPA
-p.xibar_PDGFA = 0.001; %%% PDGFA production
-p.xibar_LIF = 0.002; %%% LIF production
+p.xibar_PDGFA = 1; %%% PDGFA production
+p.xibar_LIF = 1; %%% LIF production
 p.Te = 0.0035; %%% tension on boundary
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%% parameters bounds %%%%%%%%%%%%%%%%%%%%%%%%%%%%

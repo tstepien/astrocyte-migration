@@ -1,9 +1,9 @@
 function [q1_new,q2_new] = growthfactors_implicit(q1_old,q2_old,dt,tcurr,...
-    r,dr,R,thickness_RGC,radius_endo,maxRGCthick,thickness,D1,D2,xi1,xi2,...
-    gamma3,gamma4)
+    r,dr,R,thickness_RGC,radius_endo,maxRGCthick,thickness_ret,D1,D2,xi1,...
+    xi2,gamma3,gamma4)
 % [q1_new,q2_new] = growthfactors_implicit(q1_old,q2_old,dt,tcurr,...
-%     r,dr,R,thickness_RGC,radius_endo,maxRGCthick,thickness,D1,D2,xi1,xi2,...
-%     gamma3,gamma4)
+%     r,dr,R,thickness_RGC,radius_endo,maxRGCthick,thickness_ret,D1,D2,xi1,...
+%     xi2,gamma3,gamma4)
 %
 % Uses Dirichlet boundary condition q1=q2=0 at Rmax
 %
@@ -23,8 +23,14 @@ function [q1_new,q2_new] = growthfactors_implicit(q1_old,q2_old,dt,tcurr,...
 
 timeind = ((tcurr+dt)/24>=3); %day 3 = E18
 
+if radius_endo==0
+    spaceind = (r<radius_endo)';
+else
+    spaceind = (r<=radius_endo)';
+end
+
 %%% spatial mesh
-% nodesretina = sum(thickness>0); %%% PDGFA and LIF can spread through the
+% nodesretina = sum(thickness_ret>0); %%% PDGFA and LIF can spread through the
 %                                 %%% current extent of the retina
 % Rorig = length(r);
 % r = r(1:nodesretina); %%% restrict domain
@@ -78,7 +84,7 @@ thetamatrix1 = diag(maindiag1) + diag(upperdiag1,1) + diag(lowerdiag1,-1);
 thetamatrix1(end,end) = 1;
 
 bvector1 = q1_old' + [zeros(R-1,1) ; theta7_1] ...
-    + dt*xi1.*thickness_RGC'/maxRGCthick * timeind.*(thickness>0)';
+    + dt*xi1.*thickness_RGC'/maxRGCthick * timeind.*(thickness_ret>0)';
 
 q1_new = ( thetamatrix1 \ bvector1 )';
 % % % q1_old = q1_new;
@@ -103,7 +109,7 @@ lowerdiag2 = [theta1_2 , theta6_2];
 thetamatrix2 = diag(maindiag2) + diag(upperdiag2,1) + diag(lowerdiag2,-1);
 thetamatrix2(end,end) = 1;
 
-bvector2 = q2_old' + [zeros(R-1,1) ; theta7_2] + dt*xi2.*(r<=radius_endo)';
+bvector2 = q2_old' + [zeros(R-1,1) ; theta7_2] + dt*xi2.*spaceind;
 
 q2_new = ( thetamatrix2 \ bvector2 )';
 % % % q2_old = q2_new;
@@ -113,5 +119,3 @@ q2_new = ( thetamatrix2 \ bvector2 )';
 %%% resize
 % q1_new = [q1_new , zeros(1,Rorig-nodesretina)];
 % q2_new = [q2_new , zeros(1,Rorig-nodesretina)];
-
-% keyboard

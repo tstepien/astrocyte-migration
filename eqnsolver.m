@@ -124,6 +124,7 @@ while tcurr < tmax && j<R-1
     
     %%%%%%%%%%%%%%%%%%%%%%%% solve eqn's with dt_p %%%%%%%%%%%%%%%%%%%%%%%%
     dt_c = 0;
+    numiter = 0;
     while abs(dt_p-dt_c)>=tol
         %%% cell layer thickness and radius
         [thickness_ret,thickness_RGC,radius_endo,~] = thick_rad(tcurr+dt_p,r);
@@ -140,7 +141,7 @@ while tcurr < tmax && j<R-1
         
         %%% cell sum
         k_hat = cellpops_sum_withgrowthfactors(j,c1_old,c2_old,q1_hat,q2_hat,...
-            PO2,dt_p,r,Pm,kappa,mu,alpha1,alpha2,gamma1,gamma2,cmin,rbar,ce);
+            PO2,dt_p,r,Pm,kappa,mu,alpha1,alpha2,gamma1,gamma2,cmin,rbar,ce,cmax);
         
         %%% cells separate
         %%% DON'T NEED! left in here in case we want to use it for
@@ -171,7 +172,7 @@ while tcurr < tmax && j<R-1
                 + (1-bb)*( 3*k_old(j) - 4*k_old(j-1) + k_old(j-2) ) );
 %         end
         
-%         [dt_p, dt_c]
+        [dt_p, dt_c]
 %         keyboard
         
         if abs(dt_p-dt_c)<tol
@@ -179,6 +180,12 @@ while tcurr < tmax && j<R-1
         else
             dt_p = dt_c;
             dt_c = 0;
+            numiter = numiter + 1;
+            if numiter >10
+                figure(1)
+                plot(r,k_old,r,k_hat)
+                keyboard
+            end
         end
     end
     
@@ -198,17 +205,20 @@ while tcurr < tmax && j<R-1
     
     %%% cell sum
     k_new = cellpops_sum_withgrowthfactors(j,c1_old,c2_old,q1_new,q2_new,...
-        PO2,dt_c,r,Pm,kappa,mu,alpha1,alpha2,gamma1,gamma2,cmin,rbar,ce);
+        PO2,dt_c,r,Pm,kappa,mu,alpha1,alpha2,gamma1,gamma2,cmin,rbar,ce,cmax);
     
     %%% cells separate
     [c1_new,c2_new] = cellpops_separate_withgrowthfactors(j,c1_old,...
         c2_old,k_new,q1_new,q2_new,PO2,dt_c,r,Pm,kappa,mu,alpha1,alpha2,beta,...
-        gamma1,gamma2,cmin,rbar,ce);
+        gamma1,gamma2,cmin,rbar,ce,cmax);
 
     %%%%%%%%%%%%%%%%%%%%%% reset for next time step %%%%%%%%%%%%%%%%%%%%%%%
     j = j+1;
     s = s + dr;
     tcurr = tcurr + dt_c;
+    if tcurr>67
+        keyboard
+    end
     c1_old = c1_new;
     c2_old = c2_new;
     k_old = k_new;
@@ -238,6 +248,11 @@ while tcurr < tmax && j<R-1
         break;
     elseif mvgbdy_vel(end)<10^(-3)
         disp('**fyi moving boundary is moving slow**')
+    end
+    
+    if tcurr/24>=12
+        disp('***stopping simulation since ending time greater than 12 days***')
+        break;
     end
 end
 

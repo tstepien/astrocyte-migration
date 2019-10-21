@@ -14,8 +14,8 @@ p.gamma1 = 0;%0.0001;%0; apoptosis rate APC
 p.gamma2 = 0;%0.0001;%0.5; apoptosis rate IPA
 
 %%%%%%%%%%%%%%%%%%%%%%%% growth factor parameters %%%%%%%%%%%%%%%%%%%%%%%%%
-p.xibar_PDGFA = 0.015/15; %%% PDGFA production
-p.xibar_LIF = 0.015/7; %%% LIF production
+p.xibar_PDGFA = 0;%0.015/15; %%% PDGFA production
+p.xibar_LIF = 0;%0.015/7; %%% LIF production
 
 %%%%%%%%%%%%%%%%%% moving boundary condition parameters %%%%%%%%%%%%%%%%%%%
 p.Te = 0.0035; %%% tension on boundary

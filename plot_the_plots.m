@@ -8,8 +8,7 @@ max_astrocytes = 2.67;
     
 %%% oxygen
 PO2 = oxygen(r,thickness_ret,P0,Dalpha,M0);
-    
-% [PO2,thickness] = oxygen(t,r);
+% PO2frac = PO2./(Pm+PO2);
 
 %%% variables
 T = length(t);

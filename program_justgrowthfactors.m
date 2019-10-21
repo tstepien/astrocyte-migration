@@ -6,8 +6,8 @@ clc;
 parameters_fixed
 
 %%%%%%%%%%%%%%%%%%%%%%%% growth factor parameters %%%%%%%%%%%%%%%%%%%%%%%%%
-xibar_PDGFA = 0.015/15;%0.000000001;
-xibar_LIF = 0.015/7;%0.001;
+xibar_PDGFA = 1;
+xibar_LIF = 1;
 
 %%%%%%%%%%%%%%%%%%%%% parameter scalings/calculations %%%%%%%%%%%%%%%%%%%%%
 xi1 = xibar_PDGFA / phi; %%% production/release rate of PDGFA

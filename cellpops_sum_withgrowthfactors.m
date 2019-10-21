@@ -1,7 +1,7 @@
 function k_new = cellpops_sum_withgrowthfactors(j,c1_old,c2_old,q1,q2,PO2,...
-    dt,r,Pm,kappa,mu,alpha1,alpha2,gamma1,gamma2,cmin,rbar,ce)
+    dt,r,Pm,kappa,mu,alpha1,alpha2,gamma1,gamma2,cmin,rbar,ce,cmax)
 % k_new = cellpops_sum_withgrowthfactors(j,c1_old,c2_old,q1,q2,PO2,...
-%     dt,r,Pm,kappa,mu,alpha1,alpha2,gamma1,gamma2,cmin,rbar,ce)
+%     dt,r,Pm,kappa,mu,alpha1,alpha2,gamma1,gamma2,cmin,rbar,ce,cmax)
 %
 % inputs:
 %   j      = node that moving boundary is located at
@@ -47,7 +47,7 @@ omega = 1./(mu*r(2:j)) * dt/dr^2;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% growth function %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 g = growthterms_sum_withgrowthfactors(c1_old(1:j),c2_old(1:j),q1(1:j),...
-    q2(1:j),PO2(1:j),Pm,alpha1,alpha2,gamma1,gamma2,rbar);
+    q2(1:j),PO2(1:j),Pm,alpha1,alpha2,gamma1,gamma2,cmax);
 
 %%%%%%%%%%%%%%%%%%%%%%%%% iterate for convergence %%%%%%%%%%%%%%%%%%%%%%%%%
 for m=1:5
@@ -104,4 +104,4 @@ end
 % 
 % (k_new(j)-k_old(j))/dt
 % 
-% keyboard
+keyboard
