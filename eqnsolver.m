@@ -172,7 +172,7 @@ while tcurr < tmax && j<R-1
                 + (1-bb)*( 3*k_old(j) - 4*k_old(j-1) + k_old(j-2) ) );
 %         end
         
-        [dt_p, dt_c]
+        [tcurr/24 dt_p, dt_c max(q1_hat) max(q2_hat)]
 %         keyboard
         
         if abs(dt_p-dt_c)<tol
@@ -180,12 +180,12 @@ while tcurr < tmax && j<R-1
         else
             dt_p = dt_c;
             dt_c = 0;
-            numiter = numiter + 1;
-            if numiter >10
-                figure(1)
-                plot(r,k_old,r,k_hat)
-                keyboard
-            end
+%             numiter = numiter + 1;
+%             if numiter >10
+%                 figure(1)
+%                 plot(r,k_old,r,k_hat)
+%                 keyboard
+%             end
         end
     end
     
@@ -216,9 +216,9 @@ while tcurr < tmax && j<R-1
     j = j+1;
     s = s + dr;
     tcurr = tcurr + dt_c;
-    if tcurr>67
-        keyboard
-    end
+%     if tcurr>67
+%         keyboard
+%     end
     c1_old = c1_new;
     c2_old = c2_new;
     k_old = k_new;

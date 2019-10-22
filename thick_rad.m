@@ -33,11 +33,11 @@ thickness_ret = (( thickness_peripheral - thickness_origin )./radius_ret.^2 .*r.
 %%%%%%%%%%%%%%%%%%%%%%%%% retinal ganglion cells %%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% thickness of retinal ganglion cell layer (from Braekevelt and Hollenburg)
 %%% in microns, converted to mm
-thickness_posterior = max(-1.95*tday.^2 + 14.84*tday + 9.01 , 0) * 0.001;
-thickness_peripheral = max(-3.66*tday.^2 + 26.83*tday - 14.7 , 0) * 0.001;
+thickness_RGC_origin = max(-1.95*tday.^2 + 14.84*tday + 9.01 , 0) * 0.001;
+thickness_RGC_peripheral = max(-3.66*tday.^2 + 26.83*tday - 14.7 , 0) * 0.001;
 
-thickness_RGC = max( (thickness_peripheral-thickness_posterior)./radius_ret.^2 ...
-    * r.^2 + thickness_posterior, 0) .* (r<=radius_ret);
+thickness_RGC = max( (thickness_RGC_peripheral-thickness_RGC_origin)./radius_ret.^2 ...
+    .* r.^2 + thickness_RGC_origin, 0) .* (r<=radius_ret);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%% endothelial cells %%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -21,7 +21,13 @@ function [q1_new,q2_new] = growthfactors_implicit(q1_old,q2_old,dt,tcurr,...
 %   q1_new = PDGFA growth factor concentration at next time
 %   q2_new = LIF growth factor concentration at next time
 
-timeind = ((tcurr+dt)/24>=3); %day 3 = E18
+
+tday = (tcurr+dt)/24;
+if tday<3
+    timeramp = 0;
+else
+    timeramp = 1/4*(tday-3);
+end
 
 if radius_endo==0
     spaceind = (r<radius_endo)';
@@ -84,7 +90,7 @@ thetamatrix1 = diag(maindiag1) + diag(upperdiag1,1) + diag(lowerdiag1,-1);
 thetamatrix1(end,end) = 1;
 
 bvector1 = q1_old' + [zeros(R-1,1) ; theta7_1] ...
-    + dt*xi1.*thickness_RGC'/maxRGCthick * timeind.*(thickness_ret>0)';
+    + dt*xi1.*thickness_RGC'/maxRGCthick * timeramp.*(thickness_ret>0)';
 
 q1_new = ( thetamatrix1 \ bvector1 )';
 % % % q1_old = q1_new;
