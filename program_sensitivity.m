@@ -14,24 +14,24 @@ plotsonoff = 'off';
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%% baseline parameters %%%%%%%%%%%%%%%%%%%%%%%%%%%
 p.mu = 0.1; %%% adhesion constant
-p.alpha1 = 0.23; %%% (/hr) proliferation rate APC
-p.alpha2 = 0.13; %%% (/hr) proliferation rate IPA
-p.beta = 0.03; %%% (/hr) differentiation rate
+p.alpha1 = 0.15; %%% (/hr) proliferation rate APC
+p.alpha2 = 0.15; %%% (/hr) proliferation rate IPA
+p.beta = 0.003; %%% (/hr) differentiation rate
 p.gamma1 = 0.0001; %%% (/hr) apoptosis rate APC
 p.gamma2 = 0.0001; %%% (/hr) apoptosis rate IPA
 p.Te = 0.0035; %%% tension on boundary
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%% parameters bounds %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 bound = [0.01 2; %mu
-    0 3; %alpha1
-    0 2; %alpha2
+    0 1; %alpha1
+    0 1; %alpha2
     0 1; %beta
-    0 0.0009; %gamma1
-    0 0.001; %gamma2
+    0 0.005; %gamma1
+    0 0.005; %gamma2
     0 0.0038]; %Te
 numpar = length(bound);
 
-N = 11;
+N = 21;
 
 intrange = zeros(numpar,N);
 for i=1:numpar
@@ -67,7 +67,7 @@ for j = 1:numpar %%% parameter
         toc
 
         %%% error calculation
-        [err_rad,err_dens,err_time,err_tot] = errorfunction(t,r,mvgbdy,c1,c2,q1,q2);
+        [err_rad,err_dens,err_time,err_tot] = errorfunction(t,r,mvgbdy,c1,c2);
         
         err(j,i) = err_tot;
 

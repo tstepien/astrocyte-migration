@@ -170,7 +170,7 @@ while tcurr < tmax && j<R-1
                 + (1-bb)*( 3*k_old(j) - 4*k_old(j-1) + k_old(j-2) ) );
 %         end
         
-        [tcurr/24 dt_p, dt_c max(q1_hat) max(q2_hat)]
+%         [tcurr/24 dt_p, dt_c max(q1_hat) max(q2_hat)]
 %         keyboard
         
         if abs(dt_p-dt_c)<tol
@@ -178,12 +178,11 @@ while tcurr < tmax && j<R-1
         else
             dt_p = dt_c;
             dt_c = 0;
-%             numiter = numiter + 1;
-%             if numiter >10
-%                 figure(1)
-%                 plot(r,k_old,r,k_hat)
-%                 keyboard
-%             end
+            numiter = numiter + 1;
+            if numiter >20
+                disp('***stopping simulation since got stuck in a time loop***')
+                return;
+            end
         end
     end
     
@@ -243,14 +242,14 @@ while tcurr < tmax && j<R-1
     
     if mvgbdy_vel(end)<10^(-4) || isreal(mvgbdy_vel(end))==0
         disp('***stopping simulation since moving boundary velocity is <10^(-4)***')
-        break;
+        return;
     elseif mvgbdy_vel(end)<10^(-3)
         disp('**fyi moving boundary is moving slow**')
     end
     
     if tcurr/24>=12
         disp('***stopping simulation since ending time greater than 12 days***')
-        break;
+        return;
     end
 end
 

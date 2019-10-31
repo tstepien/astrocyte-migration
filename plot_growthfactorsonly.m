@@ -49,14 +49,20 @@ h = legend('0 days (E15)','1 day (E16)','2 days (E17)','3 days (E18)',...
 set(h,'FontSize',flegend,'Position',[0.8188 0.651 0.1635 0.3]);
 
 subaxis(2,2,3,'MarginLeft',0.07,'MarginRight',0.05,'MarginBottom',0.08,'MarginTop',0.08)
-plot(radius_ret(tplot),t(tplot)/24,'-o','LineWidth',1.5)
+hold on
+plot(radius_ret(tplot),t(tplot)/24,'k','LineWidth',1.5)
+scatter(radius_ret(tplot),t(tplot)/24,70,co,'filled')
+hold off
 ylabel('t (days)','FontSize',fslabel)
 xlabel('retina radius (mm)','FontSize',fslabel)
 yticks(0:7)
 set(gca,'YLim',[0,7],'XLim',[0,rmax],'FontSize',fsticks)
 
 subaxis(2,2,4,'MarginRight',0.01,'MarginLeft',0.07)
-plot(radius_endo(tplot),t(tplot)/24,'-o','LineWidth',1.5)
+hold on
+plot(radius_endo(tplot),t(tplot)/24,'k','LineWidth',1.5)
+scatter(radius_endo(tplot),t(tplot)/24,70,co,'filled')
+hold off
 ylabel('t (days)','FontSize',fslabel)
 xlabel('endothelial cell radius (mm)','FontSize',fslabel)
 yticks(0:7)

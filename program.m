@@ -30,7 +30,7 @@ plotsonoff = 'on';
 
 %% error
 %%%%%%%%%%%%%%%%%%%%%%%%%%%% error calculation %%%%%%%%%%%%%%%%%%%%%%%%%%%%
-[err_rad,err_dens,err_time,err_tot] = errorfunction(t,r,mvgbdy,c1,c2,q1,q2);
+[err_rad,err_dens,err_time,err_tot] = errorfunction(t,r,mvgbdy,c1,c2);
 
 
 %% area under curve - trapezoidal rule
