@@ -19,8 +19,12 @@ D2 = Dwater_LIF / lambda^2; %%% effective diffusivity of LIF
 
 %%% degradation rates
 quasilength = 0.2;
-gamma3 = D1/quasilength^2;
-gamma4 = D2/quasilength^2;
+gamma3 = 4.6; %D1/quasilength^2;
+gamma4 = 4.7; %D2/quasilength^2;
+
+%%% production rates
+xibar_PDGFA = 0.92; %phi*gamma3;
+xibar_LIF = 0.94; %phi*gamma4;
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%% tension parameters %%%%%%%%%%%%%%%%%%%%%%%%%%%%

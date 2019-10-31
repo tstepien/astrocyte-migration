@@ -23,8 +23,6 @@ alpha2 = p.alpha2; %%% (/hr) proliferation rate IPA
 beta = p.beta; %%% (/hr) differentiation rate
 gamma1 = p.gamma1; %%% (/hr) apoptosis rate APC
 gamma2 = p.gamma2; %%% (/hr) apoptosis rate IPA
-xibar_PDGFA = p.xibar_PDGFA; %%% PDGFA production
-xibar_LIF = p.xibar_LIF; %%% LIF production
 Te = p.Te; %%% tension on boundary
 
 dr = m.dr;

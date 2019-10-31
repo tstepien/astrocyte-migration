@@ -19,8 +19,6 @@ p.alpha2 = 0.13; %%% (/hr) proliferation rate IPA
 p.beta = 0.03; %%% (/hr) differentiation rate
 p.gamma1 = 0.0001; %%% (/hr) apoptosis rate APC
 p.gamma2 = 0.0001; %%% (/hr) apoptosis rate IPA
-p.xibar_PDGFA = 1; %%% PDGFA production
-p.xibar_LIF = 1; %%% LIF production
 p.Te = 0.0035; %%% tension on boundary
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%% parameters bounds %%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -30,8 +28,6 @@ bound = [0.01 2; %mu
     0 1; %beta
     0 0.0009; %gamma1
     0 0.001; %gamma2
-    0 0.12; %xibar_PDGFA
-    0 10; %xibar_LIF
     0 0.0038]; %Te
 numpar = length(bound);
 
@@ -62,10 +58,6 @@ for j = 1:numpar %%% parameter
         elseif j==6
             paramval.gamma2 = intrange(j,i);
         elseif j==7
-            paramval.xibar_PDGFA = intrange(j,i);
-        elseif j==8
-            paramval.xibar_LIF = intrange(j,i);
-        elseif j==9
             paramval.Te = intrange(j,i);
         end
         

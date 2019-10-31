@@ -5,10 +5,6 @@ clc;
 %%%%%%%%%%%%%%%%%%%%%% known/derived from literature %%%%%%%%%%%%%%%%%%%%%%
 parameters_fixed
 
-%%%%%%%%%%%%%%%%%%%%%%%% growth factor parameters %%%%%%%%%%%%%%%%%%%%%%%%%
-xibar_PDGFA = 1;
-xibar_LIF = 1;
-
 %%%%%%%%%%%%%%%%%%%%% parameter scalings/calculations %%%%%%%%%%%%%%%%%%%%%
 xi1 = xibar_PDGFA / phi; %%% production/release rate of PDGFA
 xi2 = xibar_LIF / phi; %%% production/release rate of LIF
