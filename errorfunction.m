@@ -34,7 +34,13 @@ est_APC = zeros(numdays,length(r));
 est_IPA = zeros(numdays,length(r));
 act_APC = zeros(numdays,length(r));
 act_IPA = zeros(numdays,length(r));
-numnodes = zeros(numdays,1);
+dens_annulus = zeros(numdays,length(r));
+dens_disc = zeros(numdays,length(r));
+% numnodes = zeros(numdays,1);
+nodes_APC = zeros(numdays,length(r));
+nodes_IPA = zeros(numdays,length(r));
+numnodes_APC = zeros(numdays,1);
+numnodes_IPA = zeros(numdays,1);
 
 %%% calculate values on each day of data
 for i=1:numdays
@@ -44,23 +50,37 @@ for i=1:numdays
     est_APC(i,:) = (c1(ind(i),:)>0);
     est_IPA(i,:) = (c2(ind(i),:)>0);
     
-    act_APC(i,:) = (r<=rad_APC(i));
-    act_IPA(i,:) = (r<=rad_IPA(i));
+%     numnodes(i) = sum(r<=mvgbdy(ind(i)));
+    nodes_APC(i,:) = (r<=rad_APC(i) & r>rad_IPA(i)); %% annulus
+    nodes_IPA(i,:) = (r<=rad_IPA(i)); %% disc
     
-    numnodes(i) = sum(r<=mvgbdy(ind(i)));
+    numnodes_APC(i) = sum(nodes_APC(i,:));
+    numnodes_IPA(i) = sum(nodes_IPA(i,:));
+    
+    %%% incorrect density relationship for APCs and IPAs on (APC annulus)
+    %%% and (IPA disc)
+    dens_annulus(i,:) = (c1(ind(i),:) < c2(ind(i),:)) .* nodes_APC(i,:);
+    dens_disc(i,:) = (c2(ind(i),:) < c1(ind(i),:)) .* nodes_IPA(i,:);
+    
+%     act_APC(i,:) = (r<=rad_APC(i) & r>rad_IPA(i)); %% annulus
+%     act_IPA(i,:) = (r<=rad_IPA(i)); %% disc
 end
 
 %%% total error from astrocyte radius
 err_rad = sum( abs(rad_APC - mvgbdy(ind)) ./ rad_APC );
 
 %%% total error from density
-diff_APC = sum( abs(act_APC - est_APC) , 2) ./ numnodes;
-diff_IPA = sum( abs(act_IPA - est_IPA) , 2) ./ numnodes;
+err_APC = sum( dens_annulus , 2) ./ numnodes_APC;
+err_IPA = sum( dens_disc , 2) ./ numnodes_IPA;
+% diff_APC = sum( abs(act_APC - est_APC) , 2) ./ numnodes_APC;
+% diff_IPA = sum( abs(act_IPA - est_IPA) , 2) ./ numnodes_IPA;
 
-err_dens = sum( diff_APC + diff_IPA );
+err_dens = sum( err_APC + err_IPA );
 
 %%% total error from time
-err_time = abs(7 - t(end)/24)*10;%/7;
+err_time = abs(7 - t(end)/24)/7;
 
 %%% total error
 err_tot = err_rad + err_dens + err_time; %+ err_gf
+
+% keyboard

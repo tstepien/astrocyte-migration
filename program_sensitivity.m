@@ -7,7 +7,7 @@ diary sensitivity_analysis.txt
 %%% time unit: hr
 %%% space unit: mm
 
-m.dr = 0.01;
+m.dr = 0.005;
 m.rmax = 5; %%% max radius (mm) (estimate rat retinal radius = 4.1 mm)
 m.tmax = 7*24; %%% max time (hr) (7 days = 168 hr)
 plotsonoff = 'off';
@@ -16,16 +16,16 @@ plotsonoff = 'off';
 p.mu = 0.1; %%% adhesion constant
 p.alpha1 = 0.15; %%% (/hr) proliferation rate APC
 p.alpha2 = 0.15; %%% (/hr) proliferation rate IPA
-p.beta = 0.003; %%% (/hr) differentiation rate
+p.beta = 0.01; %%% (/hr) differentiation rate
 p.gamma1 = 0.0001; %%% (/hr) apoptosis rate APC
 p.gamma2 = 0.0001; %%% (/hr) apoptosis rate IPA
 p.Te = 0.0035; %%% tension on boundary
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%% parameters bounds %%%%%%%%%%%%%%%%%%%%%%%%%%%%
-bound = [0.01 2; %mu
+bound = [0.01 5; %mu
     0 1; %alpha1
     0 1; %alpha2
-    0 1; %beta
+    0 3; %beta
     0 0.005; %gamma1
     0 0.005; %gamma2
     0 0.0038]; %Te
