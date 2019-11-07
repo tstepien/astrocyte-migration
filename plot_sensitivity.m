@@ -1,7 +1,7 @@
 clear variables global;
 clc;
 
-load('sensitivity analysis results/sensitivity_analysis_1101_drp005_morepoints.mat')
+load('sensitivity analysis results/sensitivity_analysis_1107.mat')
 
 param_names = {'$\mu$','$\alpha_1$','$\alpha_2$','$\beta$',...
     '$\gamma_1$','$\gamma_2$','$T_e$'};

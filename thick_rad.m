@@ -42,4 +42,4 @@ thickness_RGC = max( (thickness_RGC_peripheral-thickness_RGC_origin)./radius_ret
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%% endothelial cells %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% radius of endothelial cells (in microns, converted to mm)
-radius_endo = max(425*tday - 1675 , 0) * 0.001;
+radius_endo = 185*tday * 0.001;

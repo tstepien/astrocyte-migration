@@ -7,7 +7,7 @@ diary sensitivity_analysis.txt
 %%% time unit: hr
 %%% space unit: mm
 
-m.dr = 0.005;
+m.dr = 0.01;
 m.rmax = 5; %%% max radius (mm) (estimate rat retinal radius = 4.1 mm)
 m.tmax = 7*24; %%% max time (hr) (7 days = 168 hr)
 plotsonoff = 'off';
