@@ -264,4 +264,5 @@ disp(['velocity of moving boundary at last time step: ',num2str(mvgbdy_vel(end))
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% plotting %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 if strcmp(plotsonoff,'on')
     plot_the_plots
+    plot_the_plots_APCIPA
 end

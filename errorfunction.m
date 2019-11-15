@@ -17,6 +17,11 @@ function [err_rad,err_dens,err_time,err_tot] = errorfunction(t,r,mvgbdy,c1,c2)
 %   err_time = error from ending time compared to 7 days
 %   err_tot  = total error = (err_rad + err_dens + err_time)
 
+%%% threshold for small density
+parameters_fixed
+thd_low = 50;
+thd_high = cmin;
+
 %%% APC, IPA, and retina radius (mm) for E15-E16, E18-E22/P0
 rad_APC = [0.33; 0.33; 0.5; 0.67; 1.67; 2.17; 2.67];
 rad_IPA = [0; 0.04; 0.08; 0.33; 1; 1.5; 2];
@@ -59,8 +64,10 @@ for i=1:numdays
     
     %%% incorrect density relationship for APCs and IPAs on (APC annulus)
     %%% and (IPA disc)
-    dens_annulus(i,:) = (c1(ind(i),:) < c2(ind(i),:)) .* nodes_APC(i,:);
-    dens_disc(i,:) = (c2(ind(i),:) < c1(ind(i),:)) .* nodes_IPA(i,:);
+    dens_annulus(i,:) = ( c1(ind(i),:) < c2(ind(i),:) | ...
+        c2(ind(i),:)>thd_low | c1(ind(i,:))<thd_high ) .* nodes_APC(i,:);
+    dens_disc(i,:) = ( c2(ind(i),:) < c1(ind(i),:) | ...
+        c1(ind(i),:)>thd_low | c2(ind(i,:))<thd_high ) .* nodes_IPA(i,:);
     
 %     act_APC(i,:) = (r<=rad_APC(i) & r>rad_IPA(i)); %% annulus
 %     act_IPA(i,:) = (r<=rad_IPA(i)); %% disc
@@ -83,4 +90,21 @@ err_time = abs(7 - t(end)/24)/7;
 %%% total error
 err_tot = err_rad + err_dens + err_time; %+ err_gf
 
+if sum(sum(c1<0))>0 || sum(sum(c2<0))>0
+    err_tot = NaN;
+end
+
+% figure
+% plot(r,dens_disc)
+% title('(incorrect disc) where c2<c1')
+% figure
+% plot(r,dens_annulus)
+% title('(incorrect annulus) where c1<c2')
+% figure
+% plot(r,nodes_IPA)
+% title('nodes where IPAs are (disc)')
+% figure
+% plot(r,nodes_APC)
+% title('nodes where APCs are (annulus)')
+% 
 % keyboard

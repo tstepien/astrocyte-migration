@@ -25,7 +25,7 @@ p.Te = 0.0035; %%% tension on boundary
 bound = [0.01 5; %mu
     0 1; %alpha1
     0 1; %alpha2
-    0 3; %beta
+    0 0.15;%3; %beta
     0 0.005; %gamma1
     0 0.005; %gamma2
     0 0.0038]; %Te
@@ -41,7 +41,7 @@ end
 %%% preallocate
 err = zeros(size(intrange));
 
-for j = 1:numpar %%% parameter
+for j = 4%1:numpar %%% parameter
     for i = 1:N %%% split up interval range
         [j i]
         paramval = p;
@@ -71,10 +71,10 @@ for j = 1:numpar %%% parameter
         
         err(j,i) = err_tot;
 
-        save('sensitivity_analysis.mat','p','intrange','err');
+        save('sensitivity_analysis.mat','p','intrange','err','bound');
     end
 end
 
-save('sensitivity_analysis.mat')
+save('sensitivity_analysis.mat','p','intrange','err','bound')
 
 diary off
