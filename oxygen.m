@@ -1,5 +1,6 @@
 function PO2 = oxygen(r,thickness_ret,P0,Dalpha,M0)
 % PO2 = oxygen(r,thickness_ret,P0,Dalpha,M0)
+% choroid PO2
 %
 % inputs:
 %   r             = spatial mesh

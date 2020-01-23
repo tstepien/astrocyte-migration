@@ -150,18 +150,19 @@ set(gca,'XLim',[0,rmax],'FontSize',fsticks)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 subaxis(3,3,6)
+hy = hyaloid(r,Ph);
 if size(thickness_ret,1)==1 || size(thickness_ret,2)==1
-    plot(thickness_ret,PO2,'-o','LineWidth',1.5)
+    plot(thickness_ret,hy+PO2,'-o','LineWidth',1.5)
     xlabel('total retinal thickness (mm)','FontSize',fslabel)
 else
     hold on
     for i=1:numcurvesplot
-        plot(r,PO2(plotind(i),:),'LineWidth',1.5,'Color',co(i,:))
+        plot(r,hy+PO2(plotind(i),:),'LineWidth',1.5,'Color',co(i,:))
     end
     hold off
     xlabel('radius (mm)','FontSize',fslabel)
 end
-ylabel('PO_2 (mmHg)','FontSize',fslabel)
+ylabel('Choroid+Hyaloid PO_2 (mmHg)','FontSize',fslabel)
 set(gca,'XLim',[0,rmax],'FontSize',fsticks)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

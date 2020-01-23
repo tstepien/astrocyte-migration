@@ -18,6 +18,7 @@ p.beta = 0.01;%0.003; %%% (/hr) differentiation rate
 p.gamma1 = 0.0001; %%% (/hr) apoptosis rate APC
 p.gamma2 = 0.0001; %%% (/hr) apoptosis rate IPA
 p.Te = 0.0035; %%% tension on boundary
+p.Ph = 10; %%% partial pressure of oxygen due to hyaloid artery
 
 
 %%% solve equation
