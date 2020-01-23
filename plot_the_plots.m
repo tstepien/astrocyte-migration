@@ -61,7 +61,7 @@ fsticks = 14;
 
 figure
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-subaxis(3,3,3,'MarginLeft',0.07,'MarginRight',0.01,'MarginTop',0.03,'MarginBottom',0.15)
+subaxis(3,3,3,'MarginLeft',0.07,'MarginRight',0.005,'MarginTop',0.03,'MarginBottom',0.15)
 hold on
 for i=1:numcurvesplot
     plot(rplot(plotind(i),:),c1plot(plotind(i),:)+c2plot(plotind(i),:),...
@@ -149,7 +149,7 @@ ylabel('retinal thickness (mm)','FontSize',fslabel)
 set(gca,'XLim',[0,rmax],'FontSize',fsticks)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-subaxis(3,3,6)
+subaxis(3,3,6,'MarginRight',0.005)
 hy = hyaloid(r,Ph);
 if size(thickness_ret,1)==1 || size(thickness_ret,2)==1
     plot(thickness_ret,hy+PO2,'-o','LineWidth',1.5)
@@ -162,7 +162,7 @@ else
     hold off
     xlabel('radius (mm)','FontSize',fslabel)
 end
-ylabel('Choroid+Hyaloid PO_2 (mmHg)','FontSize',fslabel)
+ylabel('Choroid+Hyaloid P_{O_2} (mmHg)','FontSize',fslabel)
 set(gca,'XLim',[0,rmax],'FontSize',fsticks)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -1,4 +1,4 @@
-%%% max distance astrocytes spread
+%% max distance astrocytes spread
 max_astrocytes = 2.67;
 
 %%% set up the plots

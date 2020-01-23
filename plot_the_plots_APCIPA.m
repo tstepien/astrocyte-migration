@@ -1,17 +1,9 @@
 parameters_fixed
 
-%%% max distance astrocytes spread
-max_astrocytes = 2.67;
+%%% APC, IPA, and retina radius (mm) for E15-E16, E18-E22/P0
+rad_APC = [0.33; 0.33; 000; 0.5; 0.67; 1.67; 2.17; 2.67];
 
 %%% set up the plots
-
-%%% cell layer thickness and radius
-[thickness_ret,~,~,~] = thick_rad(t,r);
-    
-%%% oxygen
-PO2 = oxygen(r,thickness_ret,P0,Dalpha,M0);
-% PO2frac = PO2./(Pm+PO2);
-
 %%% variables
 T = length(t);
 
@@ -71,8 +63,10 @@ hold on
     plot(rplot(plotind(i),:),c2plot(plotind(i),:),...
         'LineWidth',1.5,'Color',co(2,:))
     ylim_sum = [0,5000];
-line([max_astrocytes,max_astrocytes],ylim_sum,'LineStyle','--',...
-    'Color',[0.5,0.5,0.5],'LineWidth',1.25)
+    if i~=3
+        line([rad_APC(i),rad_APC(i)],ylim_sum,'LineStyle','--',...
+            'Color',[0.5,0.5,0.5],'LineWidth',1.25)
+    end
 box on
 hold off
 title([num2str(t(plotind(i))/24,3),' days (E',num2str(round(15+t(plotind(i))/24,1)),')']);
