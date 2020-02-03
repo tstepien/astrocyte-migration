@@ -12,13 +12,15 @@ plotsonoff = 'on';
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%% baseline parameters %%%%%%%%%%%%%%%%%%%%%%%%%%%
 p.mu = 0.1; %%% adhesion constant
-p.alpha1 = 0.15; %%% (/hr) proliferation rate APC
-p.alpha2 = 0.15; %%% (/hr) proliferation rate IPA
-p.beta = 0.01;%0.003; %%% (/hr) differentiation rate
-p.gamma1 = 0.0001; %%% (/hr) apoptosis rate APC
-p.gamma2 = 0.0001; %%% (/hr) apoptosis rate IPA
+p.alpha1 = 0.106; %%% (/hr) proliferation rate APC
+p.alpha2 = 0.28; %%% (/hr) proliferation rate IPA
+p.beta = 0.0001;%0.003; %%% (/hr) differentiation rate
+p.beta_hat = 0.1; %%% (/hr) mass action rate
+p.gamma1 = 0;%0.0001; %%% (/hr) apoptosis rate APC
+p.gamma2 = 0;%0.0001; %%% (/hr) apoptosis rate IPA
 p.Te = 0.0035; %%% tension on boundary
-p.Ph = 10; %%% partial pressure of oxygen due to hyaloid artery
+p.P_hy = 0; %%% partial pressure of oxygen due to hyaloid artery
+p.r_hy = 1/100; %%% radius at half-maximum of Hill function for hyaloid
 
 
 %%% solve equation

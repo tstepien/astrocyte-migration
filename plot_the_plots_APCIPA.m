@@ -55,9 +55,15 @@ fsticks = 14;
 
 figure
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-for i=1:7
-subplot(2,4,i)
-hold on
+for i=1:8
+    if i==1
+        subaxis(2,4,1,'MarginTop',0.05,'MarginBottom',0.175,'MarginLeft',0.06,'MarginRight',0.01)
+    elseif i==5
+        subaxis(2,4,5,'MarginTop',0.125,'MarginBottom',0.1)
+    else
+        subaxis(2,4,i)
+    end
+    hold on
     plot(rplot(plotind(i),:),c1plot(plotind(i),:),...
         'LineWidth',1.5,'Color',co(1,:))
     plot(rplot(plotind(i),:),c2plot(plotind(i),:),...
@@ -67,20 +73,25 @@ hold on
         line([rad_APC(i),rad_APC(i)],ylim_sum,'LineStyle','--',...
             'Color',[0.5,0.5,0.5],'LineWidth',1.25)
     end
-box on
-hold off
-title([num2str(t(plotind(i))/24,3),' days (E',num2str(round(15+t(plotind(i))/24,1)),')']);
-if i>=5
-    xlabel('radius (mm)','FontSize',fslabel)
-end
-if mvgbdy(end)<1.5
-    set(gca,'XLim',[0,mvgbdy(end)+5*dr],'YLim',ylim_sum,'FontSize',fsticks)
-else
-    set(gca,'XLim',[0,rmax],'YLim',ylim_sum,'FontSize',fsticks)
-end
+    box on
+    hold off
+    if i==8
+        title([num2str(t(plotind(i))/24,3),' days (E',num2str(round(15+t(plotind(i))/24,1)),'/P0)']);
+    else
+        title([num2str(t(plotind(i))/24,3),' days (E',num2str(round(15+t(plotind(i))/24,1)),')']);
+    end
+    if i>=5
+        xlabel('radius (mm)','FontSize',fslabel)
+    end
+    if mvgbdy(end)<1.5
+        set(gca,'XLim',[0,mvgbdy(end)+5*dr],'YLim',ylim_sum,'FontSize',fsticks)
+    else
+        set(gca,'XLim',[0,rmax-1],'YLim',ylim_sum,'FontSize',fsticks)
+        xticks([0 1 2 3 4])
+    end
 end
 
 h = legend('APCs','IPAs');
-set(h,'FontSize',fsticks,'Position',[0.713 0.08 0.13 0.22]);
+set(h,'FontSize',fsticks,'Position',[0.155 0.831 0.0946 0.1098]);
 
 set(gcf,'Units','inches','Position',[2,2,12,6],'PaperPositionMode','auto')

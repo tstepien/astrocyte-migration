@@ -126,6 +126,7 @@ if ylim_mvgbdy(2)<max_astrocytes
     set(gca,'FontSize',fsticks,'YLim',[0,max_astrocytes])
 else
     set(gca,'FontSize',fsticks,'XLim',[0,7])
+    xticks([0 1 2 3 4 5 6 7])
     hold on
     line([0,7],[max_astrocytes,max_astrocytes],'LineStyle','--',...
         'Color',[0.5,0.5,0.5],'LineWidth',1.25)
@@ -150,7 +151,7 @@ set(gca,'XLim',[0,rmax],'FontSize',fsticks)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 subaxis(3,3,6,'MarginRight',0.005)
-hy = hyaloid(r,Ph);
+hy = hyaloid(r,P_hy,r_hy);
 if size(thickness_ret,1)==1 || size(thickness_ret,2)==1
     plot(thickness_ret,hy+PO2,'-o','LineWidth',1.5)
     xlabel('total retinal thickness (mm)','FontSize',fslabel)
@@ -194,7 +195,7 @@ h = legend([num2str(t(plotind(1))/24),' days (E15)'],...
     [num2str(t(plotind(5))/24,3),' days (E',num2str(round(15+t(plotind(5))/24,1)),')'],...
     [num2str(t(plotind(6))/24,3),' days (E',num2str(round(15+t(plotind(6))/24,1)),')'],...
     [num2str(t(plotind(7))/24,3),' days (E',num2str(round(15+t(plotind(7))/24,1)),')'],...
-    [num2str(t(plotind(8))/24,3),' days (E',num2str(round(15+t(plotind(8))/24,1)),')']);
+    [num2str(t(plotind(8))/24,3),' days (E',num2str(round(15+t(plotind(8))/24,1)),'/P0)']);
 set(h,'FontSize',fsticks,'Position',[0.713 0.08 0.13 0.22]);
 
 set(gcf,'Units','inches','Position',[2,2,16,10],'PaperPositionMode','auto')

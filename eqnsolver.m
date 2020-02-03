@@ -21,10 +21,12 @@ mu = p.mu; %%% adhesion constant
 alpha1 = p.alpha1; %%% (/hr) proliferation rate APC
 alpha2 = p.alpha2; %%% (/hr) proliferation rate IPA
 beta = p.beta; %%% (/hr) differentiation rate
+beta_hat = p.beta_hat; %%% (/hr) mass action rate
 gamma1 = p.gamma1; %%% (/hr) apoptosis rate APC
 gamma2 = p.gamma2; %%% (/hr) apoptosis rate IPA
 Te = p.Te; %%% tension on boundary
-Ph = p.Ph; %%% partial pressure of oxygen due to hyaloid artery
+P_hy = p.P_hy; %%% partial pressure of oxygen due to hyaloid artery
+r_hy = p.r_hy; %%% radius at half-maximum of Hill function for hyaloid
 
 dr = m.dr;
 rmax = m.rmax; %%% max radius (mm) (estimate rat retinal radius = 4.1 mm)
@@ -54,7 +56,7 @@ if abs(s0/dr - round(s0/dr))>2*eps
     error('error specifying s(0): moving boundary must be located on grid node');
 end
 
-hy = hyaloid(r,Ph);
+hy = hyaloid(r,P_hy,r_hy);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%% initial conditions %%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -182,7 +184,7 @@ while tcurr < tmax && j<R-1
             dt_p = dt_c;
             dt_c = 0;
             numiter = numiter + 1;
-            if numiter >20
+            if numiter >50
                 disp('***stopping simulation since got stuck in a time loop***')
                 return;
             end
@@ -210,7 +212,7 @@ while tcurr < tmax && j<R-1
     %%% cells separate
     [c1_new,c2_new] = cellpops_separate_withgrowthfactors(j,c1_old,...
         c2_old,k_new,q1_new,q2_new,PO2,dt_c,r,Pm,kappa,mu,alpha1,alpha2,beta,...
-        gamma1,gamma2,cmin,rbar,ce,cmax,hy);
+        beta_hat,gamma1,gamma2,cmin,rbar,ce,cmax,hy);
 
     %%%%%%%%%%%%%%%%%%%%%% reset for next time step %%%%%%%%%%%%%%%%%%%%%%%
     j = j+1;
