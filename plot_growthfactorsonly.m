@@ -46,7 +46,7 @@ set(gca,'XLim',[0,rmax],'FontSize',fsticks)
 
 h = legend('0 days (E15)','1 day (E16)','2 days (E17)','3 days (E18)',...
     '4 days (E19)','5 days (E20)','6 days (E21)','7 days (E22/P0)');
-set(h,'FontSize',flegend,'Position',[0.8188 0.651 0.1635 0.3]);
+set(h,'FontSize',flegend,'Position',[0.8188 0.715 0.1635 0.236]);
 
 subaxis(2,2,3,'MarginLeft',0.07,'MarginRight',0.05,'MarginBottom',0.08,'MarginTop',0.08)
 hold on
