@@ -1,7 +1,7 @@
 clear variables global;
 clc;
 
-load('sensitivity analysis results/sensitivity_analysis_0205.mat')
+load('sensitivity analysis results/sensitivity_analysis_0207.mat')
 
 param_names = {'$\mu$','$\alpha_1$','$\alpha_2$','$\beta$','$\hat{\beta}$',...
     '$\gamma_1$','$\gamma_2$','$T_e$','$P_\mathrm{hy}$','$r_\mathrm{hy}$'};
@@ -11,9 +11,9 @@ param_names = {'$\mu$','$\alpha_1$','$\alpha_2$','$\beta$','$\hat{\beta}$',...
 figure
 for i=1:10
     if i==1
-        subaxis(3,4,i,'SpacingVert',0.1,'MarginLeft',0.04,'MarginRight',0,'MarginTop',0.05)
+        subaxis(3,4,i,'SpacingVert',0.1,'MarginLeft',0.045,'MarginRight',0,'MarginTop',0.05)
     elseif i==5 || i==9
-        subaxis(3,4,i,'SpacingVert',0.12,'MarginLeft',0.04,'MarginRight',0,'MarginBottom',0.08)
+        subaxis(3,4,i,'SpacingVert',0.12,'MarginLeft',0.045,'MarginRight',0,'MarginBottom',0.08)
     elseif i==4 || i==8
         subaxis(3,4,i,'SpacingVert',0.1,'MarginRight',0.02,'MarginLeft',0)
     else
@@ -87,4 +87,4 @@ for i=1:10
     set(gca,'FontSize',14)
 end
 
-set(gcf,'Units','inches','Position',[2,2,16,9],'PaperPositionMode','auto')
+set(gcf,'Units','inches','Position',[2,2,16,8],'PaperPositionMode','auto')

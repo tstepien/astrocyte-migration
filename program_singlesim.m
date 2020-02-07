@@ -22,7 +22,6 @@ p.Te = 0.0035; %%% tension on boundary
 p.P_hy = 0.01; %%% partial pressure of oxygen due to hyaloid artery
 p.r_hy = 1/10; %%% radius at half-maximum of Hill function for hyaloid
 
-
 %%% solve equation
 tic
 [t,r,c1,c2,q1,q2,mvgbdy,vel_cir,vel_rad] = eqnsolver(p,m,plotsonoff);
