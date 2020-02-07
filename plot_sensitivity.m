@@ -11,9 +11,9 @@ param_names = {'$\mu$','$\alpha_1$','$\alpha_2$','$\beta$','$\hat{\beta}$',...
 figure
 for i=1:10
     if i==1
-        subaxis(3,4,i,'SpacingVert',0.1,'MarginLeft',0.045,'MarginRight',0,'MarginTop',0.05)
+        subaxis(3,4,i,'SpacingVert',0.1,'MarginLeft',0.045,'MarginRight',0,'MarginTop',0.06,'MarginBottom',0.06)
     elseif i==5 || i==9
-        subaxis(3,4,i,'SpacingVert',0.12,'MarginLeft',0.045,'MarginRight',0,'MarginBottom',0.08)
+        subaxis(3,4,i,'SpacingVert',0.12,'MarginLeft',0.045,'MarginRight',0,'MarginBottom',0.07)
     elseif i==4 || i==8
         subaxis(3,4,i,'SpacingVert',0.1,'MarginRight',0.02,'MarginLeft',0)
     else
@@ -68,9 +68,9 @@ for i=1:10
     elseif i==3
         title('IPA proliferation rate')
     elseif i==4
-        title('Differentiation rate (O_2 and LIF)')
+        title({'Differentiation rate:';'Oxygen and LIF'})
     elseif i==5
-        title('Differentiation rate (mass action)')
+        title('Differentiation rate: mass action')
     elseif i==6
         title('APC apoptosis rate')
     elseif i==7
@@ -78,13 +78,13 @@ for i=1:10
     elseif i==8
         title('Edge tension')
     elseif i==9
-        title('Hyaloid Artery Maximum')
+        title('Hyaloid artery maximum')
     elseif i==10
-        title('Hyaloid Artery Half-Max-Value')
+        title('Hyaloid artery half-max value')
     end
     xlim([0,bound(i,2)])
     ylim([min(err(i,:)),max(err(i,:))])
     set(gca,'FontSize',14)
 end
 
-set(gcf,'Units','inches','Position',[2,2,16,8],'PaperPositionMode','auto')
+set(gcf,'Units','inches','Position',[2,2,16,9],'PaperPositionMode','auto')
