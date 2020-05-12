@@ -29,7 +29,6 @@ radius_ret = (414.17 * tday + 1029.17) * 0.001;
 thickness_ret = (( thickness_peripheral - thickness_origin )./radius_ret.^2 .*r.^2 ...
     + thickness_origin ) .* (r<=radius_ret);
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%% retinal ganglion cells %%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% thickness of retinal ganglion cell layer (from Braekevelt and Hollenburg)
 %%% in microns, converted to mm
