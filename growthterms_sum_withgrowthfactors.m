@@ -1,12 +1,17 @@
-function g = growthterms_sum_withgrowthfactors(c1,c2,q1,q2,PO2,Pm,alpha1,...
-    alpha2,gamma1,gamma2,cmax)
-% g = growthterms_sum(c1,c2,q1,q2,PO2,Pm,alpha1,alpha2,beta,gamma1,gamma2,rbar,cmax)
+function g = growthterms_sum_withgrowthfactors(c1,c2,q1,PO2,Pm,alpha11,...
+    alpha12,alpha21,alpha22,gamma1,gamma2,cmax,hyaloid)
+% g = growthterms_sum_withgrowthfactors(c1,c2,q1,PO2,Pm,alpha11,...
+%     alpha12,alpha21.alpha22,gamma1,gamma2,cmax,hyaloid)
 %
-% growth terms
+% growth terms summed: g=g1+g2
 
 global tcurr;
 
-g = (PO2./(Pm+PO2)+q1).*(alpha1*c1 + alpha2*c2).*(1 - (c1+c2)/cmax) ...
+hyaloid = hyaloid(1:length(c1));
+choroid = PO2./(Pm+PO2);
+
+g = ( (alpha11*(hyaloid + choroid) + alpha12*q1).*c1 ...
+    + (alpha21*PO2./(Pm+PO2) + alpha22*q1).*c2 ).*(1 - (c1+c2)/cmax) ...
     - (gamma1*c1 + gamma2*c2);
 
 % [tcurr/24 max(g) max(PO2./(Pm+PO2)) max(q1)]

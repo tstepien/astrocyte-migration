@@ -18,8 +18,10 @@ global whatstep tcurr;
 
 %%%%%%%%%%%%%%%% rename inputted parameters from structure %%%%%%%%%%%%%%%%
 mu = p.mu; %%% adhesion constant
-alpha1 = p.alpha1; %%% (/hr) proliferation rate APC
-alpha2 = p.alpha2; %%% (/hr) proliferation rate IPA
+alpha11 = p.alpha11; %%% (/hr) proliferation rate APC wrt oxygen
+alpha12 = p.alpha12; %%% (/hr) proliferation rate APC wrt PGFA
+alpha21 = p.alpha21; %%% (/hr) proliferation rate IPA wrt oxygen
+alpha22 = p.alpha22; %%% (/hr) proliferation rate IPA wrt PDGFA
 beta = p.beta; %%% (/hr) differentiation rate
 beta_hat = p.beta_hat; %%% (/hr) mass action rate
 gamma1 = p.gamma1; %%% (/hr) apoptosis rate APC
@@ -108,11 +110,14 @@ mvgbdy_vel = [];
 c1mb = c1(j);
 c2mb = c2(j);
 
+%%% parameters for predictor/corrector steps
+aa = 1;
+bb = 1/2;
+
 while tcurr < tmax && j<R-1
     %%%%%%%%%%%%%%%%%%%%%%%%%%% predictor step %%%%%%%%%%%%%%%%%%%%%%%%%%%%
     whatstep = 'predictor';
     
-    aa = 1;
     %%% should have s0 start further than 2 nodes in
     %%% lines commented so code runs faster, but left in case they're
     %%% desired
@@ -136,27 +141,16 @@ while tcurr < tmax && j<R-1
         PO2 = oxygen(r,thickness_ret,P0,Dalpha,M0);
         
         %%% growth factors
-        [q1_hat,q2_hat] = growthfactors_implicit(q1_old,q2_old,dt_p,tcurr,...
+        [q1_hat,~] = growthfactors_implicit(q1_old,q2_old,dt_p,tcurr,...
             r,dr,R,thickness_RGC,radius_endo,maxRGCthick,thickness_ret,D1,D2,...
             xi1,xi2,gamma3,gamma4);
         
-%         ve_old = ve_calc(j,tcurr,r,c1_old,c2_old,Pm,alpha1,alpha2,gamma1,gamma2,ce);
-        
         %%% cell sum
-        k_hat = cellpops_sum_withgrowthfactors(j,c1_old,c2_old,q1_hat,q2_hat,...
-            PO2,dt_p,r,Pm,kappa,mu,alpha1,alpha2,gamma1,gamma2,cmin,rbar,ce,cmax);
-        
-        %%% cells separate
-        %%% DON'T NEED! left in here in case we want to use it for
-        %%% debugging, but since the time steps dt are calculated only
-        %%% using the sum k=c1+c2, then this is unnecessary for
-        %%% computations
-%         [c1_hat,c2_hat] = cellpops_separate_withgrowthfactors(j,c1_old,...
-%             c2_old,k_hat,q1_hat,q2_hat,PO2,dt_p,r,Pm,kappa,mu,alpha1,alpha2,...
-%             beta,gamma1,gamma2,cmin,rbar,ce);
+        k_hat = cellpops_sum_withgrowthfactors(j,c1_old,c2_old,q1_hat,...
+            PO2,dt_p,r,Pm,kappa,mu,alpha11,alpha12,alpha21,alpha22,...
+            gamma1,gamma2,cmin,rbar,ce,cmax,hy);
         
         %%%%%%%%%%%%%%%%%%%%%%%%% corrector step %%%%%%%%%%%%%%%%%%%%%%%%%%
-        bb = 1/2;
         
         %%% should have s0 start further than 2 nodes in
         %%% lines commented so code runs faster, but left in case they're
@@ -175,7 +169,7 @@ while tcurr < tmax && j<R-1
                 + (1-bb)*( 3*k_old(j) - 4*k_old(j-1) + k_old(j-2) ) );
 %         end
         
-%         [tcurr/24 dt_p, dt_c max(q1_hat) max(q2_hat)]
+%         [tcurr/24 dt_p, dt_c] % max(q1_hat) max(q2_hat)]
 %         keyboard
         
         if abs(dt_p-dt_c)<tol
@@ -206,13 +200,15 @@ while tcurr < tmax && j<R-1
         xi1,xi2,gamma3,gamma4);
     
     %%% cell sum
-    k_new = cellpops_sum_withgrowthfactors(j,c1_old,c2_old,q1_new,q2_new,...
-        PO2,dt_c,r,Pm,kappa,mu,alpha1,alpha2,gamma1,gamma2,cmin,rbar,ce,cmax);
+    k_new = cellpops_sum_withgrowthfactors(j,c1_old,c2_old,q1_new,PO2,...
+        dt_c,r,Pm,kappa,mu,alpha11,alpha12,alpha21,alpha22,gamma1,...
+        gamma2,cmin,rbar,ce,cmax,hy);
     
     %%% cells separate
     [c1_new,c2_new] = cellpops_separate_withgrowthfactors(j,c1_old,...
-        c2_old,k_new,q1_new,q2_new,PO2,dt_c,r,Pm,kappa,mu,alpha1,alpha2,beta,...
-        beta_hat,gamma1,gamma2,cmin,rbar,ce,cmax,hy);
+        c2_old,k_new,q1_new,q2_new,PO2,dt_c,r,Pm,kappa,mu,alpha11,...
+        alpha12,alpha21,alpha22,beta,beta_hat,gamma1,gamma2,cmin,rbar,...
+        ce,cmax,hy);
 
     %%%%%%%%%%%%%%%%%%%%%% reset for next time step %%%%%%%%%%%%%%%%%%%%%%%
     j = j+1;
