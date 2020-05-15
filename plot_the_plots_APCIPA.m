@@ -1,11 +1,15 @@
 parameters_fixed
 
 %%% APC, IPA, and retina radius (mm) for E15-E16, E18-E22/P0
-rad_APC = [0.33; 0.33; 000; 0.5; 0.67; 1.67; 2.17; 2.67];
+rad_APC = [0.17; 0.33; 000; 0.5; 0.67; 1.67; 2.17; 2.67];
 
 %%% set up the plots
 %%% variables
 T = length(t);
+R = length(r);
+dr = r(2)-r(1);
+rmax = m.rmax;
+j_init = s0/dr+1;
 
 %%% only plot a subset of the times
 % numcurvesplot = 7;
@@ -24,18 +28,13 @@ for i=0:numcurvesplot-1
 end
 
 %%% color order - MATLAB
-% co = [0    0.4470    0.7410
-%     0.8500    0.3250    0.0980
-%     0.9290    0.6940    0.1250
-%     0.4940    0.1840    0.5560
-%     0.4660    0.6740    0.1880
-%     0.3010    0.7450    0.9330
-%     0.6350    0.0780    0.1840
-%     0         0.3725    0];
+% co = [0.8500    0.3250    0.0980 %red
+%     0    0.4470    0.7410 %blue
+%     ];
 
 %%% color order - to match Chan-Ling color scheme for APC/IPA
-co = [128/255 133/255 156/255;
-    171/255 5/255 32/255];
+co = [171/255 5/255 32/255;
+    128/255 133/255 156/255];
 
 
 %%% make moving boundary sharp on the plot
@@ -62,9 +61,9 @@ figure
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 for i=1:8
     if i==1
-        subaxis(2,4,1,'MarginTop',0.05,'MarginBottom',0.175,'MarginLeft',0.06,'MarginRight',0.01)
+        subaxis(2,4,1,'MarginTop',0.07,'MarginBottom',0.175,'MarginLeft',0.06,'MarginRight',0.01)
     elseif i==5
-        subaxis(2,4,5,'MarginTop',0.125,'MarginBottom',0.1)
+        subaxis(2,4,5,'MarginTop',0.14,'MarginBottom',0.1)
     else
         subaxis(2,4,i)
     end
@@ -86,7 +85,7 @@ for i=1:8
         title([num2str(t(plotind(i))/24,3),' days (E',num2str(round(15+t(plotind(i))/24,1)),')']);
     end
     if i>=5
-        xlabel('radius (mm)','FontSize',fslabel)
+        xlabel('Radius (mm)','FontSize',fslabel,'Interpreter','latex')
     end
     if mvgbdy(end)<1.5
         set(gca,'XLim',[0,mvgbdy(end)+5*dr],'YLim',ylim_sum,'FontSize',fsticks)
@@ -97,6 +96,8 @@ for i=1:8
 end
 
 h = legend('APCs','IPAs');
-set(h,'FontSize',fsticks,'Position',[0.155 0.831 0.0946 0.1098]);
+set(h,'FontSize',fsticks,'Position',[0.155 0.8102 0.0946 0.1098]);
 
-set(gcf,'Units','inches','Position',[2,2,12,6],'PaperPositionMode','auto')
+text(-16,12200,'A','FontSize',26,'FontWeight','bold')
+
+set(gcf,'Units','inches','Position',[2,2,12,6.5],'PaperPositionMode','auto')

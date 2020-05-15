@@ -38,7 +38,7 @@ kappa = 1; %%% tension function scaling (mN/mm^2)
 
 
 %%%%%%%%%%%%%%%%%%%% moving boundary initial location %%%%%%%%%%%%%%%%%%%%%
-s0 = 0.2; %%% based on Chan-Ling et al. (2009) Fig 2G: E15
+s0 = 0.17; %%% based on Chan-Ling et al. (2009) Fig 2G: E15
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%% retinal ganglion cells %%%%%%%%%%%%%%%%%%%%%%%%%%
