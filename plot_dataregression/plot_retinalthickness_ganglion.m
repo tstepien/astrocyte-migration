@@ -5,28 +5,28 @@ close all;
 %%% retinal ganglion cells
 
 % days since E15
-timeindays = (2:7)';
+timeindays = (1:6)';
 
-timeindays_more = linspace(2,7,1000);
+timeindays_more = linspace(1,6,1000);
 
 % thickness data in microns
-thickness_posterior = [27
+thickness_posterior = [0
+27
 46
 31
 32
-31
-17];
+31];
 
-thickness_peripheral = [8
+thickness_peripheral = [0
+8
 26
 30
 37
-26
-15];
+26];
 
 % regression lines
-line_posterior = -1.95*timeindays_more.^2 + 14.84*timeindays_more + 9.01;
-line_peripheral = -3.66*timeindays_more.^2 + 34.15*timeindays_more - 45.19;
+line_posterior = -3.79*timeindays_more.^2 + 31.02*timeindays_more - 23.16;
+line_peripheral = -2.49*timeindays_more.^2 + 23.81*timeindays_more - 24.12;
 
 markersize = 100;
 graycolor = [0.65 0.65 0.65];
@@ -51,6 +51,10 @@ ylabel('Ganglion Cell Layer Thickness ($\mu$m)','Interpreter','latex','FontSize'
 legend([h1 h2],{'Posterior','Peripheral'},'Location','northeast')
 
 xticks(timeindays)
-xticklabels({'E17','E18','E19','E20','E21','E22'})
+xticklabels({'E16','E17','E18','E19','E20','E21'})
+ylim([0,50])
+
+title('B                                                ',...
+    'FontSize',26)
 
 set(gcf,'Units','inches','Position',[2 2 7.75 5.75],'PaperPositionMode','auto')

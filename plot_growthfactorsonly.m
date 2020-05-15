@@ -1,3 +1,6 @@
+titles_on = 'yes';
+subpanels_on = 'no';
+
 %%% plot times: day 0, 1, 2, 3, 4, 5, 6, 7
 numcurvesplot = 8;
 tplot = zeros(1,numcurvesplot);
@@ -15,12 +18,18 @@ co = [0    0.4470    0.7410
     0.6350    0.0780    0.1840
     0         0.3725    0];
 
-fslabel = 16;
-fsticks = 14;
-flegend = 10;
+fslabel = 22;
+fsticks = 18;
+flegend = 14;
+fstitles = 24;
 
-figure
-subaxis(2,2,1,'MarginLeft',0.07,'MarginRight',0.05,'MarginTop',0.04,'MarginBottom',0.12)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+if strcmp(subpanels_on,'yes')==1
+    figure
+    subaxis(2,2,1,'MarginLeft',0.07,'MarginRight',0.05,'MarginTop',0.04,'MarginBottom',0.12)
+else
+    figure
+end
 hold on
 j=0;
 for i=tplot
@@ -28,11 +37,34 @@ for i=tplot
     plot(r,q1_imp(i,:),'LineWidth',1.5,'Color',co(j,:))
 end
 hold off
-xlabel('r (mm)','FontSize',fslabel)
-ylabel('PDGFA (ng/mL)','FontSize',fslabel)
-set(gca,'XLim',[0,rmax],'FontSize',fsticks)
+xlabel('Radius (mm)','FontSize',fslabel,'Interpreter','latex')
+ylabel('PDGFA (ng/mL)','FontSize',fslabel,'Interpreter','latex')
+box on
 
-subaxis(2,2,2,'MarginRight',0.01,'MarginLeft',0.07)
+h = legend('E15','E16','E17','E18','E19','E20','E21','E22/P0');
+set(h,'FontSize',flegend);
+
+if strcmp(subpanels_on,'yes')==0
+    set(gca,'XLim',[0,rmax],'FontSize',fsticks,'Position',[0.14 0.14 0.82 0.76])
+    set(gcf,'Units','inches','Position',[2 2 7.75 5.75],'PaperPositionMode','auto')
+else
+    set(gca,'XLim',[0,rmax],'FontSize',fsticks)
+end
+
+if strcmp(titles_on,'yes')==1
+    title('A                                                    ',...
+    'FontSize',fstitles)
+end
+
+pause(0.1)
+stop
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+if strcmp(subpanels_on,'yes')==1
+    subaxis(2,2,2,'MarginRight',0.01,'MarginLeft',0.07)
+else
+    figure
+end
 hold on
 j=0;
 for i=tplot
@@ -40,32 +72,86 @@ for i=tplot
     plot(r,q2_imp(i,:),'LineWidth',1.5,'Color',co(j,:))
 end
 hold off
-xlabel('r (mm)','FontSize',fslabel)
-ylabel('LIF (ng/mL)','FontSize',fslabel)
-set(gca,'XLim',[0,rmax],'FontSize',fsticks)
+xlabel('Radius (mm)','FontSize',fslabel,'Interpreter','latex')
+ylabel('LIF (ng/mL)','FontSize',fslabel,'Interpreter','latex')
+box on
 
-h = legend('0 days (E15)','1 day (E16)','2 days (E17)','3 days (E18)',...
-    '4 days (E19)','5 days (E20)','6 days (E21)','7 days (E22/P0)');
-set(h,'FontSize',flegend,'Position',[0.8188 0.715 0.1635 0.236]);
+h = legend('E15','E16','E17','E18','E19','E20','E21','E22/P0');
+set(h,'FontSize',flegend);
 
-subaxis(2,2,3,'MarginLeft',0.07,'MarginRight',0.05,'MarginBottom',0.08,'MarginTop',0.08)
+if strcmp(subpanels_on,'yes')==0
+    set(gca,'XLim',[0,rmax],'FontSize',fsticks,'Position',[0.14 0.14 0.82 0.76])
+    set(gcf,'Units','inches','Position',[2 2 7.75 5.75],'PaperPositionMode','auto')
+else
+    set(gca,'XLim',[0,rmax],'FontSize',fsticks)
+end
+
+if strcmp(titles_on,'yes')==1
+    title('B                                                    ',...
+    'FontSize',fstitles)
+end
+
+pause(0.1)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+if strcmp(subpanels_on,'yes')==1
+    subaxis(2,2,3,'MarginLeft',0.07,'MarginRight',0.05,'MarginBottom',0.08,'MarginTop',0.08)
+else
+    figure
+end
 hold on
 plot(radius_ret(tplot),t(tplot)/24,'k','LineWidth',1.5)
 scatter(radius_ret(tplot),t(tplot)/24,70,co,'filled')
 hold off
-ylabel('t (days)','FontSize',fslabel)
-xlabel('retina radius (mm)','FontSize',fslabel)
+ylabel('Time (days)','FontSize',fslabel,'Interpreter','latex')
+xlabel('Retina Radius (mm)','FontSize',fslabel,'Interpreter','latex')
 yticks(0:7)
-set(gca,'YLim',[0,7],'XLim',[0,rmax],'FontSize',fsticks)
+box on
 
-subaxis(2,2,4,'MarginRight',0.01,'MarginLeft',0.07)
+if strcmp(subpanels_on,'yes')==0
+    set(gca,'XLim',[0,rmax],'FontSize',fsticks,'Position',[0.14 0.14 0.82 0.76])
+    set(gcf,'Units','inches','Position',[2 2 7.75 5.75],'PaperPositionMode','auto')
+else
+    set(gca,'XLim',[0,rmax],'YLim',[0,7],'FontSize',fsticks)
+end
+
+if strcmp(titles_on,'yes')==1
+    title('C                                                    ',...
+    'FontSize',fstitles)
+end
+
+pause(0.1)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+if strcmp(subpanels_on,'yes')==1
+    subaxis(2,2,4,'MarginRight',0.01,'MarginLeft',0.07)
+else
+    figure
+end
 hold on
 plot(radius_endo(tplot),t(tplot)/24,'k','LineWidth',1.5)
 scatter(radius_endo(tplot),t(tplot)/24,70,co,'filled')
 hold off
-ylabel('t (days)','FontSize',fslabel)
-xlabel('endothelial cell radius (mm)','FontSize',fslabel)
+ylabel('Time (days)','FontSize',fslabel,'Interpreter','latex')
+xlabel('Endothelial Cell Radius (mm)','FontSize',fslabel,'Interpreter','latex')
 yticks(0:7)
-set(gca,'YLim',[0,7],'XLim',[0,rmax],'FontSize',fsticks)
+box on
 
-set(gcf,'Units','inches','Position',[2,2,10,8],'PaperPositionMode','auto')
+if strcmp(subpanels_on,'yes')==0
+    set(gca,'XLim',[0,rmax],'FontSize',fsticks,'Position',[0.14 0.14 0.82 0.76])
+    set(gcf,'Units','inches','Position',[2 2 7.75 5.75],'PaperPositionMode','auto')
+else
+    set(gca,'XLim',[0,rmax],'YLim',[0,7],'FontSize',fsticks)
+end
+
+if strcmp(titles_on,'yes')==1
+    title('D                                                    ',...
+    'FontSize',fstitles)
+end
+
+pause(0.1)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+if strcmp(subpanels_on,'yes')==1
+    set(gcf,'Units','inches','Position',[2,2,13,10],'PaperPositionMode','auto')
+end
