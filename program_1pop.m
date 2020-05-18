@@ -23,7 +23,7 @@ p.gamma2 = 0; %%% (/hr) apoptosis rate IPA
 p.Te = 0.0035; %%% tension on boundary
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% hyaloid artery %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-p.P_hy = 10; %%% partial pressure of oxygen due to hyaloid artery
+p.P_hy = 0; %%% partial pressure of oxygen due to hyaloid artery
 p.r_hy = 0.1; %%% radius at half-maximum of Hill function for hyaloid
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% mesh parameters %%%%%%%%%%%%%%%%%%%%%%%%%%%%%

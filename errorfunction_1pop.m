@@ -1,5 +1,5 @@
-function err_rad = errorfunction_1pop(t,mvgbdy)
-% err_rad = errorfunction_1pop(t,mvgbdy)
+function [err_tot,err_time,err_rad] = errorfunction_1pop(t,mvgbdy)
+% [err_tot,err_time,err_rad] = errorfunction_1pop(t,mvgbdy)
 %
 % This is the error function for comparing the experimental data with
 % simulations
@@ -9,12 +9,16 @@ function err_rad = errorfunction_1pop(t,mvgbdy)
 %   mvgbdy = vector with location of moving boundary over time
 %
 % outputs:
+%   err_tot  = total error
+%   err_time = error from time end point
 %   err_rad  = error from astrocyte radius
 
-if t(end)/24 <6 || t(end)/24>8
+if t(end)/24>8 %|| t(end)/24 <6
     err_rad = NaN;
     return
 end
+
+err_time = abs(7 - t(end)/24)/7;
 
 %%% threshold for small density
 parameters_fixed
@@ -38,3 +42,5 @@ end
 
 %%% total error from astrocyte radius
 err_rad = sum( abs(rad_APC - mvgbdy(ind)) ./ rad_APC );
+
+err_tot = err_time + err_rad;

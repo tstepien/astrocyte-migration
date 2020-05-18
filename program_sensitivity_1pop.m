@@ -30,10 +30,10 @@ p.r_hy = 0.1; %%% radius at half-maximum of Hill function for hyaloid
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%% parameters bounds %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 bound = [0.01 5; %mu
-    0 1; %alpha11
+    0.01 1; %alpha11
     0 1; %alpha12
-    0 0.1; %gamma1
-    0 0.0038; %Te
+    0 1; %gamma1
+    0.0001 0.0038; %Te
     0 20; %P_hy
     0.001 1]; %r_hy
 numpar = length(bound);
