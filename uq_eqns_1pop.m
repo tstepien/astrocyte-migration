@@ -26,35 +26,25 @@ r_hy = X(:,7);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%% fixed parameters %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% set all IPA stuff = 0
-p.alpha21 = 0;
-p.alpha22 = 0;
-p.beta = 0;
-p.beta_hat = 0;
-p.gamma2 = 0;
+alpha21 = 0;
+alpha22 = 0;
+beta = 0;
+beta_hat = 0;
+gamma2 = 0;
 
 %%% mesh parameters
 m.dr = 0.01;
 m.rmax = 5;
 m.tmax = 7*24;
 
-%%% plots on or off
-plotsonoff = 'off';
-
 %%%%%%%%%%%%%%%%%%% solve equation and calculate error %%%%%%%%%%%%%%%%%%%%
 %%% initialize
 N = size(X,1);
 Y = zeros(N,1);
 
-for i=1:N
-    p.mu = mu(i);
-    p.alpha11 = alpha11(i);
-    p.alpha12 = alpha12(i);
-    p.gamma1 = gamma1(i);
-    p.Te = Te(i);
-    p.P_hy = P_hy(i);
-    p.r_hy = r_hy(i);
-    
-    [t,~,~,~,~,~,mvgbdy,~,~] = eqnsolver(p,m,plotsonoff);
+parfor i=1:N
+    [t,~,~,~,~,~,mvgbdy,~,~] = eqnsolver(mu(i),alpha11(i),alpha12(i),...
+        alpha21,alpha22,beta,beta_hat,gamma1(i),gamma2,Te(i),P_hy(i),r_hy(i),m);
     
     [Y(i),~,~] = errorfunction_1pop(t,mvgbdy);
 end

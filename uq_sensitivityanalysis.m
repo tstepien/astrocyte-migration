@@ -8,7 +8,7 @@ clearvars
 rng(100,'twister')
 uqlab
 
-sampleN = 10;%1e4;
+sampleN = 1000;%1e4;
 
 %% 2 - COMPUTATIONAL MODEL
 % Create a MODEL object from the function file:
@@ -19,31 +19,31 @@ myModel = uq_createModel(ModelOpts);
 %% 3 - PROBABILISTIC INPUT MODEL
 % The probabilistic input model consists of 7 independent random variables.
 % Specify the marginals as follows:
-InputOpts.Marginals(1).Name = 'mu';  % adhesion constant
+InputOpts.Marginals(1).Name = '$\mu$';  % adhesion constant
 InputOpts.Marginals(1).Type = 'Uniform';
 InputOpts.Marginals(1).Parameters = [0.01 5];  % (mN h/mm^3)
 
-InputOpts.Marginals(2).Name = 'alpha11';  % proliferation rate APC wrt oxygen
+InputOpts.Marginals(2).Name = '$\alpha_{11}$';  % proliferation rate APC wrt oxygen
 InputOpts.Marginals(2).Type = 'Uniform';
 InputOpts.Marginals(2).Parameters = [0.01 1];  % (/hr)
 
-InputOpts.Marginals(3).Name = 'alpha12';  % proliferation rate APC wrt PDGFA
+InputOpts.Marginals(3).Name = '$\alpha_{12}$';  % proliferation rate APC wrt PDGFA
 InputOpts.Marginals(3).Type = 'Uniform';
 InputOpts.Marginals(3).Parameters = [0 1];  % (/hr)
 
-InputOpts.Marginals(4).Name = 'gamma1';  % apoptosis rate APC
+InputOpts.Marginals(4).Name = '$\gamma_1$';  % apoptosis rate APC
 InputOpts.Marginals(4).Type = 'Uniform';
 InputOpts.Marginals(4).Parameters = [0 1];  % (/hr)
 
-InputOpts.Marginals(5).Name = 'Te';  % tension on boundary
+InputOpts.Marginals(5).Name = '$T_e$';  % tension on boundary
 InputOpts.Marginals(5).Type = 'Uniform';
 InputOpts.Marginals(5).Parameters = [0.0001 0.0038];  % (N/mm)
 
-InputOpts.Marginals(6).Name = 'P_hy';  % partial pressure of oxygen due to hyaloid artery
+InputOpts.Marginals(6).Name = '$P_\mathrm{hy}$';  % partial pressure of oxygen due to hyaloid artery
 InputOpts.Marginals(6).Type = 'Uniform';
 InputOpts.Marginals(6).Parameters = [0 20];  % (dimensionless)
 
-InputOpts.Marginals(7).Name = 'r_hy';  % radius at half-maximum of Hill function for hyaloid
+InputOpts.Marginals(7).Name = '$r_\mathrm{hy}$';  % radius at half-maximum of Hill function for hyaloid
 InputOpts.Marginals(7).Type = 'Uniform';
 InputOpts.Marginals(7).Parameters = [0.001 1];  % (mm)
 
@@ -205,3 +205,6 @@ uq_display(BorgonovoAnalysis)
 % the 2D histogram estimation of the joint distribution used in the 
 % calculation of an index:
 uq_display(BorgonovoAnalysis, 1, 'Joint PDF', 1)
+
+%% 5. Save variables to file
+save('results_uq_sensitivity.mat')

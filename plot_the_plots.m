@@ -1,7 +1,14 @@
+parameters_fixed
+
 %%% max distance astrocytes spread
 max_astrocytes = 2.67;
 
 %%% set up the plots
+%%% variables
+R = length(r);
+dr = r(2)-r(1);
+rmax = m.rmax;
+j_init = s0/dr+1;
 
 %%% cell layer thickness and radius
 [thickness_ret,~,~,~] = thick_rad(t,r);

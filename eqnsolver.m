@@ -1,11 +1,12 @@
-function [t,r,c1,c2,q1,q2,mvgbdy,vel_cir,vel_rad] = eqnsolver(p,m,plotsonoff)
+function [t,r,c1,c2,q1,q2,mvgbdy,vel_cir,vel_rad] = eqnsolver(mu,alpha11,...
+    alpha12,alpha21,alpha22,beta,beta_hat,gamma1,gamma2,Te,P_hy,r_hy,m)
 % [c1,c2] = ............
 %
 % this is the solver
 %
 % Inputs:
-%   param = structure of parameter values
-%   mesh  = structure of mesh values
+%   [...] = parameter values
+%   m  = structure of mesh values
 %
 % Outputs:
 %   c1 = density of APCs
@@ -16,20 +17,7 @@ global whatstep tcurr;
 %%% time unit: hr
 %%% space unit: mm
 
-%%%%%%%%%%%%%%%% rename inputted parameters from structure %%%%%%%%%%%%%%%%
-mu = p.mu; %%% adhesion constant
-alpha11 = p.alpha11; %%% (/hr) proliferation rate APC wrt oxygen
-alpha12 = p.alpha12; %%% (/hr) proliferation rate APC wrt PGFA
-alpha21 = p.alpha21; %%% (/hr) proliferation rate IPA wrt oxygen
-alpha22 = p.alpha22; %%% (/hr) proliferation rate IPA wrt PDGFA
-beta = p.beta; %%% (/hr) differentiation rate
-beta_hat = p.beta_hat; %%% (/hr) mass action rate
-gamma1 = p.gamma1; %%% (/hr) apoptosis rate APC
-gamma2 = p.gamma2; %%% (/hr) apoptosis rate IPA
-Te = p.Te; %%% tension on boundary
-P_hy = p.P_hy; %%% partial pressure of oxygen due to hyaloid artery
-r_hy = p.r_hy; %%% radius at half-maximum of Hill function for hyaloid
-
+%%%%%%%%%%%%% rename inputted parameters from mesh structure %%%%%%%%%%%%%%
 dr = m.dr;
 rmax = m.rmax; %%% max radius (mm) (estimate rat retinal radius = 4.1 mm)
 tmax = m.tmax; %%% max time (hr) (7 days = 168 hr)
@@ -259,12 +247,3 @@ disp(['location of moving boundary at last time step: ',num2str(mvgbdy(end))])
 % PO2(end)
 disp(['ending time in hours: ',num2str(t(end)/24)])
 disp(['velocity of moving boundary at last time step: ',num2str(mvgbdy_vel(end))])
-
-
-%% plotting
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% plotting %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-if strcmp(plotsonoff,'on')
-    plot_the_plots
-    plot_the_plots_APCIPA
-    plot_movingbdy
-end
