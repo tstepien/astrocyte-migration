@@ -14,9 +14,9 @@ function [err_tot,err_time,err_rad] = errorfunction_1pop(t,mvgbdy)
 %   err_rad  = error from astrocyte radius
 
 if t(end)/24>8  || ~isreal(t(end)) %|| t(end)/24 <6
-    err_tot = NaN;
-    err_time = NaN;
-    err_rad = NaN;
+    err_tot = 10^4; %NaN;
+    err_time = 10^4; %NaN;
+    err_rad = 10^4; %NaN;
     return
 end
 
