@@ -7,10 +7,10 @@ close all;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%% astrocyte parameters %%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% only APCs
-mu = 0.1; %%% adhesion constant
-alpha11 = 0.03; %%% (/hr) proliferation rate APC wrt oxygen
-alpha12 = 0.22; %%% (/hr) proliferation rate APC wrt PDGFA
-gamma1 = 0.01; %%% (/hr) apoptosis rate APC
+mu = 2.5017;%0.1; %%% adhesion constant
+alpha11 = 0.4456;%0.03; %%% (/hr) proliferation rate APC wrt oxygen
+alpha12 = 0.0299;%0.22; %%% (/hr) proliferation rate APC wrt PDGFA
+gamma1 = 0.8259;%0.01; %%% (/hr) apoptosis rate APC
 
 %%% set all IPA stuff = 0
 alpha21 = 0; %%% (/hr) proliferation rate IPA wrt oxygen
@@ -23,8 +23,8 @@ gamma2 = 0; %%% (/hr) apoptosis rate IPA
 Te = 0.0035; %%% tension on boundary
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% hyaloid artery %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-P_hy = 0; %%% partial pressure of oxygen due to hyaloid artery
-r_hy = 0.1; %%% radius at half-maximum of Hill function for hyaloid
+P_hy = 19.2786;%0; %%% partial pressure of oxygen due to hyaloid artery
+r_hy = 0.5649;%0.1; %%% radius at half-maximum of Hill function for hyaloid
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% mesh parameters %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 m.dr = 0.01;
@@ -38,7 +38,7 @@ tic
 toc
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%% error calculation %%%%%%%%%%%%%%%%%%%%%%%%%%%%
-err_rad = errorfunction_1pop(t,mvgbdy);
+[err_tot,err_time,err_rad] = errorfunction_1pop(t,mvgbdy);
 
 %% plots
 plot_the_plots

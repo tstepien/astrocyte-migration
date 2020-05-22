@@ -13,7 +13,9 @@ function [err_tot,err_time,err_rad] = errorfunction_1pop(t,mvgbdy)
 %   err_time = error from time end point
 %   err_rad  = error from astrocyte radius
 
-if t(end)/24>8 %|| t(end)/24 <6
+if t(end)/24>8  || ~isreal(t(end)) %|| t(end)/24 <6
+    err_tot = NaN;
+    err_time = NaN;
     err_rad = NaN;
     return
 end
@@ -37,7 +39,7 @@ ind = zeros(numdays,1);
 %%% calculate values on each day of data
 for i=1:numdays
     jj = dayswithdata(i);
-    ind(i) = find(abs((t/24-(jj-1)))==min(abs(t/24-(jj-1))));
+    ind(i) = find(abs((t/24-(jj-1)))==min(abs(t/24-(jj-1))),1,'first');
 end
 
 %%% total error from astrocyte radius
