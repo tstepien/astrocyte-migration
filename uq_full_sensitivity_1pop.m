@@ -8,12 +8,12 @@ clearvars
 rng(100,'twister')
 uqlab
 
-sampleN = 10000;%1e4;
+sampleN = 10000;
 filename = 'parameter_analysis/full_uq_sensitivity.mat';
 
 %% 2 - COMPUTATIONAL MODEL
 % Create a MODEL object from the function file:
-ModelOpts.mFile = 'uq_eqns_1pop';
+ModelOpts.mFile = 'uq_eqns_and_error_1pop';
 
 myModel = uq_createModel(ModelOpts);
 
@@ -193,6 +193,10 @@ SobolOpts.Sobol.SampleSize = sampleN;
 % where $M$ is the input dimension and $N$ is the sample size.
 % Therefore, the total cost for the current setup is
 % $(8+2)\times 10^4 = 10^5$ evaluations of the full computational model.
+
+% Add boostrap-based confidence intervals (0.025 and 0.975 quantiles)
+SobolSensOpts.Bootstrap.Replications = 100;
+SobolSensOpts.Alpha = 0.05;
 
 % Run the sensitivity analysis:
 SobolAnalysis = uq_createAnalysis(SobolOpts);

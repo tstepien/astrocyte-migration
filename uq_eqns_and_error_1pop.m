@@ -8,12 +8,7 @@ function Y = uq_eqns_1pop(X)
 %   X = [mu, alpha11, alpha12, gamma1, Te, P_hy, r_hy]
 %
 % output:
-%   Y = moving boundary location at data point times
-
-%%% times: day 0, 1, 2, 3, 4, 5, 6, 7
-%%% but note that we don't have data for day 2
-dayswithdata = [1:2 4:8];
-numdays = length(dayswithdata);
+%   Y = total error
 
 %%%%%%%%%%%%%%%%%%%%%%%%%% parameters to examine %%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% only APCs
@@ -45,17 +40,11 @@ m.tmax = 7*24;
 %%%%%%%%%%%%%%%%%%% solve equation and calculate error %%%%%%%%%%%%%%%%%%%%
 %%% initialize
 N = size(X,1);
-Y = zeros(N,numdays);
+Y = zeros(N,1);
 
 parfor i=1:N
     [t,~,~,~,~,~,mvgbdy,~,~] = eqnsolver(mu(i),alpha11(i),alpha12(i),...
         alpha21,alpha22,beta,beta_hat,gamma1(i),gamma2,Te(i),P_hy(i),r_hy(i),m);
     
-    ind = zeros(numdays,1);
-    for k=1:numdays
-        jj = dayswithdata(k);
-        ind(k) = find(abs((t/24-(jj-1)))==min(abs(t/24-(jj-1))),1,'first');
-    end
-    
-    Y(i,:) = mvgbdy(ind)';
+    [Y(i),~,~] = errorfunction_1pop(t,mvgbdy);
 end
