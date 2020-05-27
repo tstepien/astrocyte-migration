@@ -1,4 +1,4 @@
-%% INVERSION (ABC): ASTROCYTE MIGRATION
+%% INVERSION (Bayesian): ASTROCYTE MIGRATION
 
 %% 1 - INITIALIZE UQLAB
 % Clear all variables from the workspace, set the random number generator
