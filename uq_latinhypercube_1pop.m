@@ -9,7 +9,7 @@ N = 10000;
 % save(strcat('LHpts_',num2str(N),'.mat'),'LHpts')
 % stop
 
-load(strcat('parameter analysis/LHpts_',num2str(N),'.mat'))
+load(strcat('parameter_analysis/LHpts_',num2str(N),'.mat'))
 
 if strcmp(savefiles,'yes')==1
     doublecheck = input('Are you sure you would like to save the output files? (it may overwrite): ');

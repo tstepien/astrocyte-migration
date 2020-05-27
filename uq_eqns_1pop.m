@@ -1,14 +1,15 @@
 function Y = uq_eqns_1pop(X)
 % Y = uq_eqns_1pop(X)
 %
-% This function returns the value of the error of astrocyte migration for a
-% single population of cells, described by 7 variables
+% This function returns the computed values of the moving boundary location
+% astrocyte migration for a single population of cells and the final
+% simulated time (days)
 %
 % inputs:
 %   X = [mu, alpha11, alpha12, gamma1, Te, P_hy, r_hy]
 %
 % output:
-%   Y = moving boundary location at data point times
+%   Y = moving boundary location at data point times + ending time (days)
 
 %%% times: day 0, 1, 2, 3, 4, 5, 6, 7
 %%% but note that we don't have data for day 2
@@ -45,7 +46,7 @@ m.tmax = 7*24;
 %%%%%%%%%%%%%%%%%%% solve equation and calculate error %%%%%%%%%%%%%%%%%%%%
 %%% initialize
 N = size(X,1);
-Y = zeros(N,numdays);
+Y = zeros(N,numdays+1);
 
 parfor i=1:N
     [t,~,~,~,~,~,mvgbdy,~,~] = eqnsolver(mu(i),alpha11(i),alpha12(i),...
@@ -57,5 +58,5 @@ parfor i=1:N
         ind(k) = find(abs((t/24-(jj-1)))==min(abs(t/24-(jj-1))),1,'first');
     end
     
-    Y(i,:) = mvgbdy(ind)';
+    Y(i,:) = [mvgbdy(ind)' t(end)/24];
 end

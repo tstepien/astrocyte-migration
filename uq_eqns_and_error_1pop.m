@@ -1,5 +1,5 @@
-function Y = uq_eqns_1pop(X)
-% Y = uq_eqns_1pop(X)
+function Y = uq_eqns_and_error_1pop(X)
+% Y = uq_eqns_and_error_1pop(X)
 %
 % This function returns the value of the error of astrocyte migration for a
 % single population of cells, described by 7 variables
