@@ -1,6 +1,7 @@
 clear variables;
 clc;
 close all;
+addpath ../
 
 parameters_fixed;
 
@@ -58,7 +59,7 @@ set(gca,'XLim',[0,rmax],'FontSize',fsticks,'Position',[0.14 0.14 0.82 0.76])
 h = legend('E15','E16','E17','E18','E19','E20','E21','E22/P0');
 set(h,'FontSize',fslegend);
 
-title('A                                                ',...
+title('D                                                ',...
     'FontSize',26)
 
 set(gcf,'Units','inches','Position',[2 2 7.75 5.75],'PaperPositionMode','auto')

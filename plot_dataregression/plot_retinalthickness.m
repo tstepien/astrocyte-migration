@@ -57,7 +57,7 @@ legend([h1 h2],{'Posterior','Peripheral'},'Location','northwest')
 xticks(timeindays)
 xticklabels({'E13','E14','E15','E16','E17','E18','E19','E20','E21'})
 
-title('C                                                ',...
+title('A                                                ',...
     'FontSize',26)
 
 set(gcf,'Units','inches','Position',[2 2 7.75 5.75],'PaperPositionMode','auto')

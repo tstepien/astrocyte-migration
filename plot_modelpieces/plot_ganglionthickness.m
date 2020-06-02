@@ -1,6 +1,7 @@
 clear variables;
 clc;
 close all;
+addpath ../
 
 dr = 0.01;
 rmax = 5; %%% max radius (mm) (estimate rat retinal radius = 4.1 mm)
@@ -11,7 +12,7 @@ r = 0:dr:rmax;
 t = (0:dt:tmax)';
 
 %%% cell layer thickness and radius
-[thickness_ret,~,~,~] = thick_rad(t,r);
+[~,thickness_RGC,~,~] = thick_rad(t,r);
 
 %%% plot times: day 0, 1, 2, 3, 4, 5, 6, 7
 numcurvesplot = 8;
@@ -37,13 +38,13 @@ fslegend = 14;
 figure
 hold on
 for i=1:numcurvesplot
-    plot(r,thickness_ret(plotind(i),:),'LineWidth',1.5,'Color',co(i,:))
+    plot(r,thickness_RGC(plotind(i),:),'LineWidth',1.5,'Color',co(i,:))
 end
 hold off
 xlabel('Radius (mm)','Interpreter','latex','FontSize',fslabel)
-ylabel('Retinal Thickness (mm)','Interpreter','latex','FontSize',fslabel)
+ylabel('Ganglion Cell Layer Thickness (mm)','Interpreter','latex','FontSize',fslabel)
 box on
-set(gca,'XLim',[0,rmax],'FontSize',fsticks,'Position',[0.14 0.14 0.82 0.76])
+set(gca,'XLim',[0,rmax],'FontSize',fsticks,'Position',[0.142 0.14 0.82 0.76])
 
 h = legend('E15','E16','E17','E18','E19','E20','E21','E22/P0');
 set(h,'FontSize',fslegend);
