@@ -42,13 +42,13 @@ bound = [0.01 5; %mu - adhesion constant
     0.001 1]; %r_hy - radius at half-maximum of Hill function for hyaloid
 numpar = length(bound);
 
-mu = (bound(1,2) - bound(1,1))*LHpts(:,1) + bound(1,1);
+mu      = (bound(1,2) - bound(1,1))*LHpts(:,1) + bound(1,1);
 alpha11 = (bound(2,2) - bound(2,1))*LHpts(:,2) + bound(2,1);
 alpha12 = (bound(3,2) - bound(3,1))*LHpts(:,3) + bound(3,1);
-gamma1 = (bound(4,2) - bound(4,1))*LHpts(:,4) + bound(4,1);
-Te = (bound(5,2) - bound(5,1))*LHpts(:,5) + bound(5,1);
-P_hy = (bound(6,2) - bound(6,1))*LHpts(:,6) + bound(6,1);
-r_hy = (bound(7,2) - bound(7,1))*LHpts(:,7) + bound(7,1);
+gamma1  = (bound(4,2) - bound(4,1))*LHpts(:,4) + bound(4,1);
+Te      = (bound(5,2) - bound(5,1))*LHpts(:,5) + bound(5,1);
+P_hy    = (bound(6,2) - bound(6,1))*LHpts(:,6) + bound(6,1);
+r_hy    = (bound(7,2) - bound(7,1))*LHpts(:,7) + bound(7,1);
 
 %%% preallocate
 err_tot = zeros(N,1);

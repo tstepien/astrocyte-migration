@@ -11,8 +11,9 @@ alpha11 = 0.111; %%% (/hr) proliferation rate APC wrt oxygen
 alpha12 = 0.22; %%% (/hr) proliferation rate APC wrt PDGFA
 alpha21 = 0.15; %%% (/hr) proliferation rate IPA wrt oxygen
 alpha22 = 0.15; %%% (/hr) proliferation rate IPA wrt PDGFA
-beta = 0.01; %%% (/hr) differentiation rate
-beta_hat = 0.005; %%% (/hr) mass action rate
+beta1 = 0.005; %%% (/hr) mass action rate
+beta2 = 0.01; %%% (/hr) differentiation rate wrt oxygen
+beta3 = 0.01; %%% (/hr) differentiation rate wrt LIF
 gamma1 = 0.0001; %%% (/hr) apoptosis rate APC
 gamma2 = 0.0001; %%% (/hr) apoptosis rate IPA
 
@@ -31,7 +32,7 @@ m.tmax = 7*24; %%% max time (hr) (7 days = 168 hr)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% solve equation %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 tic
 [t,r,c1,c2,q1,q2,mvgbdy,vel_cir,vel_rad] = eqnsolver(mu,alpha11,alpha12,...
-    alpha21,alpha22,beta,beta_hat,gamma1,gamma2,Te,P_hy,r_hy,m);
+    alpha21,alpha22,beta1,beta2,beta3,gamma1,gamma2,Te,P_hy,r_hy,m);
 toc
 
 

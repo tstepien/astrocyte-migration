@@ -1,9 +1,9 @@
 function [c1_new,c2_new] = cellpops_separate_withgrowthfactors(j,c1_old,...
     c2_old,k_new,q1,q2,PO2,dt,r,Pm,kappa,mu,alpha11,alpha12,alpha21,...
-    alpha22,beta,beta_hat,gamma1,gamma2,cmin,rbar,ce,cmax,hyaloid)
+    alpha22,beta1,beta2,beta3,gamma1,gamma2,cmin,rbar,ce,cmax,hyaloid)
 % [c1_new,c2_new] = cellpops_separate_withgrowthfactors(j,c1_old,...
 %     c2_old,k_new,q1,q2,PO2,dt,r,Pm,kappa,mu,alpha11,alpha12,alpha21,...
-%     alpha22,beta,beta_hat,gamma1,gamma2,cmin,rbar,ce,cmax,hyaloid)
+%     alpha22,beta1,beta2,beta3,gamma1,gamma2,cmin,rbar,ce,cmax,hyaloid)
 %
 % EXPLICIT method for growth terms
 %
@@ -55,9 +55,9 @@ omega = 1./(2*mu*r(2:j)) * dt/dr^2;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% growth function %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 g1 = growthterms_c1_withgrowthfactors(c1_old(1:j),c2_old(1:j),q1(1:j),...
-    q2(1:j),PO2(1:j),Pm,alpha11,alpha12,beta,beta_hat,gamma1,cmax,hyaloid);
+    q2(1:j),PO2(1:j),Pm,alpha11,alpha12,beta1,beta2,beta3,gamma1,cmax,hyaloid);
 g2 = growthterms_c2_withgrowthfactors(c1_old(1:j),c2_old(1:j),q1(1:j),...
-    q2(1:j),PO2(1:j),Pm,alpha21,alpha22,beta,beta_hat,gamma2,cmax,hyaloid);
+    q2(1:j),PO2(1:j),Pm,alpha21,alpha22,beta1,beta2,beta3,gamma2,cmax,hyaloid);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%% construct matrix %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% c1 - APC %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
