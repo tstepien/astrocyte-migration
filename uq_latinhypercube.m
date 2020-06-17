@@ -1,20 +1,20 @@
 clear variables global;
 clc;
 
-savefiles = 'no';
+savefiles = 'yes';
 
-N = 3;%10000;
+N = 1000000;
 
 LHpts = lhsdesign(N,13);
-save(strcat('LHpts_',num2str(N),'.mat'),'LHpts')
-% stop
+save(strcat('parameter_analysis/LHpts_',num2str(N),'.mat'),'LHpts')
+stop
 
-% load(strcat('parameter_analysis/LHpts_',num2str(N),'.mat'))
+load(strcat('parameter_analysis/LHpts_',num2str(N),'.mat'))
 
 if strcmp(savefiles,'yes')==1
     doublecheck = input('Are you sure you would like to save the output files? (it may overwrite): ');
     if strcmp(doublecheck,'y')==1
-        diary(strcat('parameter analysis/latinhypercube_',num2str(N),'.txt'));
+        diary(strcat('parameter_analysis/latinhypercube_',num2str(N),'.txt'));
     else
         return;
     end
@@ -59,18 +59,19 @@ r_hy    = (bound(13,2) - bound(13,1))*LHpts(:,13) + bound(13,1);
 err_tot = zeros(N,1);
 err_time = zeros(N,1);
 err_rad = zeros(N,1);
+err_dens = zeros(N,1);
 
-for i=1:N
+parfor i=1:N
     %%% solve equation    
     [t,r,c1,c2,~,~,mvgbdy,~,~] = eqnsolver(mu(i),alpha11(i),alpha12(i),...
         alpha21(i),alpha22(i),beta1(i),beta2(i),beta3(i),gamma1(i),...
         gamma2(i),Te(i),P_hy(i),r_hy(i),m);
     
     %%% error calculation
-    [err_tot(i),err_time(i),err_rad(i)]  = errorfunction(t,r,mvgbdy,c1,c2);
+    [err_tot(i),err_time(i),err_rad(i),err_dens(i)]  = errorfunction(t,r,mvgbdy,c1,c2);
 end
 
 if strcmp(savefiles,'yes')==1
-    save(strcat('parameter analysis/latinhypercube_',num2str(N),'pts.mat'));
+    save(strcat('parameter_analysis/latinhypercube_',num2str(N),'pts.mat'));
     diary off
 end

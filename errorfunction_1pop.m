@@ -13,6 +13,7 @@ function [err_tot,err_time,err_rad] = errorfunction_1pop(t,mvgbdy)
 %   err_time = error from time end point
 %   err_rad  = error from astrocyte radius
 
+%%% penalties
 if t(end)/24>8  || ~isreal(t(end)) %|| t(end)/24 <6
     err_tot = 10^4; %NaN;
     err_time = 10^4; %NaN;
@@ -20,12 +21,10 @@ if t(end)/24>8  || ~isreal(t(end)) %|| t(end)/24 <6
     return
 end
 
-err_time = abs(7 - t(end)/24)/7;
-
-%%% threshold for small density
+%%% fixed parameters
 parameters_fixed
 
-%%% APC, IPA, and retina radius (mm) for E15-E16, E18-E22/P0
+%%% APC radius (mm) for E15-E16, E18-E22/P0
 rad_APC = [0.17; 0.33; 0.5; 0.67; 1.67; 2.17; 2.67];
 
 %%% times: day 0, 1, 2, 3, 4, 5, 6, 7
@@ -42,7 +41,12 @@ for i=1:numdays
     ind(i) = find(abs((t/24-(jj-1)))==min(abs(t/24-(jj-1))),1,'first');
 end
 
-%%% total error from astrocyte radius
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% errors %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% time error
+err_time = abs(7 - t(end)/24)/7;
+
+%%% radius error
 err_rad = sum( abs(rad_APC - mvgbdy(ind)) ./ rad_APC );
 
+%%% total error
 err_tot = err_time + err_rad;

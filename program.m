@@ -38,7 +38,7 @@ toc
 
 %% error
 %%%%%%%%%%%%%%%%%%%%%%%%%%%% error calculation %%%%%%%%%%%%%%%%%%%%%%%%%%%%
-[err_rad,err_dens,err_tot] = errorfunction(t,r,mvgbdy,c1,c2);
+[err_tot,err_time,err_rad,err_dens] = errorfunction(t,r,mvgbdy,c1,c2);
 
 
 %% area under curve - trapezoidal rule

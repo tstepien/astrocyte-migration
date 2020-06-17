@@ -1,7 +1,7 @@
 clear variables global;
 clc;
 
-load('parameter_analysis/latinhypercube_10000pts.mat')
+load('parameter_analysis/1pop/latin_hypercube/latinhypercube_10000pts.mat')
 
 param_names = {'$\mu$','$\alpha_{11}$','$\alpha_{12}$',...
     '$\gamma_1$','$T_e$','$P_\mathrm{hy}$','$r_\mathrm{hy}$'};
@@ -19,7 +19,7 @@ param_bad = [mu(ind_bad) alpha11(ind_bad) alpha12(ind_bad) ...
     gamma1(ind_bad) Te(ind_bad) P_hy(ind_bad) r_hy(ind_bad)];
 
 figure
-for i=1:7
+for i=1:length(param_names)
     if i==1
         subaxis(2,4,i,'SpacingVert',0.15,'MarginLeft',0.05,'MarginRight',0,'MarginTop',0.15,'MarginBottom',0.08)
     elseif i==5 || i==9
