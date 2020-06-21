@@ -1,7 +1,7 @@
 clear variables global;
 clc;
 
-load('parameter_analysis/latinhypercube_100000pts.mat')
+load('parameter_analysis/latinhypercube_1000000pts.mat')
 
 param_names = {'$\mu$','$\alpha_{11}$','$\alpha_{12}$','$\alpha_{21}$',...
     '$\alpha_{22}$','$\beta_1$','$\beta_2$','$\beta_3$','$\gamma_1$',...

@@ -5,9 +5,13 @@ savefiles = 'yes';
 
 N = 1000000;
 
-LHpts = lhsdesign(N,13);
-save(strcat('parameter_analysis/LHpts_',num2str(N),'.mat'),'LHpts')
-stop
+% %%% MATLAB function (painstakenly slow for large N)
+% % LHpts = lhsdesign(N,13);
+% %%% LATIN_RANDOM function
+% % https://people.sc.fsu.edu/~jburkardt/m_src/latin_random/latin_random.html
+% LHpts = latin_random(13, N, 4)';
+% save(strcat('parameter_analysis/LHpts_',num2str(N),'.mat'),'LHpts')
+% stop
 
 load(strcat('parameter_analysis/LHpts_',num2str(N),'.mat'))
 
