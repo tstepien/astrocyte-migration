@@ -90,7 +90,7 @@ err_IPA(1) = 0; %%% initial time point has no IPAs by initial condition, so
 err_dens = sum( err_APC + err_IPA );
 
 %%% total error
-err_tot = err_rad + err_dens;
+err_tot = err_time + err_rad + err_dens;
 
 %%% figure
 % figure

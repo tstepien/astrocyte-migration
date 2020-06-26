@@ -1,99 +1,138 @@
 clear variables global;
 clc;
 
+percentholdon = 0.01;
+
 load('parameter_analysis/latinhypercube_1000000pts.mat')
+
+err_original = [err_dens err_rad err_time err_tot];
+err_names = {'Density Error','Radius Error','Time Error','Total Error'};
+
+% errDensity.original = err_dens;
+% errRadius.original = err_rad;
+% errTime.original = err_time;
+% errTotal.original = err_tot;
+
+param_original = [mu , alpha11 , alpha12 , alpha21 , alpha22 , beta1 , beta2 ,...
+    beta3 , gamma1 , gamma2 , Te , P_hy , r_hy];
+
+clear err_dens err_rad err_time err_tot mu alpha11 alpha12 alpha21 alpha22 ...
+    beta1 beta2 beta3 gamma1 gamma2 Te P_hy r_hy;
 
 param_names = {'$\mu$','$\alpha_{11}$','$\alpha_{12}$','$\alpha_{21}$',...
     '$\alpha_{22}$','$\beta_1$','$\beta_2$','$\beta_3$','$\gamma_1$',...
     '$\gamma_2$','$T_e$','$P_\mathrm{hy}$','$r_\mathrm{hy}$'};
+num_param = length(param_names);
+param_names_words = {'Adhesion constant','APC prolif rate wrt O_2',...
+    'APC prolif rate wrt PDGFA','IPA prolif rate wrt O_2',...
+    'IPA prolif rate wrt PDGFA','Mass action rate',...
+    'Differentiation rate wrt O_2','Differentiation rate wrt LIF',...
+    'APC apoptosis rate','IPA apoptosis rate','Edge tension',...
+    'Hyaloid artery maximum','Hyaloid artery half-max value'};
 
-
-% error_threshold_tot = 20;
-error_threshold_time = 0.7;
+%% remove errors that were set to 10^4
+maxthreshold = 10^4;
 
 ind = (1:N)';
-% ind_good = ind(err_tot < error_threshold_tot & err_time < error_threshold_time);
-% ind_bad = ind(err_tot >= error_threshold_tot & err_time >= error_threshold_time);
-ind_good = ind(err_time < error_threshold_time);
-ind_bad = ind(err_time >= error_threshold_time);
+ind_maxthreshold = ind(err_original(:,4) < maxthreshold);
+num_maxthreshold = length(ind_maxthreshold);
 
-param_good = [mu(ind_good) alpha11(ind_good) alpha12(ind_good) ...
-    alpha21(ind_good) alpha22(ind_good) beta1(ind_good) beta2(ind_good) ...
-    beta3(ind_good) gamma1(ind_good) gamma2(ind_good) Te(ind_good) ...
-    P_hy(ind_good) r_hy(ind_good)];
-param_bad = [mu(ind_bad) alpha11(ind_bad) alpha12(ind_bad) ...
-    alpha21(ind_bad) alpha22(ind_bad) beta1(ind_bad) beta2(ind_bad) ...
-    beta3(ind_bad) gamma1(ind_bad) gamma2(ind_bad) Te(ind_bad) ...
-    P_hy(ind_bad) r_hy(ind_bad)];
+err_maxthreshold = err_original(ind_maxthreshold,:);
+
+[~,ind_sort] = sort(err_maxthreshold(:,4));
+err_maxthreshold_sort = err_maxthreshold(ind_sort,:);
+
+figure
+tiledlayout(2,2)
+for i=1:4
+    nexttile
+    scatter(1:num_maxthreshold,err_maxthreshold_sort(:,i))
+    xlim([0,num_maxthreshold])
+    xlabel(err_names{i})
+end
+sgtitle(strcat(['Errors <10^4 (',num2str(num_maxthreshold),' parameter sets)']))
+
+modes_error = zeros(1,4);
+for i=1:4
+    modes_error(i) = mode(err_maxthreshold(:,i));
+end
+
+%% look at errors that are smaller than the mode errors for density, radius, and time
+
+ind_maxmode = ind( err_original(:,1) < modes_error(1) ...
+    & err_original(:,2) < modes_error(2) ...
+    & err_original(:,3) < modes_error(3) );
+num_maxmode = length(ind_maxmode);
+
+err_maxmode = err_original(ind_maxmode,:);
+
+[~,ind_sort] = sort(err_maxmode(:,4));
+err_maxmode_sort = err_maxmode(ind_sort,:);
+
+figure
+tiledlayout(2,2)
+for i=1:4
+    nexttile
+    scatter(1:num_maxmode,err_maxmode_sort(:,i))
+    xlim([0,num_maxmode])
+    xlabel(err_names{i})
+end
+sgtitle(strcat(['Errors < modes for density/radius/time (',num2str(num_maxmode),' parameter sets)']))
+
+
+%% histograms of parameters
+num_hold = ceil(percentholdon * num_maxthreshold);
+
+param_sort = zeros(num_maxthreshold,num_param);
+param_sort_hold = zeros(num_hold,num_param);
+for i = 1:num_param
+    temp = param_original(:,i);
+    temp = temp(ind_maxthreshold);
+    param_sort(:,i) = temp;
+    param_sort_hold(:,i) = temp(ind_sort(1:num_hold));
+    clear temp;
+end
 
 figure
 tiledlayout(3,5,'TileSpacing','compact','Padding','compact')
-for i=1:length(param_names)
+for i=1:num_param
     nexttile
     
-    h = histogram(param_good(:,i),'Normalization','probability',...
-        'FaceColor','none','LineWidth',1.5);
-%     h = histfit(param_good(:,i),[],'normal');
+    histogram(param_sort_hold(:,i),'Normalization','probability',...
+        'BinMethod','sturges','FaceColor','none','LineWidth',1.5);
+%     h = histfit(param_sort_hold(:,i),[],'normal');
 %     h(1).FaceColor = 'none';
 %     h(2).Color = 'k';
     
     xlabel(param_names{i},'Interpreter','latex')
+    title(param_names_words{i},'FontWeight','normal')
     if i==1 || i==6 || i==11
         ylabel('Percentage','Interpreter','latex')
-    end
-    if i==1
-        title('Adhesion constant','FontWeight','normal')
-    elseif i==2
-        title('APC prolif rate wrt O_2','FontWeight','normal')
-    elseif i==3
-        title('APC prolif rate wrt PDGFA','FontWeight','normal')
-    elseif i==4
-        title('IPA prolif rate wrt O_2','FontWeight','normal')
-    elseif i==5
-        title('IPA prolif rate wrt PDGFA','FontWeight','normal')
-    elseif i==6
-        title('Mass action rate','FontWeight','normal')
-    elseif i==7
-        title('Differentiation rate wrt O_2','FontWeight','normal')
-    elseif i==8
-        title('Differentiation rate wrt LIF','FontWeight','normal')
-    elseif i==9
-        title('APC apoptosis rate','FontWeight','normal')
-    elseif i==10
-        title('IPA apoptosis rate','FontWeight','normal')
-    elseif i==11
-        title('Edge tension','FontWeight','normal')
-    elseif i==12
-        title('Hyaloid artery maximum','FontWeight','normal')
-    elseif i==13
-        title('Hyaloid artery half-max value','FontWeight','normal')
     end
     xlim([0,bound(i,2)])
     
     set(gca,'FontSize',14)
 end
 
-% sgtitle(strcat('\bf Total Error Threshold:',' ',num2str(error_threshold_tot),...
-%     ',   \bf Time Error Threshold:',' ',num2str(error_threshold_time)))
-sgtitle(strcat('\bf Time Error Threshold:',' ',num2str(error_threshold_time)))
+sgtitle(strcat(['Smallest ',num2str(percentholdon*100),'% Error (',num2str(num_hold),' parameter sets)']))
 
 set(gcf,'Units','inches','Position',[2,2,16,7],'PaperPositionMode','auto')
 
 %% determine type of distribution
 
-% disttype = {'normal';'lognormal';'gamma';'exponential';'weibull';'logistic'};
-% %%% didn't use these distributions:
-% %%% 'beta';'birnbaumsaunders';'burr';'negative binomial';'extreme value';'kernel';
-% %%% 'generalized extreme value';'generalized pareto';'inversegaussian';
-% %%% 'nakagami';'loglogistic';'poisson';'rayleigh';'rician';'tlocationscale';
-% numDist = length(disttype);
-% 
-% param_dist = cell(numDist,numpar);
-% GoF_dist = zeros(numDist,numpar);
-% 
-% for i=1:numDist
-%     for j=1:numpar
-%         param_dist{i,j} = fitdist(param_good(:,j),disttype{i});
-%         GoF_dist(i,j) = chi2gof(param_good(:,j),'CDF',param_dist{i});
-%     end
-% end
+disttype = {'normal';'lognormal';'gamma';'exponential';'weibull';'logistic'};
+%%% didn't use these distributions:
+%%% 'beta';'birnbaumsaunders';'burr';'negative binomial';'extreme value';'kernel';
+%%% 'generalized extreme value';'generalized pareto';'inversegaussian';
+%%% 'nakagami';'loglogistic';'poisson';'rayleigh';'rician';'tlocationscale';
+num_dist = length(disttype);
+
+param_dist = cell(num_dist,num_param);
+GoF_dist = zeros(num_dist,num_param);
+
+for i=1:num_dist
+    for j=1:num_param
+        param_dist{i,j} = fitdist(param_sort_hold(:,j),disttype{i});
+        GoF_dist(i,j) = chi2gof(param_sort_hold(:,j),'CDF',param_dist{i});
+    end
+end
