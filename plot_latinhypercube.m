@@ -2,6 +2,7 @@ clear variables global;
 clc;
 
 percentholdon = 0.01;
+what_set = 'maxmode'; %'maxthreshold' or 'maxmode'
 
 load('parameter_analysis/latinhypercube_1000000pts.mat')
 
@@ -39,8 +40,8 @@ num_maxthreshold = length(ind_maxthreshold);
 
 err_maxthreshold = err_original(ind_maxthreshold,:);
 
-[~,ind_sort] = sort(err_maxthreshold(:,4));
-err_maxthreshold_sort = err_maxthreshold(ind_sort,:);
+[~,ind_sort_maxthreshold] = sort(err_maxthreshold(:,4));
+err_maxthreshold_sort = err_maxthreshold(ind_sort_maxthreshold,:);
 
 figure
 tiledlayout(2,2)
@@ -66,8 +67,8 @@ num_maxmode = length(ind_maxmode);
 
 err_maxmode = err_original(ind_maxmode,:);
 
-[~,ind_sort] = sort(err_maxmode(:,4));
-err_maxmode_sort = err_maxmode(ind_sort,:);
+[~,ind_sort_maxmode] = sort(err_maxmode(:,4));
+err_maxmode_sort = err_maxmode(ind_sort_maxmode,:);
 
 figure
 tiledlayout(2,2)
@@ -81,16 +82,24 @@ sgtitle(strcat(['Errors < modes for density/radius/time (',num2str(num_maxmode),
 
 
 %% histograms of parameters
-num_hold = ceil(percentholdon * num_maxthreshold);
 
-param_sort = zeros(num_maxthreshold,num_param);
+if strcmp(what_set,'maxmode')==1
+    num_parametersets = num_maxmode;
+    ind_parametersets = ind_maxmode;
+    ind_sort = ind_sort_maxmode;
+elseif strcmp(what_set,'maxthreshold')==1
+    num_parametersets = num_maxthreshold;
+    ind_parametersets = ind_maxthreshold;
+    ind_sort = ind_sort_maxthreshold;
+end
+
+num_hold = ceil(percentholdon * num_parametersets);
+
+param_sort = zeros(num_parametersets,num_param);
 param_sort_hold = zeros(num_hold,num_param);
 for i = 1:num_param
-    temp = param_original(:,i);
-    temp = temp(ind_maxthreshold);
-    param_sort(:,i) = temp;
-    param_sort_hold(:,i) = temp(ind_sort(1:num_hold));
-    clear temp;
+    param_sort(:,i) = param_original(ind_parametersets,i);
+    param_sort_hold(:,i) = param_sort(ind_sort(1:num_hold),i);
 end
 
 figure
