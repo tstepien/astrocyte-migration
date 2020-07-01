@@ -2,9 +2,10 @@ clear variables global;
 clc;
 
 percentholdon = 0.01;
-what_set = 'maxmode'; %'maxthreshold' or 'maxmode'
+what_set = 'maxthreshold'; %'maxthreshold' or 'maxmode'
+fit_dist_plot = 'yes'; % using percentholdon = 0.01 for distribution fits
 
-load('parameter_analysis/latinhypercube_1000000pts.mat')
+load('parameter_analysis/latin_hypercube/latinhypercube_1000000pts.mat')
 
 err_original = [err_dens err_rad err_time err_tot];
 err_names = {'Density Error','Radius Error','Time Error','Total Error'};
@@ -107,11 +108,30 @@ tiledlayout(3,5,'TileSpacing','compact','Padding','compact')
 for i=1:num_param
     nexttile
     
-    histogram(param_sort_hold(:,i),'Normalization','probability',...
-        'BinMethod','sturges','FaceColor','none','LineWidth',1.5);
-%     h = histfit(param_sort_hold(:,i),[],'normal');
-%     h(1).FaceColor = 'none';
-%     h(2).Color = 'k';
+    if strcmp(fit_dist_plot,'no')==1
+        histogram(param_sort_hold(:,i),'Normalization','probability',...
+            'BinMethod','sturges','FaceColor','none','LineWidth',1.5);
+    elseif strcmp(fit_dist_plot,'yes')==1
+        distributionfit = {'exponential','normal','uniform','exponential','uniform',...
+            'uniform','exponential','uniform','exponential','normal',...
+            'normal','normal','normal'};
+        if strcmp(distributionfit{i},'uniform')==0
+            h = histfit(param_sort_hold(:,i),[],distributionfit{i});
+            h(1).FaceColor = 'none';
+            h(2).Color = 'k';
+            box on
+            yt = get(gca,'YTick');
+            set(gca,'YTick',yt,'YTickLabel',round(yt/num_hold,2));
+        else
+            hold on
+            histogram(param_sort_hold(:,i),'Normalization','probability',...
+                'BinMethod','sqrt','FaceColor','none');
+            plot(linspace(bound(i,1),bound(i,2),100),0.02*ones(1,100),'k',...
+                'LineWidth',2.5)
+            box on
+            hold off
+        end
+    end
     
     xlabel(param_names{i},'Interpreter','latex')
     title(param_names_words{i},'FontWeight','normal')
