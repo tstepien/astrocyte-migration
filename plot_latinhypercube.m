@@ -15,8 +15,8 @@ err_names = {'Density Error','Radius Error','Time Error','Total Error'};
 % errTime.original = err_time;
 % errTotal.original = err_tot;
 
-param_original = [mu , alpha11 , alpha12 , alpha21 , alpha22 , beta1 , beta2 ,...
-    beta3 , gamma1 , gamma2 , Te , P_hy , r_hy];
+param_original = [mu , alpha11 , alpha12 , alpha21 , alpha22 , beta1 , ...
+    beta2 , beta3 , gamma1 , gamma2 , Te , P_hy , r_hy];
 
 clear err_dens err_rad err_time err_tot mu alpha11 alpha12 alpha21 alpha22 ...
     beta1 beta2 beta3 gamma1 gamma2 Te P_hy r_hy;
@@ -44,7 +44,7 @@ err_maxthreshold = err_original(ind_maxthreshold,:);
 [~,ind_sort_maxthreshold] = sort(err_maxthreshold(:,4));
 err_maxthreshold_sort = err_maxthreshold(ind_sort_maxthreshold,:);
 
-figure
+fig1 = figure;
 tiledlayout(2,2)
 for i=1:4
     nexttile
@@ -71,7 +71,7 @@ err_maxmode = err_original(ind_maxmode,:);
 [~,ind_sort_maxmode] = sort(err_maxmode(:,4));
 err_maxmode_sort = err_maxmode(ind_sort_maxmode,:);
 
-figure
+fig2 = figure;
 tiledlayout(2,2)
 for i=1:4
     nexttile
@@ -80,7 +80,6 @@ for i=1:4
     xlabel(err_names{i})
 end
 sgtitle(strcat(['Errors < modes for density/radius/time (',num2str(num_maxmode),' parameter sets)']))
-
 
 %% histograms of parameters
 
@@ -103,7 +102,7 @@ for i = 1:num_param
     param_sort_hold(:,i) = param_sort(ind_sort(1:num_hold),i);
 end
 
-figure
+fig3 = figure;
 tiledlayout(3,5,'TileSpacing','compact','Padding','compact')
 for i=1:num_param
     nexttile
@@ -145,7 +144,7 @@ end
 
 sgtitle(strcat(['Smallest ',num2str(percentholdon*100),'% Error (',num2str(num_hold),' parameter sets)']))
 
-set(gcf,'Units','inches','Position',[2,2,16,7],'PaperPositionMode','auto')
+set(fig3,'Units','inches','Position',[2,2,16,7],'PaperPositionMode','auto')
 
 %% determine type of distribution
 
@@ -165,3 +164,17 @@ for i=1:num_dist
         GoF_dist(i,j) = chi2gof(param_sort_hold(:,j),'CDF',param_dist{i});
     end
 end
+
+%% corner plot
+
+num_keepscatter = 3; %number to keep for scatter plot
+param_min = param_sort_hold(1:num_keepscatter,:);
+
+param_mean = zeros(1,num_param);
+for i=1:num_param
+    param_mean(i) = mean(param_sort_hold(:,i));
+end
+
+fig4 = figure;
+ecornerplot(param_sort_hold,param_min,param_mean,bound,'names',param_names,'ks',true);
+set(fig4,'Units','inches','Position',[2,2,10,8],'PaperPositionMode','auto')
