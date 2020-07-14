@@ -1,6 +1,8 @@
 clear variables global;
 clc;
 
+addpath emcee_mymod
+
 percentholdon = 0.01;
 what_set = 'maxthreshold'; %'maxthreshold' or 'maxmode'
 fit_dist_plot = 'yes'; % using percentholdon = 0.01 for distribution fits
@@ -178,3 +180,16 @@ end
 fig4 = figure;
 ecornerplot(param_sort_hold,param_min,param_mean,bound,'names',param_names,'ks',true);
 set(fig4,'Units','inches','Position',[2,2,10,8],'PaperPositionMode','auto')
+
+%% correlation
+
+corrmatrix = zeros(num_param,num_param);
+for i=1:num_param
+    for j=1:num_param
+        if j<i
+            corrmatrix(i,j) = corr(param_sort_hold(:,i),param_sort_hold(:,j));
+        end
+    end
+end
+
+max(abs(corrmatrix(:)))
