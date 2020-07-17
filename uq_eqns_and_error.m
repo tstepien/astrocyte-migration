@@ -41,10 +41,10 @@ m.tmax = 7*24;
 %%%%%%%%%%%%%%%%%%% solve equation and calculate error %%%%%%%%%%%%%%%%%%%%
 %%% initialize
 N = size(X,1);
-Y = zeros(N,numdays+1);
+Y = zeros(N,1);
 
-parfor i=1:N
-    [t,~,c1,c2,~,~,mvgbdy,~,~] = eqnsolver(mu(i),alpha11(i),alpha12(i),...
+for i=1:N
+    [t,r,c1,c2,~,~,mvgbdy,~,~] = eqnsolver(mu(i),alpha11(i),alpha12(i),...
         alpha21(i),alpha22(i),beta1(i),beta2(i),beta3(i),gamma1(i),...
         gamma2(i),Te(i),P_hy(i),r_hy(i),m);
     
