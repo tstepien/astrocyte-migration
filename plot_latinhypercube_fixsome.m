@@ -3,11 +3,11 @@ clc;
 
 addpath emcee_mymod
 
-percentholdon = 0.01;
-what_set = 'maxmode'; %'maxthreshold' or 'maxmode'
-fit_dist_plot = 'yes'; % using percentholdon = 0.01 for distribution fits
+percentholdon = 1;
+what_set = 'maxthreshold'; %'maxthreshold' or 'maxmode'
+fit_dist_plot = 'no'; % using percentholdon = 0.01 for distribution fits
 
-load('parameter_analysis/latin_hypercube/latinhypercube_1000000pts.mat')
+load('parameter_analysis/latin_hypercube/latinhypercube_1000pts.mat')
 
 err_original = [err_dens err_rad err_time err_tot];
 err_names = {'Density Error','Radius Error','Time Error','Total Error'};
@@ -17,21 +17,19 @@ err_names = {'Density Error','Radius Error','Time Error','Total Error'};
 % errTime.original = err_time;
 % errTotal.original = err_tot;
 
-param_original = [mu , alpha11 , alpha12 , alpha21 , alpha22 , beta1 , ...
-    beta2 , beta3 , gamma1 , gamma2 , Te , P_hy , r_hy];
+param_original = [mu , alpha11 , alpha12 , alpha22 , beta1 , beta3 , ...
+    gamma2 , P_hy , r_hy];
 
-clear err_dens err_rad err_time err_tot mu alpha11 alpha12 alpha21 alpha22 ...
-    beta1 beta2 beta3 gamma1 gamma2 Te P_hy r_hy;
+clear err_dens err_rad err_time err_tot mu alpha11 alpha12 alpha22 ...
+    beta1 beta3 gamma2 P_hy r_hy;
 
-param_names = {'$\mu$','$\alpha_{11}$','$\alpha_{12}$','$\alpha_{21}$',...
-    '$\alpha_{22}$','$\beta_1$','$\beta_2$','$\beta_3$','$\gamma_1$',...
-    '$\gamma_2$','$T_e$','$P_\mathrm{hy}$','$r_\mathrm{hy}$'};
+param_names = {'$\mu$','$\alpha_{11}$','$\alpha_{12}$','$\alpha_{22}$',...
+    '$\beta_1$','$\beta_3$','$\gamma_2$','$P_\mathrm{hy}$','$r_\mathrm{hy}$'};
 num_param = length(param_names);
 param_names_words = {'Adhesion constant','APC prolif rate wrt O_2',...
     'APC prolif rate wrt PDGFA','IPA prolif rate wrt O_2',...
-    'IPA prolif rate wrt PDGFA','Mass action rate',...
-    'Differentiation rate wrt O_2','Differentiation rate wrt LIF',...
-    'APC apoptosis rate','IPA apoptosis rate','Edge tension',...
+    'Mass action rate','Differentiation rate wrt LIF',...
+    'APC apoptosis rate','IPA apoptosis rate',...
     'Hyaloid artery maximum','Hyaloid artery half-max value'};
 
 %% remove errors that were set to 10^4
@@ -63,25 +61,25 @@ end
 
 %% look at errors that are smaller than the mode errors for density, radius, and time
 
-ind_maxmode = ind( err_original(:,1) < modes_error(1) ...
-    & err_original(:,2) < modes_error(2) ...
-    & err_original(:,3) < modes_error(3) );
-num_maxmode = length(ind_maxmode);
-
-err_maxmode = err_original(ind_maxmode,:);
-
-[~,ind_sort_maxmode] = sort(err_maxmode(:,4));
-err_maxmode_sort = err_maxmode(ind_sort_maxmode,:);
-
-fig2 = figure;
-tiledlayout(2,2)
-for i=1:4
-    nexttile
-    scatter(1:num_maxmode,err_maxmode_sort(:,i))
-    xlim([0,num_maxmode])
-    xlabel(err_names{i})
-end
-sgtitle(strcat(['Errors < modes for density/radius/time (',num2str(num_maxmode),' parameter sets)']))
+% ind_maxmode = ind( err_original(:,1) < modes_error(1) ...
+%     & err_original(:,2) < modes_error(2) ...
+%     & err_original(:,3) < modes_error(3) );
+% num_maxmode = length(ind_maxmode);
+% 
+% err_maxmode = err_original(ind_maxmode,:);
+% 
+% [~,ind_sort_maxmode] = sort(err_maxmode(:,4));
+% err_maxmode_sort = err_maxmode(ind_sort_maxmode,:);
+% 
+% fig2 = figure;
+% tiledlayout(2,2)
+% for i=1:4
+%     nexttile
+%     scatter(1:num_maxmode,err_maxmode_sort(:,i))
+%     xlim([0,num_maxmode])
+%     xlabel(err_names{i})
+% end
+% sgtitle(strcat(['Errors < modes for density/radius/time (',num2str(num_maxmode),' parameter sets)']))
 
 %% histograms of parameters
 
@@ -105,7 +103,7 @@ for i = 1:num_param
 end
 
 fig3 = figure;
-tiledlayout(3,5,'TileSpacing','compact','Padding','compact')
+tiledlayout(3,3,'TileSpacing','compact','Padding','compact')
 for i=1:num_param
     nexttile
     
@@ -146,7 +144,7 @@ end
 
 sgtitle(strcat(['Smallest ',num2str(percentholdon*100),'% Error (',num2str(num_hold),' parameter sets)']))
 
-set(fig3,'Units','inches','Position',[2,2,16,7],'PaperPositionMode','auto')
+set(fig3,'Units','inches','Position',[2,2,10,7],'PaperPositionMode','auto')
 
 %% determine type of distribution
 

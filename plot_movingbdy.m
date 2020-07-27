@@ -32,7 +32,7 @@ figure
 hold on
     plot(t/24,mvgbdy,'k','LineWidth',1.5)
     scatter(t/24,mvgbdy,20,'k')
-    scatter(rad_days,rad_APC,150,co(5,:),'x','LineWidth',1.5)
+    scatter(rad_days,rad_APC,150,[0.5 0.5 0.5],'x','LineWidth',1.5)
 hold off
 xlabel('Time (days)','FontSize',fslabel,'Interpreter','latex')
 ylabel('Moving Boundary (mm)','FontSize',fslabel,'Interpreter','latex')

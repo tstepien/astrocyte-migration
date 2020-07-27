@@ -3,6 +3,9 @@ parameters_fixed
 %%% max distance astrocytes spread
 max_astrocytes = 2.67;
 
+rad_APC = [0.17; 0.33; 0.5; 0.67; 1.67; 2.17; 2.67]; %not including E17
+rad_days = [0; 1; 3; 4; 5; 6; 7];
+
 %%% set up the plots
 %%% variables
 R = length(r);
@@ -125,7 +128,11 @@ end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 subaxis(3,3,4,'MarginTop',0.03,'MarginBottom',0.08)
-plot(t/24,mvgbdy,'-o')
+hold on
+plot(t/24,mvgbdy,'k','LineWidth',1.5)
+scatter(t/24,mvgbdy,20,'k')
+scatter(rad_days,rad_APC,150,[0.5 0.5 0.5],'x','LineWidth',1.5)
+hold off
 xlabel('t (days)','FontSize',fslabel)
 ylabel('moving boundary (mm)','FontSize',fslabel)
 ylim_mvgbdy = get(gca,'YLim');
@@ -134,10 +141,6 @@ if ylim_mvgbdy(2)<max_astrocytes
 else
     set(gca,'FontSize',fsticks,'XLim',[0,7])
     xticks([0 1 2 3 4 5 6 7])
-    hold on
-    line([0,7],[max_astrocytes,max_astrocytes],'LineStyle','--',...
-        'Color',[0.5,0.5,0.5],'LineWidth',1.25)
-    hold off
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
