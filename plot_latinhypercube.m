@@ -3,12 +3,12 @@ clc;
 
 addpath emcee_mymod
 
-percentholdon = 0.01;
+percentholdon = 0.1;
 what_set = 'maxthreshold'; %'maxthreshold' or 'maxmode'
-fit_dist_plot = 'yes'; % using percentholdon = 0.01 for distribution fits
+fit_dist_plot = 'no'; % using percentholdon = 0.01 for distribution fits
 titles_on = 'yes';
 
-load('parameter_analysis/2pop - all 13 param vary/latin_hypercube/latinhypercube_1000000pts.mat')
+load('parameter_analysis/2pop-all13paramvary/latin_hypercube/latinhypercube_1000000pts.mat')
 
 err_original = [err_dens err_rad err_time err_tot];
 err_names = {'Density Error','Radius Error','Time Error','Total Error'};
