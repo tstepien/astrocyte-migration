@@ -6,7 +6,7 @@ addpath emcee_mymod
 percentholdon = 0.1;
 what_set = 'maxthreshold'; %'maxthreshold' or 'maxmode'
 fit_dist_plot = 'no'; % using percentholdon = 0.01 for distribution fits
-titles_on = 'yes';
+titles_on = 'no';
 
 load('parameter_analysis/2pop-someparamfixed/latin_hypercube/latinhypercube_100000pts.mat')
 
@@ -104,9 +104,13 @@ for i = 1:num_param
 end
 
 fig3 = figure;
-tiledlayout(3,3,'TileSpacing','compact','Padding','compact')
+tiledlayout(2,5,'TileSpacing','compact','Padding','compact')
 for i=1:num_param
-    nexttile
+    if i<5
+        nexttile
+    else
+        nexttile(i+1)
+    end
     
     if strcmp(fit_dist_plot,'no')==1
         histogram(param_sort_hold(:,i),'Normalization','probability',...
@@ -137,7 +141,7 @@ for i=1:num_param
     if strcmp(titles_on,'yes')==1
         title(param_names_words{i},'FontWeight','normal')
     end
-    if i==1 || i==4 || i==7
+    if i==1 || i==5
         ylabel('Percentage','Interpreter','latex')
     end
     xlim([0,bound(i,2)])
@@ -149,7 +153,7 @@ if strcmp(titles_on,'yes')==1
     sgtitle(strcat(['Smallest ',num2str(percentholdon*100),'% Error (',num2str(num_hold),' parameter sets)']))
 end
 
-set(fig3,'Units','inches','Position',[2,2,10,7],'PaperPositionMode','auto')
+set(fig3,'Units','inches','Position',[2,2,16,4.74],'PaperPositionMode','auto')
 
 %% determine type of distribution
 

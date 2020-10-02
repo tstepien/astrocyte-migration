@@ -5,8 +5,8 @@ addpath ../
 
 parameters_fixed;
 
-P_hy = 10;
-r_hy = 1/10;
+P_hy = 4.6343;
+r_hy = 0.6963;
 
 dr = 0.01;
 rmax = 5; %%% max radius (mm) (estimate rat retinal radius = 4.1 mm)
