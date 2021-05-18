@@ -1,5 +1,6 @@
 clear variables global;
 clc;
+addpath plot_simulations
 
 %%%%%%%%%%%%%%%%%%% input all fixed parameters that are %%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%% known/derived from literature %%%%%%%%%%%%%%%%%%%%%%

@@ -1,6 +1,7 @@
 clear variables global;
 clc;
 close all;
+addpath plot_simulations
 
 %%% time unit: hr
 %%% space unit: mm
