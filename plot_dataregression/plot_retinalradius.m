@@ -40,7 +40,7 @@ xlim([timeindays(1),timeindays(end)])
 xticks(timeindays)
 xticklabels({'E15','E16','E17','E18','E19','E20','E21','E22'})
 
-title('B                                                ',...
+title('D                                                ',...
     'FontSize',26)
 
 set(gcf,'Units','inches','Position',[2 2 7.75 5.75],'PaperPositionMode','auto')
