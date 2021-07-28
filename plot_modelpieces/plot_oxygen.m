@@ -5,28 +5,34 @@ addpath ../
 
 parameters_fixed;
 
-P_hy = 4.6343;
-r_hy = 0.6963;
-
-dr = 0.01;
 rmax = 5; %%% max radius (mm) (estimate rat retinal radius = 4.1 mm)
-dt = 1;
 tmax = 7*24; %%% max time (hr) (7 days = 168 hr)
 
-r = 0:dr:rmax;
-t = (0:dt:tmax)';
+nxpts = 26;
+ntpts = 29;
 
-%%% cell layer thickness and radius
-[thickness_ret,~,~,~] = thick_rad(t,r);
-    
-%%% oxygen
-PO2 = oxygen(r,thickness_ret,P0,Dalpha,M0);
+x = linspace(0,1,nxpts);    % 0 <= x <= 1 by definition
+t = linspace(0,tmax,ntpts);
+
+% Set up vectors for interpolation to obtain PO2 
+[Lvec, Pvec] = oxygen_setup(M0, Dalpha, Pm, P0);
 
 %%% plot times: day 0, 1, 2, 3, 4, 5, 6, 7
 numcurvesplot = 8;
-plotind = zeros(1,numcurvesplot);
-for i=0:numcurvesplot-1
-    plotind(i+1) = find(abs((t/24-i))==min(abs(t/24-i)));
+
+% set up retinal thickness and choroid oxygen
+r = zeros(numcurvesplot,nxpts+2);
+PO2 = zeros(numcurvesplot,nxpts+2);
+
+for i=1:numcurvesplot
+    [~,~,~,radius_ret] = thick_rad(t(i*4-3),0);
+    for j = 1:nxpts
+        r(i,j) = radius_ret * x(j);
+        [thickness_ret,~,~,~] = thick_rad(t(i*4-3),r(i,j));
+        PO2(i,j) = interp1(Lvec,Pvec,thickness_ret);
+    end
+    r(i,nxpts+1) = r(i,nxpts);   %to make plots go to axis at outer edge 
+    r(i,nxpts+2) = rmax;  
 end
 
 %%% color order
@@ -44,22 +50,20 @@ fsticks = 18;
 fslegend = 14;
 
 figure
-
-hy = hyaloid(r,P_hy,r_hy);
 hold on
 for i=1:numcurvesplot
-    plot(r,hy+PO2(plotind(i),:),'LineWidth',1.5,'Color',co(i,:))
+    plot(r(i,:),PO2(i,:),'LineWidth',1.5,'Color',co(i,:)) 
 end
 hold off
 xlabel('Radius (mm)','Interpreter','latex','FontSize',fslabel)
-ylabel('Choroid and Hyaloid\, $\mathrm{P}_{\mathrm{O}_2}$ (mmHg)','Interpreter','latex','FontSize',fslabel)
+ylabel('Choroid\, $\mathrm{P}_{\mathrm{O}_2}$ (mmHg)','Interpreter','latex','FontSize',fslabel)
 box on
 set(gca,'XLim',[0,rmax],'FontSize',fsticks,'Position',[0.14 0.14 0.82 0.76])
 
 h = legend('E15','E16','E17','E18','E19','E20','E21','E22/P0');
 set(h,'FontSize',fslegend);
 
-title('D                                                ',...
+title('B                                                ',...
     'FontSize',26)
 
 set(gcf,'Units','inches','Position',[2 2 7.75 5.75],'PaperPositionMode','auto')

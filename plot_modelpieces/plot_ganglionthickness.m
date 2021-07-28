@@ -3,6 +3,8 @@ clc;
 close all;
 addpath ../
 
+parameters_fixed;
+
 dr = 0.01;
 rmax = 5; %%% max radius (mm) (estimate rat retinal radius = 4.1 mm)
 dt = 1;
@@ -13,6 +15,9 @@ t = (0:dt:tmax)';
 
 %%% cell layer thickness and radius
 [~,thickness_RGC,~,~] = thick_rad(t,r);
+
+%%% dimensionalize
+thickness_RGC = thickness_RGC * maxRGCthick; % normalized
 
 %%% plot times: day 0, 1, 2, 3, 4, 5, 6, 7
 numcurvesplot = 8;
@@ -49,7 +54,7 @@ set(gca,'XLim',[0,rmax],'FontSize',fsticks,'Position',[0.142 0.14 0.82 0.76])
 h = legend('E15','E16','E17','E18','E19','E20','E21','E22/P0');
 set(h,'FontSize',fslegend);
 
-title('B                                                ',...
+title('A                                                ',...
     'FontSize',26)
 
 set(gcf,'Units','inches','Position',[2 2 7.75 5.75],'PaperPositionMode','auto')
