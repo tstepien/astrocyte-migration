@@ -82,3 +82,5 @@ sol = pdepe(1,@AstroPDE,@AstroIC,@AstroBC,x,t);
 %% plot results
 
 plot_the_plots
+plot_the_plots_5panels
+plot_the_plots_APCIPA
