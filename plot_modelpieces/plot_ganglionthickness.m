@@ -46,9 +46,9 @@ for i=1:numcurvesplot
     plot(r,thickness_RGC(plotind(i),:),'LineWidth',1.5,'Color',co(i,:))
 end
 hold off
-xlabel('Radius (mm)','Interpreter','latex','FontSize',fslabel)
-ylabel('Ganglion Cell Layer Thickness (mm)','Interpreter','latex','FontSize',fslabel)
-box on
+xlabel('$r$ (mm)','Interpreter','latex','FontSize',fslabel)
+ylabel('Ganglion cell layer thickness (mm)','Interpreter','latex','FontSize',fslabel)
+box off
 set(gca,'XLim',[0,rmax],'FontSize',fsticks,'Position',[0.142 0.14 0.82 0.76])
 
 h = legend('E15','E16','E17','E18','E19','E20','E21','E22/P0');

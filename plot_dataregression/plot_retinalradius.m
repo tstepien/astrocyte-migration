@@ -30,11 +30,11 @@ scatter(timeindays,radiusdata,markersize,'filled',...
     'MarkerFaceColor','k');
 hold off
 
-box on
+box off
 set(gca,'FontSize',18,'Position',[0.14 0.08 0.82 0.82])
 
 %xlabel('Days since E15','Interpreter','latex','FontSize',22)
-ylabel('Retinal Radius ($\mu$m)','Interpreter','latex','FontSize',22)
+ylabel('Retinal radius ($\mu$m)','Interpreter','latex','FontSize',22)
 
 xlim([timeindays(1),timeindays(end)])
 xticks(timeindays)

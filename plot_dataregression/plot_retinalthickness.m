@@ -46,11 +46,11 @@ h2 = scatter(timeindays,thickness_peripheral,markersize,'^','filled',...
     'MarkerFaceColor',graycolor);
 hold off
 
-box on
+box off
 set(gca,'FontSize',18,'Position',[0.14 0.08 0.82 0.82])
 
 %xlabel('Days since E15','Interpreter','latex','FontSize',22)
-ylabel('Retinal Thickness ($\mu$m)','Interpreter','latex','FontSize',22)
+ylabel('Retinal thickness ($\mu$m)','Interpreter','latex','FontSize',22)
 
 legend([h1 h2],{'Posterior','Peripheral'},'Location','northwest')
 

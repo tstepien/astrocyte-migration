@@ -71,7 +71,7 @@ t = linspace(0,tmax,ntpts);
 [Lvec, Pvec] = oxygen_setup(M0, Dalpha, Pm, P0);
 
 % Calculate growth factors for interpolation using fixed domain
-r = linspace(0,rmax,26);
+r = linspace(0,rmax,nxpts);
 sol = pdepe(1,@GF_PDE,@GF_IC,@GF_BC,r,t);
 PDGFA = sol(:,:,1);
 LIF = sol(:,:,2);
