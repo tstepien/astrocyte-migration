@@ -31,10 +31,15 @@ line_peripheral = -2.49*timeindays_more.^2 + 23.81*timeindays_more - 24.12;
 markersize = 100;
 graycolor = [0.65 0.65 0.65];
 
+fstitle = 26;
+fslabel = 26;
+fsticks = 22;
+fslegend = 18;
+
 figure
 hold on
-plot(timeindays_more,line_posterior,'LineWidth',2,'Color','k')
-plot(timeindays_more,line_peripheral,'LineWidth',2,'Color',graycolor)
+plot(timeindays_more,line_posterior,'LineWidth',2.5,'Color','k')
+plot(timeindays_more,line_peripheral,'LineWidth',2.5,'Color',graycolor)
 
 h1 = scatter(timeindays,thickness_posterior,markersize,'filled',...
     'MarkerFaceColor','k');
@@ -43,10 +48,10 @@ h2 = scatter(timeindays,thickness_peripheral,markersize,'^','filled',...
 hold off
 
 box off
-set(gca,'FontSize',18,'Position',[0.14 0.08 0.82 0.82])
+set(gca,'FontSize',fsticks,'Position',[0.175 0.08 0.79 0.82])
 
-%xlabel('Days since E15','Interpreter','latex','FontSize',22)
-ylabel('Ganglion cell layer thickness ($\mu$m)','Interpreter','latex','FontSize',22)
+%xlabel('Days since E15','Interpreter','latex','FontSize',fslabel)
+ylabel('Ganglion cell layer thickness ($\mu$m)','Interpreter','latex','FontSize',fslabel)
 
 legend([h1 h2],{'Posterior','Peripheral'},'Location','northeast')
 
@@ -55,6 +60,6 @@ xticklabels({'E16','E17','E18','E19','E20','E21'})
 ylim([0,50])
 
 title('B                                                ',...
-    'FontSize',26)
+    'FontSize',fstitle)
 
 set(gcf,'Units','inches','Position',[2 2 7.75 5.75],'PaperPositionMode','auto')

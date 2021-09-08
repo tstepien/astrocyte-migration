@@ -36,25 +36,26 @@ co = [0    0.4470    0.7410
     0.6350    0.0780    0.1840
     0         0.3725    0];
 
-fslabel = 22;
-fsticks = 18;
-fslegend = 14;
+fstitle = 26;
+fslabel = 26;
+fsticks = 22;
+fslegend = 18;
 
 figure
 hold on
 for i=1:numcurvesplot
-    plot(r,thickness_RGC(plotind(i),:),'LineWidth',1.5,'Color',co(i,:))
+    plot(r,thickness_RGC(plotind(i),:),'LineWidth',2.5,'Color',co(i,:))
 end
 hold off
 xlabel('$r$ (mm)','Interpreter','latex','FontSize',fslabel)
 ylabel('Ganglion cell layer thickness (mm)','Interpreter','latex','FontSize',fslabel)
 box off
-set(gca,'XLim',[0,rmax],'FontSize',fsticks,'Position',[0.142 0.14 0.82 0.76])
+set(gca,'XLim',[0,rmax],'FontSize',fsticks,'Position',[0.175 0.14 0.79 0.76])
 
 h = legend('E15','E16','E17','E18','E19','E20','E21','E22/P0');
-set(h,'FontSize',fslegend);
+set(h,'FontSize',fslegend,'Position',[0.769 0.467 0.181 0.434]);
 
 title('A                                                ',...
-    'FontSize',26)
+    'FontSize',fstitle)
 
 set(gcf,'Units','inches','Position',[2 2 7.75 5.75],'PaperPositionMode','auto')
