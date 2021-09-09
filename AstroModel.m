@@ -37,23 +37,22 @@ rmax = 5; % max radius (mm) (estimate rat retinal radius = 4.1 mm)
 tmax = 7 * 24; % max time (hr) (7 days)
 
 %% cell growth parameters
-alpha10 = 0.1; % (/hr) basal proliferation rate 
-alpha11 = 0.08; % 0.2 % (/hr) proliferation rate APC wrt oxygen
-alpha12 = 0.1; % 0.5 % (/hr) proliferation rate APC wrt PDGFA
-alpha20 = 0.0; % (/hr) basal proliferation rate 
-alpha21 = 0.0; % 0.2 % (/hr) proliferation rate IPA wrt oxygen
-alpha22 = 0.0; % 0.5 % (/hr) proliferation rate IPA wrt PDGFA
-beta1 = 0.08; % (/hr) basal differentiation rate 
-beta2 = 0.03; % (/hr) differentiation rate wrt oxygen
-beta3 = 0.02; % (/hr) differentiation rate wrt LIF
+alpha10 = 0.08; % (/hr) basal proliferation rate (0.1)
+alpha11 = 0.08; %  (/hr) proliferation rate APC wrt oxygen (0.08)
+alpha12 = 0.12; %  (/hr) proliferation rate APC wrt PDGFA (0.1)
+alpha20 = 0.0; % (/hr) basal proliferation rate (zero) 
+alpha21 = 0.0; % (/hr) proliferation rate IPA wrt oxygen
+alpha22 = 0.0; % (/hr) proliferation rate IPA wrt PDGFA
+beta1 = 0.07; % (/hr) basal differentiation rate (0.08)
+beta2 = 0.03; % (/hr) differentiation rate wrt oxygen (0.03)
+beta3 = 0.02; % (/hr) differentiation rate wrt LIF (0.02)
 gamma1 = 0.0; % (/hr) apoptosis rate APC
 gamma2 = 0.0; % (/hr) apoptosis rate IPA
 
 %% tension parameters 
 mu1 = 0.2; % adhesion constant (mm/hr/(mN/mm^2))
 mu2 = 0.5;
-% fun = @(x) kappa*x^2/(cmin^2 + x^2)*(1/sqrt(pi*x) - rbar) - Te ;
-ce = 1000; % /mm^2, estimated from Figure 2B of Fruttiger 2007
+kappa = 30; % tension function scaling (Pa, microN/mm^2)
 % tension on boundary (mN/mm)
 Te = kappa * (1/sqrt(pi*ce) - rbar) ; % simpler form, June 2021
 kTprime1 = kappa / (2 * mu1 * sqrt(pi));

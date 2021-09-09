@@ -1,7 +1,7 @@
 %%% this file contains all of the fixed parameters that are known/derived
 %%% from literature
 
-global s0 rbar rproc cmax kappa Pm P0 maxRGCthick
+global s0 rbar rproc cmax ce Pm P0 maxRGCthick
 global D1 D2 gamma3 gamma4 xi1p xi2p
 
 %%%%%%%%%%%%%%%%%%%%%%%% growth factor parameters %%%%%%%%%%%%%%%%%%%%%%%%%
@@ -36,7 +36,7 @@ rproc = 15.5*10^(-3); %%% reference radius with processes included (mm)
 %                        %% (cells/mm^2)
 cmax = 1/(pi*rbar^2); %%% reference cell density that includes only the 
                       %%% cell body (cells/mm^2)
-kappa = 1; %%% tension function scaling (mN/mm^2)
+ce = 1000; % /mm^2, estimated from Figure 2B of Fruttiger 2007
 
 
 %%%%%%%%%%%%%%%%%%%% moving boundary initial location %%%%%%%%%%%%%%%%%%%%%

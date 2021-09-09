@@ -6,7 +6,7 @@ function [Lvec, Pvec] = oxygen_setup(M0, Dalpha, Pm, P0)
     k = M0 / Dalpha;
     Lvec = [0];
     Pvec = [0]; %put PO2 = 0 when retina has zero thickness    %L is thickness of retina
-    for L = 0.01:0.01:0.25
+    for L = 0.01:0.01:0.3
         xmesh = linspace(0,L,21);
         solinit = bvpinit(xmesh, @(x) guess(x,L,P0));
         sol = bvp4c(@(x,y) bvpfcn(x,y,k,Pm), @(ya,yb) bcfcn(ya,yb,P0), solinit);

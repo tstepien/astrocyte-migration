@@ -3,9 +3,14 @@ global kTprime1 kTprime2 cmax Lvec Pvec Pm LIF PDGFA nxpts ntpts tmax rmax
 global alpha10 alpha11 alpha12 alpha20 alpha21 alpha22 beta1 beta2 beta3 gamma1 gamma2
 
 usum = u(1) + u(2);
+if usum <= 0
+    fprintf('*** Error: negative usum = %f\n',usum);
+end
+Dusum = DuDx(1) + DuDx(2);
 
 % oxygen, PDGFA, LIF - use previously calculated interpolation functions
 [thickness_ret,~,~,~] = thick_rad(t,x * u(4));
+
 nthpts = size(Pvec,1);  % do interpolation by hand for speed
 thmax = Lvec(nthpts);
 thgrid = 1 + (nthpts - 1) * thickness_ret / thmax;
@@ -35,8 +40,8 @@ g2 = u(2) * ((alpha20 + alpha21 * choroid + alpha22 * PDGFA1) * (1 - usum/cmax).
     - gamma2) + u(1) * (beta1 + beta2 * choroid + beta3 * LIF1);
 
 c = [u(4)^2; u(4)^2; 0; 1];
-f = [kTprime1 * u(1) * usum^(-3/2) * (DuDx(1) + DuDx(2));...
-    kTprime2 * u(2) * usum^(-3/2) * (DuDx(1) + DuDx(2));...
+f = [kTprime1 * u(1) * usum^(-3/2) * Dusum;...
+    kTprime2 * u(2) * usum^(-3/2) * Dusum;...
     DuDx(3); DuDx(4)];
 s = [x * u(4) * u(3) * DuDx(1) + u(4)^2 * g1;...
     x * u(4) * u(3) * DuDx(2) + u(4)^2 * g2;...
