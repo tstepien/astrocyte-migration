@@ -26,7 +26,7 @@
 
 clear variables global;
 addpath plot_simulations
-global kappa kTprime1 kTprime2 ce ce1 cmax Lvec Pvec Pm rmax
+global kTprime1 kTprime2 ce ce1 cmax Lvec Pvec Pm rmax
 global alpha10 alpha11 alpha12 alpha20 alpha21 alpha22 beta1 beta2 beta3 gamma1 gamma2
 global LIF PDGFA nxpts ntpts tmax
 
@@ -50,15 +50,15 @@ gamma1 = 0.0; % (/hr) apoptosis rate APC
 gamma2 = 0.0; % (/hr) apoptosis rate IPA
 
 %% tension parameters 
-mu1 = 0.2; % adhesion constant (mm/hr/(mN/mm^2))
-mu2 = 0.5;
+mu1 = 1; %1.75 % adhesion constant (mm/hr/(mN/mm^2))
+mu2 = 2.5; %1.75
 kappa = 30; % tension function scaling (Pa, microN/mm^2)
 % tension on boundary (mN/mm)
 Te = kappa * (1/sqrt(pi*ce) - rbar) ; % simpler form, June 2021
 kTprime1 = kappa / (2 * mu1 * sqrt(pi));
 kTprime2 = kappa / (2 * mu2 * sqrt(pi));
 % parameter in initial condition, chosen to match subsequent solution
-ce1 = 0.5 * alpha11 * s0^2 * sqrt(ce) * (1 - ce/cmax) / kTprime1;
+ce1 = ce*(1 + 0.5 * alpha11 * s0^2 * sqrt(ce) * (1 - ce/cmax) / kTprime1);
 
 %% set up and solve
 nxpts = 26;
@@ -80,6 +80,10 @@ sol = pdepe(1,@AstroPDE,@AstroIC,@AstroBC,x,t);
 
 %% plot results
 
-plot_the_plots
-plot_the_plots_5panels
-plot_the_plots_APCIPA
+% plot_the_plots
+% plot_the_plots_5panels
+plot_the_plots_6panels
+% plot_the_plots_APCIPA
+% plot_growthfactors_O2_thickness
+
+% plot_timversion

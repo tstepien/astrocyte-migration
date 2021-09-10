@@ -15,7 +15,7 @@ fslabel = 16;
 fsticks = 14;
 fslegend = 14;
 
-figure(7);
+figure
 tiledlayout(2,3,'TileSpacing','Compact','Padding','compact')
 % extra points to make plots go to axis at outer edge
 r = zeros(numcurvesplot,nxpts+1);

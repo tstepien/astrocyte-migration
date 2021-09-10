@@ -30,7 +30,11 @@ xi2p = 4.7; %gamma4;
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%% tension parameters %%%%%%%%%%%%%%%%%%%%%%%%%%%%
-rbar = 7.75*10^(-3); %%% reference radius (mm)
+rbar = 7.5*10^(-3); %%% reference radius (mm)
+
+%%%%%% 7.5 changed from 7.75? ^
+
+
 rproc = 15.5*10^(-3); %%% reference radius with processes included (mm)
 % cmin = 1/(pi*rproc^2); %%% reference cell density that includes processes
 %                        %% (cells/mm^2)

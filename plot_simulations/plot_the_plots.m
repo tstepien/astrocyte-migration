@@ -1,13 +1,13 @@
-figure(1);  % check boundary condition at outer edge satisfied
-plot(t,sol(:,nxpts,1)+sol(:,nxpts,2))
-figure(2);
-surf(x,t,sol(:,:,1));
-figure(3);
-surf(x,t,sol(:,:,2));
-figure(4);
-surf(x,t,sol(:,:,3));
-figure(5);
-surf(x,t,sol(:,:,4));
+% figure  % check boundary condition at outer edge satisfied
+% plot(t,sol(:,nxpts,1)+sol(:,nxpts,2))
+% figure
+% surf(x,t,sol(:,:,1));
+% figure
+% surf(x,t,sol(:,:,2));
+% figure
+% surf(x,t,sol(:,:,3));
+% figure
+% surf(x,t,sol(:,:,4));
 
 % color order
 co = [0    0.4470    0.7410
@@ -22,7 +22,7 @@ co = [0    0.4470    0.7410
 fslabel = 12;
 numcurvesplot = floor(ntpts/4)+1;
 
-figure(6);
+figure
 tiledlayout(3,3,'TileSpacing','Compact')
 % extra points to make plots go to axis at outer edge
 r = zeros(numcurvesplot,nxpts+2);
