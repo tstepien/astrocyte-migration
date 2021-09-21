@@ -48,7 +48,7 @@ for i=1:numcurvesplot
 end
 hold off
 box off
-xlabel('$r$ (mm)','FontSize',fslabel,'Interpreter','latex')
+xlabel('Radius (mm)','FontSize',fslabel,'Interpreter','latex')
 ylabel('APCs + IPAs (cells/mm$^2$)','FontSize',fslabel,'Interpreter','latex')
 set(gca,'XLim',[0,rmax],'YLim',[0,ylim_sum],'FontSize',fsticks)
 xticks(0:rmax)
@@ -66,7 +66,7 @@ for i=1:numcurvesplot
 end
 hold off
 box off
-xlabel('$r$ (mm)','FontSize',fslabel,'Interpreter','latex')
+xlabel('Radius (mm)','FontSize',fslabel,'Interpreter','latex')
 ylabel('APCs (cells/mm$^2$)','FontSize',fslabel,'Interpreter','latex')
 set(gca,'XLim',[0,rmax],'YLim',[0,ylim_sum],'FontSize',fsticks)
 xticks(0:rmax)
@@ -81,7 +81,7 @@ for i=1:numcurvesplot
 end
 hold off
 box off
-xlabel('$r$ (mm)','FontSize',fslabel,'Interpreter','latex')
+xlabel('Radius (mm)','FontSize',fslabel,'Interpreter','latex')
 ylabel('IPAs (cells/mm$^2$)','FontSize',fslabel,'Interpreter','latex')
 set(gca,'XLim',[0,rmax],'YLim',[0,ylim_sum],'FontSize',fsticks)
 xticks(0:rmax)
@@ -114,7 +114,7 @@ for i=1:numcurvesplot
 end
 
 
-%%%%%%%%%%%%%%%% PANEL0.215 0.614 0.101 0.332: tension
+%%%%%%%%%%%%%%%% PANEL: tension
 nexttile
 
 hold on
@@ -122,7 +122,7 @@ for i=1:numcurvesplot
     plot(r(i,:),tension_plot(i,:),'LineWidth',2.5,'Color',co(i,:))
 end
 hold off
-xlabel('$r$ (mm)','FontSize',fslabel,'Interpreter','latex')
+xlabel('Radius (mm)','FontSize',fslabel,'Interpreter','latex')
 ylabel('Tension (Pa mm)','FontSize',fslabel,'Interpreter','latex')
 set(gca,'XLim',[0,rmax],'FontSize',fsticks)
 xticks(0:rmax)
@@ -137,7 +137,7 @@ for i=1:numcurvesplot
 end
 hold off
 box off
-xlabel('$r$ (mm)','FontSize',fslabel,'Interpreter','latex')
+xlabel('Radius (mm)','FontSize',fslabel,'Interpreter','latex')
 ylabel('APC velocity (mm/hr)','FontSize',fslabel,'Interpreter','latex')
 set(gca,'XLim',[0,rmax],'YLim',[0 0.06],'FontSize',fsticks)
 xticks(0:rmax)
@@ -153,7 +153,7 @@ plot(t/24,rm,'k','LineWidth',2.5)
 scatter(rad_days,rad_APC,150,[0.5 0.5 0.5],'x','LineWidth',2.5)
 hold off
 box off
-xlabel('$t$ (days)','FontSize',fslabel,'Interpreter','latex')
+xlabel('Time (days)','FontSize',fslabel,'Interpreter','latex')
 ylabel('Cell boundary (mm)','FontSize',fslabel,'Interpreter','latex')
 set(gca,'XLim',[0,8],'FontSize',fsticks)
 xticks(0:2:8)

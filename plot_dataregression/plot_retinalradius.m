@@ -28,9 +28,9 @@ fsticks = 22;
 
 figure
 hold on
-plot(timeindays_more,line_radius,'LineWidth',2.5,'Color','k')
+plot(timeindays_more,line_radius/1000,'LineWidth',2.5,'Color','k')
 
-scatter(timeindays,radiusdata,markersize,'filled',...
+scatter(timeindays,radiusdata/1000,markersize,'filled',...
     'MarkerFaceColor','k');
 hold off
 
@@ -38,7 +38,7 @@ box off
 set(gca,'FontSize',fsticks,'Position',[0.175 0.08 0.79 0.82])
 
 %xlabel('Days since E15','Interpreter','latex','FontSize',fslabel)
-ylabel('Retinal radius ($\mu$m)','Interpreter','latex','FontSize',fslabel)
+ylabel('Retinal radius (mm)','Interpreter','latex','FontSize',fslabel)
 
 xlim([timeindays(1),timeindays(end)])
 xticks(timeindays)

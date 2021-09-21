@@ -56,7 +56,7 @@ for i=1:numcurvesplot
    plot(r(i,:),y1(i,:),'LineWidth',2.5,'Color',co(i,:)) 
 end
 hold off
-xlabel('$r$ (mm)','FontSize',fslabel,'Interpreter','latex')
+xlabel('Radius (mm)','FontSize',fslabel,'Interpreter','latex')
 ylabel('PDGFA (ng/mL)','FontSize',fslabel,'Interpreter','latex')
 box off
 
@@ -88,7 +88,7 @@ for i=1:numcurvesplot
    plot(r(i,:),y2(i,:),'LineWidth',2.5,'Color',co(i,:)) 
 end
 hold off
-xlabel('$r$ (mm)','FontSize',fslabel,'Interpreter','latex')
+xlabel('Radius (mm)','FontSize',fslabel,'Interpreter','latex')
 ylabel('LIF (ng/mL)','FontSize',fslabel,'Interpreter','latex')
 box off
 
@@ -119,7 +119,7 @@ hold on
 plot(radius_ret(tplot),t(tplot)/24,'k','LineWidth',2.5)
 scatter(radius_ret(tplot),t(tplot)/24,70,co,'filled')
 hold off
-ylabel('$t$ (days)','FontSize',fslabel,'Interpreter','latex')
+ylabel('Time (days)','FontSize',fslabel,'Interpreter','latex')
 xlabel('Retinal radius (mm)','FontSize',fslabel,'Interpreter','latex')
 yticks(0:7)
 box off
@@ -148,7 +148,7 @@ hold on
 plot(radius_endo(tplot),t(tplot)/24,'k','LineWidth',2.5)
 scatter(radius_endo(tplot),t(tplot)/24,70,co,'filled')
 hold off
-ylabel('$t$ (days)','FontSize',fslabel,'Interpreter','latex')
+ylabel('Time (days)','FontSize',fslabel,'Interpreter','latex')
 xlabel('Endothelial cell radius (mm)','FontSize',fslabel,'Interpreter','latex')
 yticks(0:7)
 box off

@@ -42,12 +42,12 @@ fslegend = 18;
 
 figure
 hold on
-plot(timeindays_more,line_posterior,'LineWidth',2.5,'Color','k')
-plot(timeindays_more,line_peripheral,'LineWidth',2.5,'Color',graycolor)
+plot(timeindays_more,line_posterior/1000,'LineWidth',2.5,'Color','k')
+plot(timeindays_more,line_peripheral/1000,'LineWidth',2.5,'Color',graycolor)
 
-h1 = scatter(timeindays,thickness_posterior,markersize,'filled',...
+h1 = scatter(timeindays,thickness_posterior/1000,markersize,'filled',...
     'MarkerFaceColor','k');
-h2 = scatter(timeindays,thickness_peripheral,markersize,'^','filled',...
+h2 = scatter(timeindays,thickness_peripheral/1000,markersize,'^','filled',...
     'MarkerFaceColor',graycolor);
 hold off
 
@@ -55,7 +55,7 @@ box off
 set(gca,'FontSize',fsticks,'Position',[0.175 0.08 0.79 0.82])
 
 %xlabel('Days since E15','Interpreter','latex','FontSize',fslabel)
-ylabel('Retinal thickness ($\mu$m)','Interpreter','latex','FontSize',fslabel)
+ylabel('Retinal thickness (mm)','Interpreter','latex','FontSize',fslabel)
 
 legend([h1 h2],{'Posterior','Peripheral'},'Location','northwest')
 
