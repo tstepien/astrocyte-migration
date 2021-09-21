@@ -24,9 +24,8 @@
 
 % Units are mm and hour
 
-clc
 clear variables global;
-addpath plot_simulations uq
+addpath plot_simulations
 global kTprime1 kTprime2 ce ce1 cmax Lvec Pvec Pm rmax
 global alpha10 alpha11 alpha12 alpha20 alpha21 alpha22 beta1 beta2 beta3 gamma1 gamma2
 global LIF PDGFA nxpts ntpts tmax
@@ -38,10 +37,10 @@ rmax = 5; % max radius (mm) (estimate rat retinal radius = 4.1 mm)
 tmax = 7 * 24; % max time (hr) (7 days)
 
 %% cell growth parameters
-alpha10 = 0.06; % (/hr) basal proliferation rate (0.08)
-alpha11 = 0.06; %  (/hr) proliferation rate APC wrt oxygen (0.08)
-alpha12 = 0.1; %  (/hr) proliferation rate APC wrt PDGFA (0.12)
-alpha20 = 0.0; % (/hr) basal proliferation rate (zero)
+alpha10 = 0.08; % (/hr) basal proliferation rate (0.1)
+alpha11 = 0.08; %  (/hr) proliferation rate APC wrt oxygen (0.08)
+alpha12 = 0.12; %  (/hr) proliferation rate APC wrt PDGFA (0.1)
+alpha20 = 0.0; % (/hr) basal proliferation rate (zero) 
 alpha21 = 0.0; % (/hr) proliferation rate IPA wrt oxygen
 alpha22 = 0.0; % (/hr) proliferation rate IPA wrt PDGFA
 beta1 = 0.07; % (/hr) basal differentiation rate (0.08)
@@ -52,7 +51,7 @@ gamma2 = 0.0; % (/hr) apoptosis rate IPA
 
 %% tension parameters 
 mu1 = 1; %1.75 % adhesion constant (mm/hr/(mN/mm^2))
-mu2 = 2; %1.75
+mu2 = 2.5; %1.75
 kappa = 30; % tension function scaling (Pa, microN/mm^2)
 % tension on boundary (mN/mm)
 Te = kappa * (1/sqrt(pi*ce) - rbar) ; % simpler form, June 2021
@@ -77,7 +76,6 @@ PDGFA = sol(:,:,1);
 LIF = sol(:,:,2);
 
 % Calculate cell densities using time-dependent domain stretching
-% options = odeset('RelTol',1e-6,'AbsTol',1e-8,'NormControl','on');
 sol = pdepe(1,@AstroPDE,@AstroIC,@AstroBC,x,t);
 
 %% plot results
