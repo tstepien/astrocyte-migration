@@ -13,7 +13,7 @@ fslegend = 14;
 figure(8);
 tiledlayout(2,4,'TileSpacing','Compact','Padding','compact')
 % extra points to make plots go to axis at outer edge
-r = zeros(numcurvesplot,nxpts+1);
+rplot = zeros(numcurvesplot,nxpts+1);
 y1 = zeros(numcurvesplot,nxpts+1);
 y2 = zeros(numcurvesplot,nxpts+1);
 
@@ -21,11 +21,11 @@ y2 = zeros(numcurvesplot,nxpts+1);
 rm = sol(:,nxpts,4);
 for i=1:numcurvesplot
     for j = 1:nxpts
-        r(i,j) = rm(i*4-3) * x(j);
+        rplot(i,j) = rm(i*4-3) * x(j);
         y1(i,j) = sol(i*4-3,j,1);
         y2(i,j) = sol(i*4-3,j,2);        
     end
-    r(i,nxpts+1) = r(i,nxpts);
+    rplot(i,nxpts+1) = rplot(i,nxpts);
 end
 
 % find max value of APC+IPA and round up to nearest thousand
@@ -34,8 +34,8 @@ ylim_sum = ceil(max(max(y1+y2))/1000)*1000;
 for i=1:numcurvesplot
     nexttile
     hold on
-    plot(r(i,:),y1(i,:),'LineWidth',1.5,'Color',co(1,:))
-    plot(r(i,:),y2(i,:),'LineWidth',1.5,'Color',co(2,:))
+    plot(rplot(i,:),y1(i,:),'LineWidth',1.5,'Color',co(1,:))
+    plot(rplot(i,:),y2(i,:),'LineWidth',1.5,'Color',co(2,:))
     
     if i<3
         line([rad_APC(i),rad_APC(i)],[0 ylim_sum],'LineStyle','--',...

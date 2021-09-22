@@ -19,7 +19,7 @@ fslegend = 14;
 figure
 tiledlayout(2,3,'TileSpacing','Compact','Padding','none')
 % extra points to make plots go to axis at outer edge
-r = zeros(numcurvesplot,nxpts+2);
+rplot = zeros(numcurvesplot,nxpts+2);
 APC_plot = zeros(numcurvesplot,nxpts+2);
 IPA_plot = zeros(numcurvesplot,nxpts+2);
 tension_plot = zeros(numcurvesplot,nxpts+2);
@@ -29,12 +29,12 @@ velocity_plot = zeros(numcurvesplot,nxpts+2);
 rm = sol(:,nxpts,4);
 for i=1:numcurvesplot
     for j = 1:nxpts
-        r(i,j) = rm(i*4-3) * x(j);
+        rplot(i,j) = rm(i*4-3) * x(j);
         APC_plot(i,j) = sol(i*4-3,j,1);
         IPA_plot(i,j) = sol(i*4-3,j,2);        
     end
-    r(i,nxpts+1) = r(i,nxpts);   %to make plots go to axis at outer edge 
-    r(i,nxpts+2) = rmax;
+    rplot(i,nxpts+1) = rplot(i,nxpts);   %to make plots go to axis at outer edge 
+    rplot(i,nxpts+2) = rmax;
 end
 
 % find max value of APC+IPA and round up to nearest 500
@@ -44,7 +44,7 @@ ylim_sum = ceil(max(max(APC_plot+IPA_plot))/500)*500;
 nexttile
 hold on
 for i=1:numcurvesplot
-    plot(r(i,:),APC_plot(i,:)+IPA_plot(i,:),'LineWidth',2.5,'Color',co(i,:))
+    plot(rplot(i,:),APC_plot(i,:)+IPA_plot(i,:),'LineWidth',2.5,'Color',co(i,:))
 end
 hold off
 box off
@@ -62,7 +62,7 @@ title('A                              ',...
 nexttile
 hold on
 for i=1:numcurvesplot
-    plot(r(i,:),APC_plot(i,:),'LineWidth',2.5,'Color',co(i,:))
+    plot(rplot(i,:),APC_plot(i,:),'LineWidth',2.5,'Color',co(i,:))
 end
 hold off
 box off
@@ -77,7 +77,7 @@ title('B                              ',...
 nexttile
 hold on
 for i=1:numcurvesplot
-    plot(r(i,:),IPA_plot(i,:),'LineWidth',2.5,'Color',co(i,:))
+    plot(rplot(i,:),IPA_plot(i,:),'LineWidth',2.5,'Color',co(i,:))
 end
 hold off
 box off
@@ -119,7 +119,7 @@ nexttile
 
 hold on
 for i=1:numcurvesplot
-    plot(r(i,:),tension_plot(i,:),'LineWidth',2.5,'Color',co(i,:))
+    plot(rplot(i,:),tension_plot(i,:),'LineWidth',2.5,'Color',co(i,:))
 end
 hold off
 xlabel('Radius (mm)','FontSize',fslabel,'Interpreter','latex')
@@ -133,7 +133,7 @@ title('D                              ',...
 nexttile
 hold on
 for i=1:numcurvesplot
-    plot(r(i,:),velocity_plot(i,:),'LineWidth',2.5,'Color',co(i,:))
+    plot(rplot(i,:),velocity_plot(i,:),'LineWidth',2.5,'Color',co(i,:))
 end
 hold off
 box off

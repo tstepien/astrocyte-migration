@@ -27,20 +27,20 @@ fslegend = 18;
 radius_endo = zeros(length(t),1);
 radius_ret = zeros(length(t),1);
 for i=1:length(t)
-    [~,~,radius_endo(i),radius_ret(i)] = thick_rad(t(i),r);
+    [~,~,radius_endo(i),radius_ret(i)] = thick_rad(t(i),rplot);
 end
 
 % set up PDGFA and LIF
-r = zeros(numcurvesplot,nxpts+1);
+rplot = zeros(numcurvesplot,nxpts+1);
 y1 = zeros(numcurvesplot,nxpts+1);
 y2 = zeros(numcurvesplot,nxpts+1);
 for i=1:numcurvesplot
     for j = 1:nxpts
-        r(i,j) = rmax * x(j);
+        rplot(i,j) = rmax * x(j);
         y1(i,j) = PDGFA(i*4-3,j);
         y2(i,j) = LIF(i*4-3,j);        
     end
-    r(i,nxpts+1) = r(i,nxpts);
+    rplot(i,nxpts+1) = rplot(i,nxpts);
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -53,7 +53,7 @@ else
 end
 hold on
 for i=1:numcurvesplot
-   plot(r(i,:),y1(i,:),'LineWidth',2.5,'Color',co(i,:)) 
+   plot(rplot(i,:),y1(i,:),'LineWidth',2.5,'Color',co(i,:)) 
 end
 hold off
 xlabel('Radius (mm)','FontSize',fslabel,'Interpreter','latex')
@@ -85,7 +85,7 @@ else
 end
 hold on
 for i=1:numcurvesplot
-   plot(r(i,:),y2(i,:),'LineWidth',2.5,'Color',co(i,:)) 
+   plot(rplot(i,:),y2(i,:),'LineWidth',2.5,'Color',co(i,:)) 
 end
 hold off
 xlabel('Radius (mm)','FontSize',fslabel,'Interpreter','latex')
