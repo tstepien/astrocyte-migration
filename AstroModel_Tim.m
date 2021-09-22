@@ -24,6 +24,7 @@
 
 % Units are mm and hour
 
+clc
 clear variables global;
 addpath plot_simulations
 global kTprime1 kTprime2 ce ce1 cmax Lvec Pvec Pm rmax
@@ -93,4 +94,4 @@ c1 = sol(:,:,1);
 c2 = sol(:,:,2);
 mvgbdy = sol(:,nxpts,4);
 
-[err_tot,err_time,err_rad,err_dens] = errorfunction(t,r,mvgbdy,c1,c2)
+[err_tot,err_rad,err_dens] = errorfunction(t,x,mvgbdy,c1,c2)
