@@ -26,7 +26,7 @@
 
 clc
 clear variables global;
-addpath plot_simulations uq
+addpath plot_simulations
 global kTprime1 kTprime2 ce ce1 cmax Lvec Pvec Pm rmax
 global alpha10 alpha11 alpha12 alpha20 alpha21 alpha22 beta1 beta2 beta3 gamma1 gamma2
 global LIF PDGFA nxpts ntpts tmax

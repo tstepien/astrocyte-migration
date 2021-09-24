@@ -11,7 +11,6 @@ if ~isreal(u) || ~isreal(DuDx) || usum<=0
 end
 Dusum = DuDx(1) + DuDx(2);
 
-
 parameters_fixed
 
 kTprime1 = m.kTprime1;
