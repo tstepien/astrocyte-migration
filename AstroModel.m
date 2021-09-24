@@ -62,7 +62,7 @@ kTprime2 = kappa / (2 * mu2 * sqrt(pi));
 ce1 = ce*(1 + 0.5 * alpha11 * s0^2 * sqrt(ce) * (1 - ce/cmax) / kTprime1);
 
 %% set up and solve
-nxpts = 751;
+nxpts = 26;
 ntpts = 29;
 x = linspace(0,1,nxpts);    % 0 <= x <= 1 by definition
 t = linspace(0,tmax,ntpts);
@@ -91,8 +91,4 @@ plot_the_plots_6panels
 % plot_timversion
 
 %% calculate error
-c1 = sol(:,:,1);
-c2 = sol(:,:,2);
-mvgbdy = sol(:,nxpts,4);
-
-[err_tot,err_time,err_rad,err_dens] = errorfunction(t,x,mvgbdy,c1,c2)
+[err_tot,err_rad,err_dens] = errorfunction(t,x,sol)
