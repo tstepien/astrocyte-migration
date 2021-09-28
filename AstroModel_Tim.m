@@ -90,8 +90,5 @@ plot_the_plots_6panels
 % plot_timversion
 
 %% calculate error
-c1 = sol(:,:,1);
-c2 = sol(:,:,2);
-mvgbdy = sol(:,nxpts,4);
 
-[err_tot,err_rad,err_dens] = errorfunction(t,x,mvgbdy,c1,c2)
+[err_tot,err_rad,err_dens] = errorfunction(t,x,sol)

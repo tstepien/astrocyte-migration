@@ -3,7 +3,7 @@
 % Clear all variables from the workspace, set the random number generator
 % for reproducible results, and initialize the UQLab framework:
 clc;
-clearvars
+clear variables global;
 rng(100,'twister')
 uqlab
 
@@ -22,47 +22,38 @@ myModel = uq_createModel(ModelOpts);
 InputOpts.Marginals(1).Name = '$\alpha_{10}$';  % proliferation rate APC baseline
 InputOpts.Marginals(1).Type = 'Uniform';
 InputOpts.Marginals(1).Parameters = [0.01 0.1];  % (/hr)
-% InputOpts.Marginals(1).Bounds = [0.01 0.1];  % (/hr)
 
 InputOpts.Marginals(2).Name = '$\alpha_{11}$';  % proliferation rate APC wrt oxygen
 InputOpts.Marginals(2).Type = 'Uniform';
 InputOpts.Marginals(2).Parameters = [0 0.1];  % (/hr)
-% InputOpts.Marginals(2).Bounds = [0 0.1];  % (/hr)
 
 InputOpts.Marginals(3).Name = '$\alpha_{12}$';  % proliferation rate APC wrt PDGFA
 InputOpts.Marginals(3).Type = 'Uniform';
 InputOpts.Marginals(3).Parameters = [0 0.1];  % (/hr)
-% InputOpts.Marginals(3).Bounds = [0 0.1];  % (/hr)
 
 InputOpts.Marginals(4).Name = '$\alpha_{20}$';  % proliferation rate IPA baseline
 InputOpts.Marginals(4).Type = 'Uniform';
 InputOpts.Marginals(4).Parameters = [0 0.1];  % (/hr)
-% InputOpts.Marginals(4).Bounds = [0 0.1];  % (/hr)
 
 InputOpts.Marginals(5).Name = '$\alpha_{21}$';  % proliferation rate IPA wrt oxygen
 InputOpts.Marginals(5).Type = 'Uniform';
 InputOpts.Marginals(5).Parameters = [0 0.1];  % (/hr)
-% InputOpts.Marginals(5).Bounds = [0 0.1];  % (/hr)
 
 InputOpts.Marginals(6).Name = '$\alpha_{22}$';  % proliferation rate IPA wrt PDGFA
 InputOpts.Marginals(6).Type = 'Uniform';
 InputOpts.Marginals(6).Parameters = [0 0.1];  % (/hr)
-% InputOpts.Marginals(6).Bounds = [0 0.1];  % (/hr)
 
 InputOpts.Marginals(7).Name = '$\beta_1$';  % differentiation rate baseline
 InputOpts.Marginals(7).Type = 'Uniform';
 InputOpts.Marginals(7).Parameters = [0 0.1];  % (/hr)
-% InputOpts.Marginals(7).Bounds = [0 0.1];  % (/hr)
 
 InputOpts.Marginals(8).Name = '$\beta_2$';  % differentiation rate wrt oxygen
 InputOpts.Marginals(8).Type = 'Uniform';
 InputOpts.Marginals(8).Parameters = [0 0.1];  % (/hr)
-% InputOpts.Marginals(8).Bounds = [0 0.1];  % (/hr)
 
 InputOpts.Marginals(9).Name = '$\beta_3$';  % differentiation rate wrt LIF
 InputOpts.Marginals(9).Type = 'Uniform';
 InputOpts.Marginals(9).Parameters = [0 0.1];  % (/hr)
-% InputOpts.Marginals(9).Bounds = [0 0.1];  % (/hr)
 
 % Create an INPUT object based on the specified marginals:
 myInput = uq_createInput(InputOpts);

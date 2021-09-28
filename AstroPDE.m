@@ -2,13 +2,6 @@ function [c,f,s] = AstroPDE(x,t,u,DuDx)
 global kTprime1 kTprime2 cmax Lvec Pvec Pm LIF PDGFA nxpts ntpts tmax rmax
 global alpha10 alpha11 alpha12 alpha20 alpha21 alpha22 beta1 beta2 beta3 gamma1 gamma2
 
-if ~isreal(u) || ~isreal(DuDx)
-    c = zeros(size(u));
-    f = zeros(size(u));
-    s = zeros(size(u));
-    return
-end
-
 usum = u(1) + u(2);
 if usum <= 0
     fprintf('*** Error: negative usum = %f\n',usum);

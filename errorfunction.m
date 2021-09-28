@@ -99,7 +99,15 @@ end
 err_rad = sum( abs(rad_APC - mvgbdy(ind)) ./ rad_APC );
 
 %%% density error
-err_APC = sum( dens_annulus , 2) ./ numnodes_APC;
+if sum(numnodes_APC==0)>0 %%% if number of APC nodes is 0 for any time point
+    err_tot = 10^4; %NaN;
+%     err_time = 10^4; %NaN;
+    err_rad = 10^4; %NaN;
+    err_dens = 10^4; %NaN;
+    return
+else
+    err_APC = sum( dens_annulus , 2) ./ numnodes_APC;
+end
 err_IPA = sum( dens_disc , 2) ./ numnodes_IPA;
 err_IPA(1) = 0; %%% initial time point has no IPAs by initial condition, so
                 %%% numnodes_IPA=0 and dividing by zero results in NaN

@@ -24,7 +24,7 @@
 
 % Units are mm and hour
 
-clc
+% clc
 clear variables global;
 addpath plot_simulations
 global kTprime1 kTprime2 ce ce1 cmax Lvec Pvec Pm rmax
@@ -38,17 +38,31 @@ rmax = 5; % max radius (mm) (estimate rat retinal radius = 4.1 mm)
 tmax = 7 * 24; % max time (hr) (7 days)
 
 %% cell growth parameters
-alpha10 = 0.06; % (/hr) basal proliferation rate (0.08)
-alpha11 = 0.06; %  (/hr) proliferation rate APC wrt oxygen (0.08)
-alpha12 = 0.1; %  (/hr) proliferation rate APC wrt PDGFA (0.12)
-alpha20 = 0.0; % (/hr) basal proliferation rate (zero)
-alpha21 = 0.0; % (/hr) proliferation rate IPA wrt oxygen
-alpha22 = 0.0; % (/hr) proliferation rate IPA wrt PDGFA
-beta1 = 0.07; % (/hr) basal differentiation rate (0.08)
-beta2 = 0.03; % (/hr) differentiation rate wrt oxygen (0.03)
-beta3 = 0.02; % (/hr) differentiation rate wrt LIF (0.02)
+% alpha10 = 0.08; % (/hr) basal proliferation rate (0.1)
+% alpha11 = 0.08; %  (/hr) proliferation rate APC wrt oxygen (0.08)
+% alpha12 = 0.09; %  (/hr) proliferation rate APC wrt PDGFA (0.1)
+% alpha20 = 0.0; % (/hr) basal proliferation rate (zero) 
+% alpha21 = 0.005; % (/hr) proliferation rate IPA wrt oxygen
+% alpha22 = 0.01; % (/hr) proliferation rate IPA wrt PDGFA
+% beta1 = 0.07; % (/hr) basal differentiation rate (0.08)
+% beta2 = 0.03; % (/hr) differentiation rate wrt oxygen (0.03)
+% beta3 = 0.02; % (/hr) differentiation rate wrt LIF (0.02)
+% gamma1 = 0.0; % (/hr) apoptosis rate APC
+% gamma2 = 0.0; % (/hr) apoptosis rate IPA
+
+% from september 27 afternoon
+alpha10 = 0.0746; % (/hr) basal proliferation rate (0.1)
+alpha11 = 0.0667; %  (/hr) proliferation rate APC wrt oxygen (0.08)
+alpha12 = 0.1005; %  (/hr) proliferation rate APC wrt PDGFA (0.1)
+alpha20 = 0.0006; % (/hr) basal proliferation rate (zero) 
+alpha21 = 0.0049; % (/hr) proliferation rate IPA wrt oxygen
+alpha22 = 0.0109; % (/hr) proliferation rate IPA wrt PDGFA
+beta1 = 0.0589; % (/hr) basal differentiation rate (0.08)
+beta2 = 0.0337; % (/hr) differentiation rate wrt oxygen (0.03)
+beta3 = 0.0184; % (/hr) differentiation rate wrt LIF (0.02)
 gamma1 = 0.0; % (/hr) apoptosis rate APC
 gamma2 = 0.0; % (/hr) apoptosis rate IPA
+
 
 %% tension parameters 
 mu1 = 1; %1.75 % adhesion constant (mm/hr/(mN/mm^2))

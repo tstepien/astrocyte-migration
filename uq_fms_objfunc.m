@@ -1,4 +1,4 @@
-function Y = uq_eqns_and_error(param)
+function Y = uq_fms_objfunc(param)
 % Y = uq_eqns_and_error(param)
 %
 % This function returns the computed values of the moving boundary location
@@ -16,15 +16,15 @@ global ce kTprime1 s0 ce1 nxpts ntpts
 
 %%%%%%%%%%%%%%%%%%%%%%%%%% parameters to examine %%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% APCs and IPAs
-alpha10 = param(:,1);
-alpha11 = param(:,2);
-alpha12 = param(:,3);
-alpha20 = param(:,4);
-alpha21 = param(:,5);
-alpha22 = param(:,6);
-beta1 = param(:,7);
-beta2 = param(:,8);
-beta3 = param(:,9);
+alpha10 = param(1);
+alpha11 = param(2);
+alpha12 = param(3);
+alpha20 = param(4);
+alpha21 = param(5);
+alpha22 = param(6);
+beta1 = param(7);
+beta2 = param(8);
+beta3 = param(9);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%% fixed parameters %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 parameters_fixed
@@ -41,8 +41,11 @@ kappa = 30; % tension function scaling (Pa, microN/mm^2)
 Te = kappa * (1/sqrt(pi*ce) - rbar) ; % simpler form, June 2021
 m.kTprime1 = kappa / (2 * mu1 * sqrt(pi));
 m.kTprime2 = kappa / (2 * mu2 * sqrt(pi));
+% parameter in initial condition, chosen to match subsequent solution
+m.ce1 = ce*(1 + 0.5 * alpha11 * s0^2 * sqrt(ce) * (1 - ce/cmax) / m.kTprime1);
 
 kTprime1=m.kTprime1;
+ce1=m.ce1;
 
 %%%%%%%%%%%%%%%%%%% solve equation and calculate error %%%%%%%%%%%%%%%%%%%%
 %%% initialize
@@ -63,18 +66,8 @@ sol = pdepe(1,@GF_PDE,@GF_IC,@GF_BC,r,t);
 m.PDGFA = sol(:,:,1);
 m.LIF = sol(:,:,2);
 
-N = size(param,1);
-Y = zeros(N,1);
+sol = pdepe(1,@(x,t,u,DuDx) AstroPDE_uq(x,t,u,DuDx,alpha10,alpha11,...
+    alpha12,alpha20,alpha21,alpha22,beta1,beta2,beta3,m),@AstroIC,...
+    @AstroBC,x,t);
 
-for i=1:N
-    % parameter in initial condition, chosen to match subsequent solution
-    m.ce1 = ce*(1 + 0.5 * alpha11(i) * s0^2 * sqrt(ce) * (1 - ce/cmax) / m.kTprime1);
-    ce1=m.ce1;
-
-    % Calculate cell densities using time-dependent domain stretching
-    sol = pdepe(1,@(x,t,u,DuDx) AstroPDE_uq(x,t,u,DuDx,alpha10(i),...
-        alpha11(i),alpha12(i),alpha20(i),alpha21(i),alpha22(i),beta1(i),...
-        beta2(i),beta3(i),m),@AstroIC,@AstroBC,x,t);
-    
-    [Y(i),~,~] = errorfunction(t,x,sol);
-end
+[Y,~,~] = errorfunction(t,x,sol);
