@@ -26,6 +26,12 @@ beta1 = param(7);
 beta2 = param(8);
 beta3 = param(9);
 
+if alpha10<0 || alpha11<0 || alpha12<0 || alpha20<0 || alpha21<0 ...
+        || alpha22<0 || beta1<0 || beta2<0 || beta3<0
+    Y = 10^4;
+    return
+end
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%% fixed parameters %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 parameters_fixed
 

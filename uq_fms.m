@@ -2,15 +2,27 @@ clc
 clear variables global;
 
 %% cell growth parameters
-alpha10 = 0.08; % (/hr) basal proliferation rate (0.1)
-alpha11 = 0.08; %  (/hr) proliferation rate APC wrt oxygen (0.08)
-alpha12 = 0.09; %  (/hr) proliferation rate APC wrt PDGFA (0.1)
-alpha20 = 0.0; % (/hr) basal proliferation rate (zero) 
-alpha21 = 0.005; % (/hr) proliferation rate IPA wrt oxygen
-alpha22 = 0.01; % (/hr) proliferation rate IPA wrt PDGFA
-beta1 = 0.07; % (/hr) basal differentiation rate (0.08)
-beta2 = 0.03; % (/hr) differentiation rate wrt oxygen (0.03)
-beta3 = 0.02; % (/hr) differentiation rate wrt LIF (0.02)
+%%% my values with nonzero alphas
+% alpha10 = 0.08; % (/hr) basal proliferation rate
+% alpha11 = 0.08; %  (/hr) proliferation rate APC wrt oxygen
+% alpha12 = 0.09; %  (/hr) proliferation rate APC wrt PDGFA
+% alpha20 = 0.0; % (/hr) basal proliferation rate
+% alpha21 = 0.005; % (/hr) proliferation rate IPA wrt oxygen
+% alpha22 = 0.01; % (/hr) proliferation rate IPA wrt PDGFA
+% beta1 = 0.07; % (/hr) basal differentiation rate
+% beta2 = 0.03; % (/hr) differentiation rate wrt oxygen
+% beta3 = 0.02; % (/hr) differentiation rate wrt LIF
+
+%%% tim's value with zero alphas
+alpha10 = 0.08; % (/hr) basal proliferation rate
+alpha11 = 0.08; %  (/hr) proliferation rate APC wrt oxygen
+alpha12 = 0.12; %  (/hr) proliferation rate APC wrt PDGFA
+alpha20 = 0.0; % (/hr) basal proliferation rate
+alpha21 = 0.0; % (/hr) proliferation rate IPA wrt oxygen
+alpha22 = 0.0; % (/hr) proliferation rate IPA wrt PDGFA
+beta1 = 0.07; % (/hr) basal differentiation rate
+beta2 = 0.03; % (/hr) differentiation rate wrt oxygen
+beta3 = 0.02; % (/hr) differentiation rate wrt LIF
 
 init_param = [alpha10,alpha11,alpha12,alpha20,alpha21,alpha22,beta1,...
     beta2,beta3];

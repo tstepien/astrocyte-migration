@@ -96,26 +96,32 @@ end
 % err_time = abs(7 - t(end)/24)/7;
 
 %%% radius error
-err_rad = sum( abs(rad_APC - mvgbdy(ind)) ./ rad_APC );
+% multiply by a weight to had interior points be made more important
+weight = ones(size(rad_APC));
+weight(5:6) = 2;
+err_rad = sum( abs(rad_APC - mvgbdy(ind)) ./ rad_APC  .* weight );
 
 %%% density error
-if sum(numnodes_APC==0)>0 %%% if number of APC nodes is 0 for any time point
-    err_tot = 10^4; %NaN;
-%     err_time = 10^4; %NaN;
-    err_rad = 10^4; %NaN;
-    err_dens = 10^4; %NaN;
-    return
-else
-    err_APC = sum( dens_annulus , 2) ./ numnodes_APC;
-end
-err_IPA = sum( dens_disc , 2) ./ numnodes_IPA;
-err_IPA(1) = 0; %%% initial time point has no IPAs by initial condition, so
-                %%% numnodes_IPA=0 and dividing by zero results in NaN
-err_dens = sum( err_APC + err_IPA );
+% if sum(numnodes_APC==0)>0 %%% if number of APC nodes is 0 for any time point
+%     err_tot = 10^4; %NaN;
+% %     err_time = 10^4; %NaN;
+%     err_rad = 10^4; %NaN;
+%     err_dens = 10^4; %NaN;
+%     return
+% else
+%     err_APC = sum( dens_annulus , 2) ./ numnodes_APC;
+% end
+% err_IPA = sum( dens_disc , 2) ./ numnodes_IPA;
+% err_IPA(1) = 0; %%% initial time point has no IPAs by initial condition, so
+%                 %%% numnodes_IPA=0 and dividing by zero results in NaN
+% err_dens = sum( err_APC + err_IPA );
+err_dens = NaN;
 
 %%% total error
 % err_tot = err_time + err_rad + err_dens;
-err_tot = err_rad + err_dens;
+% err_tot = err_rad + err_dens;
+% err_tot = (100/numdays)*err_rad + (100/nxpts)*err_dens;
+err_tot = err_rad;
 
 %%% figure
 % figure
