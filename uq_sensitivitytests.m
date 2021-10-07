@@ -7,7 +7,7 @@ clear variables global;
 rng(100,'twister')
 uqlab
 
-sampleN = 20;
+sampleN = 10;
 filename = 'parameter_analysis/full_uq_sensitivity.mat';
 
 %% 2 - COMPUTATIONAL MODEL
@@ -25,11 +25,11 @@ InputOpts.Marginals(1).Parameters = [0.04 0.12];  % (/hr)
 
 InputOpts.Marginals(2).Name = '$\alpha_{11}$';  % proliferation rate APC wrt oxygen
 InputOpts.Marginals(2).Type = 'Uniform';
-InputOpts.Marginals(2).Parameters = [0.01 0.09];  % (/hr)
+InputOpts.Marginals(2).Parameters = [0 0.09];  % (/hr)
 
 InputOpts.Marginals(3).Name = '$\alpha_{12}$';  % proliferation rate APC wrt PDGFA
 InputOpts.Marginals(3).Type = 'Uniform';
-InputOpts.Marginals(3).Parameters = [0.05 0.18];  % (/hr)
+InputOpts.Marginals(3).Parameters = [0 0.18];  % (/hr)
 
 InputOpts.Marginals(4).Name = '$\alpha_{20}$';  % proliferation rate IPA baseline
 InputOpts.Marginals(4).Type = 'Uniform';
@@ -45,15 +45,15 @@ InputOpts.Marginals(6).Parameters = [0 0.01];  % (/hr)
 
 InputOpts.Marginals(7).Name = '$\beta_1$';  % differentiation rate baseline
 InputOpts.Marginals(7).Type = 'Uniform';
-InputOpts.Marginals(7).Parameters = [0.06 0.08];  % (/hr)
+InputOpts.Marginals(7).Parameters = [0 0.08];  % (/hr)
 
 InputOpts.Marginals(8).Name = '$\beta_2$';  % differentiation rate wrt oxygen
 InputOpts.Marginals(8).Type = 'Uniform';
-InputOpts.Marginals(8).Parameters = [0.02 0.04];  % (/hr)
+InputOpts.Marginals(8).Parameters = [0 0.04];  % (/hr)
 
 InputOpts.Marginals(9).Name = '$\beta_3$';  % differentiation rate wrt LIF
 InputOpts.Marginals(9).Type = 'Uniform';
-InputOpts.Marginals(9).Parameters = [0.01 0.03];  % (/hr)
+InputOpts.Marginals(9).Parameters = [0 0.03];  % (/hr)
 
 % Create an INPUT object based on the specified marginals:
 myInput = uq_createInput(InputOpts);
