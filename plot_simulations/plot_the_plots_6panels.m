@@ -94,7 +94,7 @@ title('C                              ',...
 for i=1:numcurvesplot
     for j = 1:nxpts
         usumT = sol(i*4-3,j,1) + sol(i*4-3,j,2);
-        tension_plot(i,j) = kappa * (1./sqrt(pi*usumT) - rbar/1000) ;
+        tension_plot(i,j) = kappa * (1./sqrt(pi*usumT) - rbar) ;
     end
 end
 
@@ -124,7 +124,7 @@ end
 hold off
 xlabel('Radius (mm)','FontSize',fslabel,'Interpreter','latex')
 ylabel('Tension (Pa mm)','FontSize',fslabel,'Interpreter','latex')
-set(gca,'XLim',[0,rmax],'FontSize',fsticks)
+set(gca,'XLim',[0,rmax],'YLim',[0,0.4],'FontSize',fsticks)
 xticks(0:rmax)
 title('D                              ',...
     'FontSize',fstitle)
