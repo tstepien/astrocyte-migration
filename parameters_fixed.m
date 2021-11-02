@@ -31,10 +31,6 @@ xi2p = 4.7; %gamma4;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%% tension parameters %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 rbar = 7.5*10^(-3); %%% reference radius (mm)
-
-%%%%%% 7.5 changed from 7.75? ^
-
-
 rproc = 15.5*10^(-3); %%% reference radius with processes included (mm)
 % cmin = 1/(pi*rproc^2); %%% reference cell density that includes processes
 %                        %% (cells/mm^2)
@@ -42,6 +38,9 @@ cmax = 1/(pi*rbar^2); %%% reference cell density that includes only the
                       %%% cell body (cells/mm^2)
 ce = 1000; % /mm^2, estimated from Figure 2B of Fruttiger 2007
 
+kappa = 300; % tension function scaling (Pa, microN/mm^2)
+% tension on boundary (mN/mm)
+Te = kappa * (1/sqrt(pi*ce) - rbar) ; % simpler form, June 2021
 
 %%%%%%%%%%%%%%%%%%%% moving boundary initial location %%%%%%%%%%%%%%%%%%%%%
 s0 = 0.17; %%% based on Chan-Ling et al. (2009) Fig 2G: E15

@@ -124,7 +124,7 @@ end
 hold off
 xlabel('Radius (mm)','FontSize',fslabel,'Interpreter','latex')
 ylabel('Tension (Pa mm)','FontSize',fslabel,'Interpreter','latex')
-set(gca,'XLim',[0,rmax],'YLim',[0,0.4],'FontSize',fsticks)
+set(gca,'XLim',[0,rmax],'YLim',[0,4],'FontSize',fsticks)
 xticks(0:rmax)
 title('D                              ',...
     'FontSize',fstitle)
@@ -155,8 +155,8 @@ hold off
 box off
 xlabel('Time (days)','FontSize',fslabel,'Interpreter','latex')
 ylabel('Cell boundary (mm)','FontSize',fslabel,'Interpreter','latex')
-set(gca,'XLim',[0,8],'FontSize',fsticks)
-xticks(0:2:8)
+set(gca,'XLim',[0,7],'FontSize',fsticks)
+xticks(0:7)
 title('F                              ',...
     'FontSize',fstitle)
 

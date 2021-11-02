@@ -141,20 +141,17 @@ beta3 = 0.0007; % (/hr) differentiation rate wrt LIF (0.02)
 gamma1 = 0.0; % (/hr) apoptosis rate APC
 gamma2 = 0.0; % (/hr) apoptosis rate IPA
 
-
-
-%% tension parameters 
-mu1 = 1; %1.75 % adhesion constant (mm/hr/(mN/mm^2))
-mu2 = 2; %1.75
-kappa = 30; % tension function scaling (Pa, microN/mm^2)
-% tension on boundary (mN/mm)
-Te = kappa * (1/sqrt(pi*ce) - rbar) ; % simpler form, June 2021
+%% tension parameters
+mu1 = 10; %15 % adhesion constant (mm/hr/(mN/mm^2))
+mu2 = 20; %15
 kTprime1 = kappa / (2 * mu1 * sqrt(pi));
 kTprime2 = kappa / (2 * mu2 * sqrt(pi));
+
 % parameter in initial condition, chosen to match subsequent solution
 ce1 = ce*(1 + 0.5 * alpha11 * s0^2 * sqrt(ce) * (1 - ce/cmax) / kTprime1);
 
 %% set up and solve
+% mesh
 nxpts = 26;
 ntpts = 29;
 x = linspace(0,1,nxpts);    % 0 <= x <= 1 by definition

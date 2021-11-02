@@ -23,13 +23,6 @@ fslabel = 26;
 fsticks = 22;
 fslegend = 18;
 
-% set up radius
-radius_endo = zeros(length(t),1);
-radius_ret = zeros(length(t),1);
-for i=1:length(t)
-    [~,~,radius_endo(i),radius_ret(i)] = thick_rad(t(i),rplot);
-end
-
 % set up PDGFA and LIF
 rplot = zeros(numcurvesplot,nxpts+1);
 y1 = zeros(numcurvesplot,nxpts+1);
@@ -41,6 +34,13 @@ for i=1:numcurvesplot
         y2(i,j) = LIF(i*4-3,j);        
     end
     rplot(i,nxpts+1) = rplot(i,nxpts);
+end
+
+% set up radius
+radius_endo = zeros(length(t),1);
+radius_ret = zeros(length(t),1);
+for i=1:length(t)
+    [~,~,radius_endo(i),radius_ret(i)] = thick_rad(t(i),rplot);
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
