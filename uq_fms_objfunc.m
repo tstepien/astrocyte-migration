@@ -40,13 +40,11 @@ m.rmax = 5; % max radius (mm) (estimate rat retinal radius = 4.1 mm)
 m.tmax = 7 * 24; % max time (hr) (7 days)
 
 %%% tension parameters 
-mu1 = 1; %1.75 % adhesion constant (mm/hr/(mN/mm^2))
-mu2 = 2; %1.75
-kappa = 30; % tension function scaling (Pa, microN/mm^2)
-% tension on boundary (mN/mm)
-Te = kappa * (1/sqrt(pi*ce) - rbar) ; % simpler form, June 2021
+mu1 = 10; %15 % adhesion constant (mm/hr/(mN/mm^2))
+mu2 = 20; %15
 m.kTprime1 = kappa / (2 * mu1 * sqrt(pi));
 m.kTprime2 = kappa / (2 * mu2 * sqrt(pi));
+
 % parameter in initial condition, chosen to match subsequent solution
 m.ce1 = ce*(1 + 0.5 * alpha11 * s0^2 * sqrt(ce) * (1 - ce/cmax) / m.kTprime1);
 

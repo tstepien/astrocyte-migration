@@ -38,19 +38,19 @@ rmax = 5; % max radius (mm) (estimate rat retinal radius = 4.1 mm)
 tmax = 7 * 24; % max time (hr) (7 days)
 
 %% cell growth parameters
-% alpha10 = 0.08; % (/hr) basal proliferation rate (0.1)
-% alpha11 = 0.08; %  (/hr) proliferation rate APC wrt oxygen (0.08)
-% alpha12 = 0.09; %  (/hr) proliferation rate APC wrt PDGFA (0.1)
-% alpha20 = 0.0; % (/hr) basal proliferation rate (zero) 
-% alpha21 = 0.005; % (/hr) proliferation rate IPA wrt oxygen
-% alpha22 = 0.01; % (/hr) proliferation rate IPA wrt PDGFA
-% beta1 = 0.07; % (/hr) basal differentiation rate (0.08)
-% beta2 = 0.03; % (/hr) differentiation rate wrt oxygen (0.03)
-% beta3 = 0.02; % (/hr) differentiation rate wrt LIF (0.02)
-% gamma1 = 0.0; % (/hr) apoptosis rate APC
-% gamma2 = 0.0; % (/hr) apoptosis rate IPA
+alpha10 = 0.08; % (/hr) basal proliferation rate (0.1)
+alpha11 = 0.08; %  (/hr) proliferation rate APC wrt oxygen (0.08)
+alpha12 = 0.09; %  (/hr) proliferation rate APC wrt PDGFA (0.1)
+alpha20 = 0.0; % (/hr) basal proliferation rate (zero) 
+alpha21 = 0.005; % (/hr) proliferation rate IPA wrt oxygen
+alpha22 = 0.01; % (/hr) proliferation rate IPA wrt PDGFA
+beta1 = 0.07; % (/hr) basal differentiation rate (0.08)
+beta2 = 0.03; % (/hr) differentiation rate wrt oxygen (0.03)
+beta3 = 0.02; % (/hr) differentiation rate wrt LIF (0.02)
+gamma1 = 0.0; % (/hr) apoptosis rate APC
+gamma2 = 0.0; % (/hr) apoptosis rate IPA
 
-% % from september 27 afternoon
+%%% from september 27 afternoon
 % alpha10 = 0.0746; % (/hr) basal proliferation rate (0.1)
 % alpha11 = 0.0667; %  (/hr) proliferation rate APC wrt oxygen (0.08)
 % alpha12 = 0.1005; %  (/hr) proliferation rate APC wrt PDGFA (0.1)
@@ -63,7 +63,7 @@ tmax = 7 * 24; % max time (hr) (7 days)
 % gamma1 = 0.0; % (/hr) apoptosis rate APC
 % gamma2 = 0.0; % (/hr) apoptosis rate IPA
 
-% % from oct 4 - starting from tim's values
+%%% from oct 4 - starting from tim's values
 % alpha10 = 0.0584; % (/hr) basal proliferation rate (0.1)
 % alpha11 = 0.0673; %  (/hr) proliferation rate APC wrt oxygen (0.08)
 % alpha12 = 0.1761; %  (/hr) proliferation rate APC wrt PDGFA (0.1)
@@ -76,7 +76,7 @@ tmax = 7 * 24; % max time (hr) (7 days)
 % gamma1 = 0.0; % (/hr) apoptosis rate APC
 % gamma2 = 0.0; % (/hr) apoptosis rate IPA
 
-% from oct 4 - starting from my values
+%%% from oct 4 - starting from my values
 % alpha10 = 0.0774; % (/hr) basal proliferation rate (0.1)
 % alpha11 = 0.0262; %  (/hr) proliferation rate APC wrt oxygen (0.08)
 % alpha12 = 0.1286; %  (/hr) proliferation rate APC wrt PDGFA (0.1)
@@ -89,7 +89,7 @@ tmax = 7 * 24; % max time (hr) (7 days)
 % gamma1 = 0.0; % (/hr) apoptosis rate APC
 % gamma2 = 0.0; % (/hr) apoptosis rate IPA
 
-% from oct 5 - starting from tim's values
+%%% from oct 5 - starting from tim's values
 % alpha10 = 0.0820; % (/hr) basal proliferation rate (0.1)
 % alpha11 = 0.0681; %  (/hr) proliferation rate APC wrt oxygen (0.08)
 % alpha12 = 0.1976; %  (/hr) proliferation rate APC wrt PDGFA (0.1)
@@ -102,7 +102,7 @@ tmax = 7 * 24; % max time (hr) (7 days)
 % gamma1 = 0.0; % (/hr) apoptosis rate APC
 % gamma2 = 0.0; % (/hr) apoptosis rate IPA
 
-% from oct 5 - starting from my values
+%%% from oct 5 - starting from my values
 % alpha10 = 0.0734; % (/hr) basal proliferation rate (0.1)
 % alpha11 = 0.0701; %  (/hr) proliferation rate APC wrt oxygen (0.08)
 % alpha12 = 0.1835; %  (/hr) proliferation rate APC wrt PDGFA (0.1)
@@ -115,7 +115,7 @@ tmax = 7 * 24; % max time (hr) (7 days)
 % gamma1 = 0.0; % (/hr) apoptosis rate APC
 % gamma2 = 0.0; % (/hr) apoptosis rate IPA
 
-% from oct 5 - starting from tim's values - radius weighted points 5-6
+%%% from oct 5 - starting from tim's values - radius weighted points 5-6
 % alpha10 = 0.0004; % (/hr) basal proliferation rate (0.1)
 % alpha11 = 0.0859; %  (/hr) proliferation rate APC wrt oxygen (0.08)
 % alpha12 = 0.1699; %  (/hr) proliferation rate APC wrt PDGFA (0.1)
@@ -128,22 +128,100 @@ tmax = 7 * 24; % max time (hr) (7 days)
 % gamma1 = 0.0; % (/hr) apoptosis rate APC
 % gamma2 = 0.0; % (/hr) apoptosis rate IPA
 
-% from oct 5 - starting from my values - radius weighted points 5-6
-alpha10 = 0.0708; % (/hr) basal proliferation rate (0.1)
-alpha11 = 0.0398; %  (/hr) proliferation rate APC wrt oxygen (0.08)
-alpha12 = 0.0949; %  (/hr) proliferation rate APC wrt PDGFA (0.1)
-alpha20 = 0.0018; % (/hr) basal proliferation rate (zero) 
-alpha21 = 0.0015; % (/hr) proliferation rate IPA wrt oxygen
-alpha22 = 0.0084; % (/hr) proliferation rate IPA wrt PDGFA
-beta1 = 0.0508; % (/hr) basal differentiation rate (0.08)
-beta2 = 0.0139; % (/hr) differentiation rate wrt oxygen (0.03)
-beta3 = 0.0007; % (/hr) differentiation rate wrt LIF (0.02)
-gamma1 = 0.0; % (/hr) apoptosis rate APC
-gamma2 = 0.0; % (/hr) apoptosis rate IPA
+%%% from oct 5 - starting from my values - radius weighted points 5-6
+% alpha10 = 0.0708; % (/hr) basal proliferation rate (0.1)
+% alpha11 = 0.0398; %  (/hr) proliferation rate APC wrt oxygen (0.08)
+% alpha12 = 0.0949; %  (/hr) proliferation rate APC wrt PDGFA (0.1)
+% alpha20 = 0.0018; % (/hr) basal proliferation rate (zero) 
+% alpha21 = 0.0015; % (/hr) proliferation rate IPA wrt oxygen
+% alpha22 = 0.0084; % (/hr) proliferation rate IPA wrt PDGFA
+% beta1 = 0.0508; % (/hr) basal differentiation rate (0.08)
+% beta2 = 0.0139; % (/hr) differentiation rate wrt oxygen (0.03)
+% beta3 = 0.0007; % (/hr) differentiation rate wrt LIF (0.02)
+% gamma1 = 0.0; % (/hr) apoptosis rate APC
+% gamma2 = 0.0; % (/hr) apoptosis rate IPA
+
+%%% from nov 2 - starting from tim's values - radius weighted points 4-6
+% alpha10 = 0.0794; % (/hr) basal proliferation rate (0.1)
+% alpha11 = 0.0343; %  (/hr) proliferation rate APC wrt oxygen (0.08)
+% alpha12 = 0.2187; %  (/hr) proliferation rate APC wrt PDGFA (0.1)
+% alpha20 = 0.001; % (/hr) basal proliferation rate (zero) 
+% alpha21 = 0.0005; % (/hr) proliferation rate IPA wrt oxygen
+% alpha22 = 0.0007; % (/hr) proliferation rate IPA wrt PDGFA
+% beta1 = 0.0483; % (/hr) basal differentiation rate (0.08)
+% beta2 = 0.0331; % (/hr) differentiation rate wrt oxygen (0.03)
+% beta3 = 0.0184; % (/hr) differentiation rate wrt LIF (0.02)
+% gamma1 = 0.0; % (/hr) apoptosis rate APC
+% gamma2 = 0.0; % (/hr) apoptosis rate IPA
+
+%%% from nov 2 - starting from my values - radius weighted points 4-6
+% alpha10 = 0.0973; % (/hr) basal proliferation rate (0.1)
+% alpha11 = 0.00002; %  (/hr) proliferation rate APC wrt oxygen (0.08)
+% alpha12 = 0.1288; %  (/hr) proliferation rate APC wrt PDGFA (0.1)
+% alpha20 = 0.0013; % (/hr) basal proliferation rate (zero) 
+% alpha21 = 0.0058; % (/hr) proliferation rate IPA wrt oxygen
+% alpha22 = 0.0141; % (/hr) proliferation rate IPA wrt PDGFA
+% beta1 = 0.0434; % (/hr) basal differentiation rate (0.08)
+% beta2 = 0.0210; % (/hr) differentiation rate wrt oxygen (0.03)
+% beta3 = 0.0250; % (/hr) differentiation rate wrt LIF (0.02)
+% gamma1 = 0.0; % (/hr) apoptosis rate APC
+% gamma2 = 0.0; % (/hr) apoptosis rate IPA
+
+%%% from nov 3 - starting from tim's values - radius weighted points 4-7
+% alpha10 = 0.0751; % (/hr) basal proliferation rate (0.1)
+% alpha11 = 0.0581; %  (/hr) proliferation rate APC wrt oxygen (0.08)
+% alpha12 = 0.1550; %  (/hr) proliferation rate APC wrt PDGFA (0.1)
+% alpha20 = 0.0003; % (/hr) basal proliferation rate (zero) 
+% alpha21 = 0.0006; % (/hr) proliferation rate IPA wrt oxygen
+% alpha22 = 0.0007; % (/hr) proliferation rate IPA wrt PDGFA
+% beta1 = 0.0481; % (/hr) basal differentiation rate (0.08)
+% beta2 = 0.0518; % (/hr) differentiation rate wrt oxygen (0.03)
+% beta3 = 0.0118; % (/hr) differentiation rate wrt LIF (0.02)
+% gamma1 = 0.0; % (/hr) apoptosis rate APC
+% gamma2 = 0.0; % (/hr) apoptosis rate IPA
+
+%%% from nov 3 - starting from my values - radius weighted points 4-7
+% alpha10 = 0.0847; % (/hr) basal proliferation rate (0.1)
+% alpha11 = 0.0562; %  (/hr) proliferation rate APC wrt oxygen (0.08)
+% alpha12 = 0.1987; %  (/hr) proliferation rate APC wrt PDGFA (0.1)
+% alpha20 = 0.0008; % (/hr) basal proliferation rate (zero) 
+% alpha21 = 0.0048; % (/hr) proliferation rate IPA wrt oxygen
+% alpha22 = 0.0006; % (/hr) proliferation rate IPA wrt PDGFA
+% beta1 = 0.0680; % (/hr) basal differentiation rate (0.08)
+% beta2 = 0.0364; % (/hr) differentiation rate wrt oxygen (0.03)
+% beta3 = 0.0189; % (/hr) differentiation rate wrt LIF (0.02)
+% gamma1 = 0.0; % (/hr) apoptosis rate APC
+% gamma2 = 0.0; % (/hr) apoptosis rate IPA
+
+%%% from nov 3 - starting from tim's values - radius weighted points 3,5-7
+% alpha10 = 0.0625; % (/hr) basal proliferation rate (0.1)
+% alpha11 = 0.0428; %  (/hr) proliferation rate APC wrt oxygen (0.08)
+% alpha12 = 0.1411; %  (/hr) proliferation rate APC wrt PDGFA (0.1)
+% alpha20 = 0.0013; % (/hr) basal proliferation rate (zero) 
+% alpha21 = 0.0011; % (/hr) proliferation rate IPA wrt oxygen
+% alpha22 = 0.0014; % (/hr) proliferation rate IPA wrt PDGFA
+% beta1 = 0.0423; % (/hr) basal differentiation rate (0.08)
+% beta2 = 0.0294; % (/hr) differentiation rate wrt oxygen (0.03)
+% beta3 = 0.0087; % (/hr) differentiation rate wrt LIF (0.02)
+% gamma1 = 0.0; % (/hr) apoptosis rate APC
+% gamma2 = 0.0; % (/hr) apoptosis rate IPA
+
+%%% from nov 3 - starting from my values - radius weighted points 3,5-7
+% alpha10 = 0.0798; % (/hr) basal proliferation rate (0.1)
+% alpha11 = 0.0795; %  (/hr) proliferation rate APC wrt oxygen (0.08)
+% alpha12 = 0.1258; %  (/hr) proliferation rate APC wrt PDGFA (0.1)
+% alpha20 = 0.0000009; % (/hr) basal proliferation rate (zero) 
+% alpha21 = 0.000005; % (/hr) proliferation rate IPA wrt oxygen
+% alpha22 = 0.0155; % (/hr) proliferation rate IPA wrt PDGFA
+% beta1 = 0.0698; % (/hr) basal differentiation rate (0.08)
+% beta2 = 0.0339; % (/hr) differentiation rate wrt oxygen (0.03)
+% beta3 = 0.0191; % (/hr) differentiation rate wrt LIF (0.02)
+% gamma1 = 0.0; % (/hr) apoptosis rate APC
+% gamma2 = 0.0; % (/hr) apoptosis rate IPA
 
 %% tension parameters
-mu1 = 10; %15 % adhesion constant (mm/hr/(mN/mm^2))
-mu2 = 20; %15
+mu1 = 15; %15 % adhesion constant (mm/hr/(mN/mm^2))
+mu2 = 15; %15
 kTprime1 = kappa / (2 * mu1 * sqrt(pi));
 kTprime2 = kappa / (2 * mu2 * sqrt(pi));
 

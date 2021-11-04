@@ -96,9 +96,9 @@ end
 % err_time = abs(7 - t(end)/24)/7;
 
 %%% radius error
-% multiply by a weight to had interior points be made more important
+% multiply by a weight to have interior points be made more important
 weight = ones(size(rad_APC));
-weight(5:6) = 2;
+% weight([3,5:7]) = 3;
 err_rad = sum( abs(rad_APC - mvgbdy(ind)) ./ rad_APC  .* weight );
 
 %%% density error
