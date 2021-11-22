@@ -1,6 +1,6 @@
 # astrocyte-migration
 
-<a href="https://github.com/tstepien/astrocyte-migration/"><img src="https://img.shields.io/badge/github-https%3A%2F%2Fgithub.com%2Ftstepien%2Fastrocyte--migration%2F-blue" /></a> <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" /></a>
+<a href="https://github.com/tstepien/astrocyte-migration/"><img src="https://img.shields.io/badge/github-tstepien%2Fastrocyte--migration-blue" /></a> <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" /></a>
 
 The code contained in the astrocyte-migration project was developed to numerically simulate astrocyte migration and differentiation during embryonic development of the retina. It is described in:
 >[Tracy L. Stepien](https://github.com/tstepien/) and [Timothy W. Secomb](https://physiology.arizona.edu/people/secomb), Spreading mechanics and differentiation of astrocytes
