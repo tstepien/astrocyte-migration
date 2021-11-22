@@ -1,7 +1,9 @@
 %   AstrocyteModel_TWS
 %   Model for spread of astrocytes of surface of retina
-%   Based on work of Tracy Stepien
-%   TWS, June 2021
+%   TWS and TLS, 2021
+%
+%   ***Simulation of growth factors only***
+%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %   Use the MatLab PDE solver PDEPE. The PDE is
 %   [A] .*  D_ [u] = D_ [ A * D * Du/Dx ] +      [R]

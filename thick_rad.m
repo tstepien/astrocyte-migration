@@ -1,6 +1,9 @@
 function [thickness_ret,thickness_RGC,radius_endo,radius_ret] = thick_rad(t,r)
+% [thickness_ret,thickness_RGC,radius_endo,radius_ret] = thick_rad(t,r)
+%
 % Calculates the thickness of the retina and the retinal ganglion cell (RGC)
 % layer, and the radius of the endothelial cell spread
+%
 % inputs:
 %   t = current time
 %   r = radial position

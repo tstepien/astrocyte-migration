@@ -1,7 +1,6 @@
-%   AstrocyteModel_TWS
+%   AstrocyteModel
 %   Model for spread of astrocytes of surface of retina
-%   Based on work of Tracy Stepien
-%   TWS, June 2021
+%   TWS and TLS, 2021
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %   Use the MatLab PDE solver PDEPE. The PDE is
 %   [A] .*  D_ [u] = D_ [ A * D * Du/Dx ] +      [R]
@@ -38,6 +37,7 @@ rmax = 5; % max radius (mm) (estimate rat retinal radius = 4.1 mm)
 tmax = 7 * 24; % max time (hr) (7 days)
 
 %% cell growth parameters
+%%% nonzero alpha21 alpha22
 alpha10 = 0.08; % (/hr) basal proliferation rate (0.1)
 alpha11 = 0.08; %  (/hr) proliferation rate APC wrt oxygen (0.08)
 alpha12 = 0.09; %  (/hr) proliferation rate APC wrt PDGFA (0.1)
@@ -50,7 +50,22 @@ beta3 = 0.02; % (/hr) differentiation rate wrt LIF (0.02)
 gamma1 = 0.0; % (/hr) apoptosis rate APC
 gamma2 = 0.0; % (/hr) apoptosis rate IPA
 
-%%% from september 27 afternoon
+%%% zero alpha21 alpha22
+% alpha10 = 0.08; % (/hr) basal proliferation rate (0.1)
+% alpha11 = 0.08; %  (/hr) proliferation rate APC wrt oxygen (0.08)
+% alpha12 = 0.12; %  (/hr) proliferation rate APC wrt PDGFA (0.1)
+% alpha20 = 0.0; % (/hr) basal proliferation rate (zero) 
+% alpha21 = 0.0; % (/hr) proliferation rate IPA wrt oxygen
+% alpha22 = 0.0; % (/hr) proliferation rate IPA wrt PDGFA
+% beta1 = 0.07; % (/hr) basal differentiation rate (0.08)
+% beta2 = 0.03; % (/hr) differentiation rate wrt oxygen (0.03)
+% beta3 = 0.02; % (/hr) differentiation rate wrt LIF (0.02)
+% gamma1 = 0.0; % (/hr) apoptosis rate APC
+% gamma2 = 0.0; % (/hr) apoptosis rate IPA
+
+%%% parameters below found from exploring parameter space using fminsearch
+
+%%% from running an fminsearch routine
 % alpha10 = 0.0746; % (/hr) basal proliferation rate (0.1)
 % alpha11 = 0.0667; %  (/hr) proliferation rate APC wrt oxygen (0.08)
 % alpha12 = 0.1005; %  (/hr) proliferation rate APC wrt PDGFA (0.1)
@@ -63,7 +78,7 @@ gamma2 = 0.0; % (/hr) apoptosis rate IPA
 % gamma1 = 0.0; % (/hr) apoptosis rate APC
 % gamma2 = 0.0; % (/hr) apoptosis rate IPA
 
-%%% from oct 4 - starting from tim's values
+%%% fminssearch from zero values - radius and density error
 % alpha10 = 0.0584; % (/hr) basal proliferation rate (0.1)
 % alpha11 = 0.0673; %  (/hr) proliferation rate APC wrt oxygen (0.08)
 % alpha12 = 0.1761; %  (/hr) proliferation rate APC wrt PDGFA (0.1)
@@ -76,7 +91,7 @@ gamma2 = 0.0; % (/hr) apoptosis rate IPA
 % gamma1 = 0.0; % (/hr) apoptosis rate APC
 % gamma2 = 0.0; % (/hr) apoptosis rate IPA
 
-%%% from oct 4 - starting from my values
+%%% fminssearch from nonzero values - radius and density error
 % alpha10 = 0.0774; % (/hr) basal proliferation rate (0.1)
 % alpha11 = 0.0262; %  (/hr) proliferation rate APC wrt oxygen (0.08)
 % alpha12 = 0.1286; %  (/hr) proliferation rate APC wrt PDGFA (0.1)
@@ -89,7 +104,7 @@ gamma2 = 0.0; % (/hr) apoptosis rate IPA
 % gamma1 = 0.0; % (/hr) apoptosis rate APC
 % gamma2 = 0.0; % (/hr) apoptosis rate IPA
 
-%%% from oct 5 - starting from tim's values
+%%% fminssearch from zero values
 % alpha10 = 0.0820; % (/hr) basal proliferation rate (0.1)
 % alpha11 = 0.0681; %  (/hr) proliferation rate APC wrt oxygen (0.08)
 % alpha12 = 0.1976; %  (/hr) proliferation rate APC wrt PDGFA (0.1)
@@ -102,7 +117,7 @@ gamma2 = 0.0; % (/hr) apoptosis rate IPA
 % gamma1 = 0.0; % (/hr) apoptosis rate APC
 % gamma2 = 0.0; % (/hr) apoptosis rate IPA
 
-%%% from oct 5 - starting from my values
+%%% fminssearch from nonzero values
 % alpha10 = 0.0734; % (/hr) basal proliferation rate (0.1)
 % alpha11 = 0.0701; %  (/hr) proliferation rate APC wrt oxygen (0.08)
 % alpha12 = 0.1835; %  (/hr) proliferation rate APC wrt PDGFA (0.1)
@@ -115,7 +130,7 @@ gamma2 = 0.0; % (/hr) apoptosis rate IPA
 % gamma1 = 0.0; % (/hr) apoptosis rate APC
 % gamma2 = 0.0; % (/hr) apoptosis rate IPA
 
-%%% from oct 5 - starting from tim's values - radius weighted points 5-6
+%%% fminssearch from zero values - radius error weighted points 5-6
 % alpha10 = 0.0004; % (/hr) basal proliferation rate (0.1)
 % alpha11 = 0.0859; %  (/hr) proliferation rate APC wrt oxygen (0.08)
 % alpha12 = 0.1699; %  (/hr) proliferation rate APC wrt PDGFA (0.1)
@@ -128,7 +143,7 @@ gamma2 = 0.0; % (/hr) apoptosis rate IPA
 % gamma1 = 0.0; % (/hr) apoptosis rate APC
 % gamma2 = 0.0; % (/hr) apoptosis rate IPA
 
-%%% from oct 5 - starting from my values - radius weighted points 5-6
+%%% fminssearch from nonzero values - radius error weighted points 5-6
 % alpha10 = 0.0708; % (/hr) basal proliferation rate (0.1)
 % alpha11 = 0.0398; %  (/hr) proliferation rate APC wrt oxygen (0.08)
 % alpha12 = 0.0949; %  (/hr) proliferation rate APC wrt PDGFA (0.1)
@@ -141,7 +156,7 @@ gamma2 = 0.0; % (/hr) apoptosis rate IPA
 % gamma1 = 0.0; % (/hr) apoptosis rate APC
 % gamma2 = 0.0; % (/hr) apoptosis rate IPA
 
-%%% from nov 2 - starting from tim's values - radius weighted points 4-6
+%%% fminssearch from zero values - radius error weighted points 4-6
 % alpha10 = 0.0794; % (/hr) basal proliferation rate (0.1)
 % alpha11 = 0.0343; %  (/hr) proliferation rate APC wrt oxygen (0.08)
 % alpha12 = 0.2187; %  (/hr) proliferation rate APC wrt PDGFA (0.1)
@@ -154,7 +169,7 @@ gamma2 = 0.0; % (/hr) apoptosis rate IPA
 % gamma1 = 0.0; % (/hr) apoptosis rate APC
 % gamma2 = 0.0; % (/hr) apoptosis rate IPA
 
-%%% from nov 2 - starting from my values - radius weighted points 4-6
+%%% fminssearch from nonzero values - radius error weighted points 4-6
 % alpha10 = 0.0973; % (/hr) basal proliferation rate (0.1)
 % alpha11 = 0.00002; %  (/hr) proliferation rate APC wrt oxygen (0.08)
 % alpha12 = 0.1288; %  (/hr) proliferation rate APC wrt PDGFA (0.1)
@@ -167,7 +182,7 @@ gamma2 = 0.0; % (/hr) apoptosis rate IPA
 % gamma1 = 0.0; % (/hr) apoptosis rate APC
 % gamma2 = 0.0; % (/hr) apoptosis rate IPA
 
-%%% from nov 3 - starting from tim's values - radius weighted points 4-7
+%%% fminssearch from zero values - radius error weighted points 4-7
 % alpha10 = 0.0751; % (/hr) basal proliferation rate (0.1)
 % alpha11 = 0.0581; %  (/hr) proliferation rate APC wrt oxygen (0.08)
 % alpha12 = 0.1550; %  (/hr) proliferation rate APC wrt PDGFA (0.1)
@@ -180,7 +195,7 @@ gamma2 = 0.0; % (/hr) apoptosis rate IPA
 % gamma1 = 0.0; % (/hr) apoptosis rate APC
 % gamma2 = 0.0; % (/hr) apoptosis rate IPA
 
-%%% from nov 3 - starting from my values - radius weighted points 4-7
+%%% fminssearch from nonzero values - radius error weighted points 4-7
 % alpha10 = 0.0847; % (/hr) basal proliferation rate (0.1)
 % alpha11 = 0.0562; %  (/hr) proliferation rate APC wrt oxygen (0.08)
 % alpha12 = 0.1987; %  (/hr) proliferation rate APC wrt PDGFA (0.1)
@@ -193,7 +208,7 @@ gamma2 = 0.0; % (/hr) apoptosis rate IPA
 % gamma1 = 0.0; % (/hr) apoptosis rate APC
 % gamma2 = 0.0; % (/hr) apoptosis rate IPA
 
-%%% from nov 3 - starting from tim's values - radius weighted points 3,5-7
+%%% fminssearch from zero values - radius error weighted points 3,5-7
 % alpha10 = 0.0625; % (/hr) basal proliferation rate (0.1)
 % alpha11 = 0.0428; %  (/hr) proliferation rate APC wrt oxygen (0.08)
 % alpha12 = 0.1411; %  (/hr) proliferation rate APC wrt PDGFA (0.1)
@@ -206,7 +221,7 @@ gamma2 = 0.0; % (/hr) apoptosis rate IPA
 % gamma1 = 0.0; % (/hr) apoptosis rate APC
 % gamma2 = 0.0; % (/hr) apoptosis rate IPA
 
-%%% from nov 3 - starting from my values - radius weighted points 3,5-7
+%%% fminssearch from nonzero values - radius error weighted points 3,5-7
 % alpha10 = 0.0798; % (/hr) basal proliferation rate (0.1)
 % alpha11 = 0.0795; %  (/hr) proliferation rate APC wrt oxygen (0.08)
 % alpha12 = 0.1258; %  (/hr) proliferation rate APC wrt PDGFA (0.1)
@@ -220,8 +235,8 @@ gamma2 = 0.0; % (/hr) apoptosis rate IPA
 % gamma2 = 0.0; % (/hr) apoptosis rate IPA
 
 %% tension parameters
-mu1 = 15; %15 % adhesion constant (mm/hr/(mN/mm^2))
-mu2 = 15; %15
+mu1 = 10; %15 % adhesion constant (mm/hr/(mN/mm^2))
+mu2 = 20; %15
 kTprime1 = kappa / (2 * mu1 * sqrt(pi));
 kTprime2 = kappa / (2 * mu2 * sqrt(pi));
 
@@ -245,7 +260,6 @@ PDGFA = sol(:,:,1);
 LIF = sol(:,:,2);
 
 % Calculate cell densities using time-dependent domain stretching
-%options = odeset('RelTol',1e-10,'AbsTol',1e-10,'NormControl',1);
 sol = pdepe(1,@AstroPDE,@AstroIC,@AstroBC,x,t);%,options);
 
 %% plot results
@@ -255,8 +269,6 @@ sol = pdepe(1,@AstroPDE,@AstroIC,@AstroBC,x,t);%,options);
 plot_the_plots_6panels
 % plot_the_plots_APCIPA
 % plot_growthfactors_O2_thickness
-
-% plot_timversion
 
 %% calculate error
 [err_tot,err_rad,err_dens] = errorfunction(t,x,sol)

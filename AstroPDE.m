@@ -1,4 +1,8 @@
 function [c,f,s] = AstroPDE(x,t,u,DuDx)
+% [c,f,s] = AstroPDE(x,t,u,DuDx)
+%
+% astrocytes: partial differential equations
+
 global kTprime1 kTprime2 cmax Lvec Pvec Pm LIF PDGFA nxpts ntpts tmax rmax
 global alpha10 alpha11 alpha12 alpha20 alpha21 alpha22 beta1 beta2 beta3 gamma1 gamma2
 
@@ -46,4 +50,5 @@ f = [kTprime1 * u(1) * usum^(-3/2) * Dusum;...
 s = [x * u(4) * u(3) * DuDx(1) + u(4)^2 * g1;...
     x * u(4) * u(3) * DuDx(2) + u(4)^2 * g2;...
     0; u(3)];
+
 end
