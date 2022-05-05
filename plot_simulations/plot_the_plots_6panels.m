@@ -147,7 +147,7 @@ title('E                              ',...
 %%%%%%%%%%%%%%%% PANEL: Radius vs. time / distance astrocytes spread
 rad_APC = [0.17; 0.33; 0.5; 0.67; 1.67; 2.17; 2.67]; %not including E17
 rad_days = [0; 1; 3; 4; 5; 6; 7];
-nexttile(6)
+nexttile
 hold on
 plot(t/24,rm,'k','LineWidth',2.5)
 scatter(rad_days,rad_APC,150,[0.5 0.5 0.5],'x','LineWidth',2.5)
