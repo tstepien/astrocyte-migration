@@ -16,4 +16,4 @@ during retinal development, Accepted in *Journal of Theoretical Biology*, DOI: [
 + [plot_simulations](plot_simulations): Code to create Figures - in the paper
 
 ## Licensing
-Copyright 2017-2021 [Tracy Stepien](https://github.com/tstepien/), [Timothy Secomb](https://github.com/secomb/). This is free software made available under the MIT License. For details see the LICENSE file.
+Copyright 2017-2022 [Tracy Stepien](https://github.com/tstepien/), [Timothy Secomb](https://github.com/secomb/). This is free software made available under the MIT License. For details see the LICENSE file.
