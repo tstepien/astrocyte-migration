@@ -11,9 +11,9 @@ during retinal development, Accepted in *Journal of Theoretical Biology*, DOI: [
 + [AstroModel_growthfactors.m](AstroModel_growthfactors.m): run this program to solve just the growth factor equations
 
 ## Description of Folders
-+ [plot_dataregression](plot_dataregression): Code to create Figures - in the paper
-+ [plot_modelpieces](plot_modelpieces): Code to create Figures - in the paper
-+ [plot_simulations](plot_simulations): Code to create Figures - in the paper
++ [plot_dataregression](plot_dataregression): Code to create Figures 4C, 4D, 5B in the paper
++ [plot_modelpieces](plot_modelpieces): Code to create Figures 4A, 4B, 5A in the paper
++ [plot_simulations](plot_simulations): Code to create Figures 6, 7, 8, 9 in the paper
 
 ## Licensing
 Copyright 2017-2022 [Tracy Stepien](https://github.com/tstepien/), [Timothy Secomb](https://github.com/secomb/). This is free software made available under the MIT License. For details see the LICENSE file.
