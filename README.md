@@ -4,7 +4,7 @@
 
 The code contained in the astrocyte-migration project was developed to numerically simulate astrocyte migration and differentiation during embryonic development of the retina. It is described in:
 >[Tracy L. Stepien](https://github.com/tstepien/) and [Timothy W. Secomb](https://physiology.arizona.edu/people/secomb), Spreading mechanics and differentiation of astrocytes
-during retinal development, Submitted to *Journal of Theoretical Biology*.
+during retinal development, Accepted in *Journal of Theoretical Biology*.
 
 ## Programs
 + [AstroModel.m](AstroModel.m): run this program to solve the astrocyte model equations (includes growth factors)
